@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Grid, Card, CardContent, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, CircularProgress, Alert } from '@mui/material';
+import { Box, Grid, Card, CardContent, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, CircularProgress, Alert, Select, MenuItem, InputLabel, FormControl, Checkbox } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import axios from 'axios';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 
 const VendorsPage = () => {
     const [vendors, setVendors] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [open, setOpen] = useState(false);
     const [formData, setFormData] = useState({
+        id: '',
         company_name: '',
         website_url: '',
         contact_info: '',
@@ -20,7 +24,6 @@ const VendorsPage = () => {
     const [formErrors, setFormErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Fetch vendors from the API
     useEffect(() => {
         axios.get('/api/get-vendors')
             .then(response => {
@@ -37,52 +40,39 @@ const VendorsPage = () => {
             });
     }, []);
 
-    // Handle input change
+    useEffect(() => {
+        if (open) {
+            axios.get('/api/get-categories')
+                .then(response => {
+                    if (response.data.success) {
+                        setCategories(response.data.categories);
+                    } else {
+                        setError('Failed to get categories');
+                    }
+                })
+                .catch(() => {
+                    setError('Failed to get categories');
+                });
+        }
+    }, [open]);
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
 
-    // Handle edit button click
-    const handleEditClick = (vendor) => {
-        setFormData({
-            ...vendor, // Populate form data with vendor's existing data
-        });
-        setOpen(true);  // Open the modal for editing
-    };
-
-    // Handle delete button click
-    const handleDeleteClick = async (id) => {
-        if (window.confirm('Are you sure you want to delete this vendor?')) {
-            try {
-                const response = await axios.delete(`/api/delete-vendor?id=${id}`);
-                if (response.data.success) {
-                    setVendors(vendors.filter(vendor => vendor.id !== id)); // Update vendor list
-                } else {
-                    alert('Failed to delete vendor');
-                }
-            } catch (error) {
-                console.error('Error deleting vendor:', error);
-            }
-        }
-    };
-
-    // Handle form submission (for both create and edit)
     const handleSubmit = async () => {
         setIsSubmitting(true);
         try {
             let response;
             if (formData.id) {
-                // Edit existing vendor
                 response = await axios.put(`/api/update-vendor?id=${formData.id}`, formData);
             } else {
-                // Create new vendor
                 response = await axios.post('/api/create-vendor', formData);
             }
 
             if (response.data.success) {
                 setOpen(false);
-                // Optionally refresh the vendor list
                 axios.get('/api/get-vendors').then(response => {
                     if (response.data.success) {
                         setVendors(response.data.vendors);
@@ -97,11 +87,57 @@ const VendorsPage = () => {
         setIsSubmitting(false);
     };
 
-    // Open and close modal
     const handleClickOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    // Render loading spinner
+    const handleEditClick = (vendor) => {
+        setFormData({
+            id: vendor.id,
+            company_name: vendor.company_name,
+            website_url: vendor.website_url,
+            contact_info: vendor.contact_info,
+            description: vendor.description,
+            category_id: vendor.category_id,
+            initial_release: vendor.initial_release,
+            current_release: vendor.current_release,
+        });
+        setOpen(true);
+    };
+
+    const handleDeleteClick = async (vendorId) => {
+        if (window.confirm('Are you sure you want to delete this vendor?')) {
+            try {
+                const response = await axios.delete(`/api/delete-vendor?id=${vendorId}`);
+                if (response.data.success) {
+                    setVendors(vendors.filter(vendor => vendor.id !== vendorId));
+                } else {
+                    setError('Failed to delete vendor');
+                }
+            } catch {
+                setError('Failed to delete vendor');
+            }
+        }
+    };
+
+    // Handle the checkbox change for approval
+    const handleApprovalChange = async (vendorId, approved) => {
+        try {
+            const response = await axios.put(`/api/update-vendor?id=${vendorId}`, { approved });
+            if (response.data.success) {
+                // Update the local state
+                setVendors(prevVendors =>
+                    prevVendors.map(vendor =>
+                        vendor.id === vendorId ? { ...vendor, approved } : vendor
+                    )
+                );
+            } else {
+                setError('Failed to update approval status');
+            }
+        } catch {
+            setError('Failed to update approval status');
+        }
+    };
+
     if (loading) {
         return (
             <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
@@ -110,7 +146,6 @@ const VendorsPage = () => {
         );
     }
 
-    // Render error message
     if (error) {
         return (
             <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
@@ -121,11 +156,8 @@ const VendorsPage = () => {
 
     return (
         <Box p={3}>
-            {/* Header section with the title and Create Vendor button */}
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-                <Typography variant="h4">
-                    Vendors List
-                </Typography>
+                <Typography variant="h4">Vendors List</Typography>
                 <Button
                     variant="contained"
                     color="primary"
@@ -144,7 +176,6 @@ const VendorsPage = () => {
                 </Button>
             </Box>
 
-            {/* Vendors List */}
             <Grid container spacing={3}>
                 {vendors.map((vendor) => (
                     <Grid item xs={12} sm={6} md={4} key={vendor.id}>
@@ -159,11 +190,13 @@ const VendorsPage = () => {
                                 <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
                                     <strong>Website:</strong> {vendor.website_url}
                                 </Typography>
-                                <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
-                                    <strong>Category:</strong> {vendor.category}
+                                <Typography variant="body2" color="textSecondary" sx={{ mt: 1, display: 'flex' }}>
+                                    <strong>Category:</strong>
+                                    <div>
+                                        Title: {vendor.category.title}<br /> Name: {vendor.category.shortname}
+                                    </div>
                                 </Typography>
 
-                                {/* Edit and Delete Buttons */}
                                 <Button
                                     variant="contained"
                                     color="primary"
@@ -180,13 +213,27 @@ const VendorsPage = () => {
                                 >
                                     Delete
                                 </Button>
+
+                                <FormControlLabel
+                                    style={{ float: 'right' }}
+                                    sx={{ mt: 2 }}
+                                    control={
+                                        <Switch
+                                            checked={vendor.approved === 1}
+                                            onChange={(e) => handleApprovalChange(vendor.id, e.target.checked ? 1 : 0)}
+                                            color="primary"
+                                        />
+                                    }
+                                    label="Approve"
+                                    labelPlacement="end"
+                                />
+
                             </CardContent>
                         </Card>
                     </Grid>
                 ))}
             </Grid>
 
-            {/* Vendor Modal for Create and Edit */}
             <Dialog open={open} onClose={handleClose} fullWidth>
                 <DialogTitle>{formData.id ? 'Edit Vendor' : 'Create Vendor'}</DialogTitle>
                 <DialogContent>
@@ -236,17 +283,23 @@ const VendorsPage = () => {
                         error={!!formErrors.description}
                         helperText={formErrors.description}
                     />
-                    <TextField
-                        margin="dense"
-                        label="Category ID"
-                        name="category_id"
-                        value={formData.category_id}
-                        onChange={handleInputChange}
-                        fullWidth
-                        required
-                        error={!!formErrors.category_id}
-                        helperText={formErrors.category_id}
-                    />
+
+                    <FormControl fullWidth margin="dense" required error={!!formErrors.category_id}>
+                        <InputLabel>Category</InputLabel>
+                        <Select
+                            name="category_id"
+                            value={formData.category_id}
+                            onChange={handleInputChange}
+                        >
+                            {categories.map(category => (
+                                <MenuItem key={category.id} value={category.id}>
+                                    {category.title}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                        {formErrors.category_id && <Typography color="error">{formErrors.category_id}</Typography>}
+                    </FormControl>
+
                     <TextField
                         margin="dense"
                         label="Initial Release"
