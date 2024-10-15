@@ -38,13 +38,15 @@ const RegisterPage = () => {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault(); // Prevent page reload on submit
         console.log('Username:', formValues.username);
+        console.log('email:', formValues.email);
         console.log('Password:', value);
         setError(''); // Reset error before making the API call
 
         try {
-            const response = await axios.post('https://example.com/api/login', {
-                username: formValues.username,
-                password: value
+            const response = await axios.post('http://localhost:8000/api/register', {
+                name: formValues.username,
+                email: formValues.email,
+                password: value,
             });
 
             if (response.status === 200) {
@@ -87,13 +89,24 @@ const RegisterPage = () => {
                     noValidate sx={{ mt: 1 }}
                 >
                     <Input
-                        startDecorator={<MailIcon />}
                         name="username"
                         placeholder="Enter username"
                         fullWidth
                         required
                         autoFocus
                         value={formValues.username}
+                        onChange={handleInputChange}
+                        style={{ marginBottom: '10px' }}
+                    />
+                    <Input
+                        startDecorator={<MailIcon />}
+                        name="email"
+                        type='email'
+                        placeholder="Enter email"
+                        fullWidth
+                        required
+                        autoFocus
+                        value={formValues.email}
                         onChange={handleInputChange}
                         style={{ marginBottom: '10px' }}
                     />

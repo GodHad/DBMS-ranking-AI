@@ -37,19 +37,23 @@ const LoginPage = () => {
     // Handle form submission
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault(); // Prevent page reload on submit
-        console.log('Username:', formValues.username);
+        console.log('email:', formValues.email);
         console.log('Password:', value);
         setError(''); // Reset error before making the API call
 
         try {
-            const response = await axios.post('https://example.com/api/login', {
-                username: formValues.username,
+            const response = await axios.post('http://localhost:8000/api/login', {
+                email: formValues.email,
                 password: value
             });
 
-            if (response.status === 200) {
-                localStorage.setItem('token', response.data.token); // Store token in localStorage
-                navigate('/dashboard'); // Redirect after login success
+            if (response.status === 200 && response.data.token) {
+                // Store token in localStorage and navigate to dashboard
+                localStorage.setItem('token', response.data.token);
+                navigate('/'); // Redirect after login success
+            } else {
+                // If there's no token or the response isn't valid, set an error
+                setError('Login failed. Please check your credentials and try again.');
             }
         } catch (err) {
             setError('Login failed. Please check your credentials and try again.'); // Set error if login fails
@@ -88,12 +92,13 @@ const LoginPage = () => {
                 >
                     <Input
                         startDecorator={<MailIcon />}
-                        name="username"
-                        placeholder="Enter username"
+                        name="email"
+                        type='email'
+                        placeholder="Enter email"
                         fullWidth
                         required
                         autoFocus
-                        value={formValues.username}
+                        value={formValues.email}
                         onChange={handleInputChange}
                         style={{ marginBottom: '10px' }}
                     />
@@ -107,18 +112,6 @@ const LoginPage = () => {
                             value={value}
                             onChange={(event) => setValue(event.target.value)}
                         />
-                        <LinearProgress
-                            determinate
-                            size="sm"
-                            value={Math.min((value.length * 100) / minLength, 100)}
-                            sx={{ bgcolor: 'background.level3', color: 'hsl(var(--hue) 80% 40%)' }}
-                        />
-                        <Typography level="body-xs" sx={{ alignSelf: 'flex-end', color: 'hsl(var(--hue) 80% 30%)' }}>
-                            {value.length < 3 && 'Very weak'}
-                            {value.length >= 3 && value.length < 6 && 'Weak'}
-                            {value.length >= 6 && value.length < 10 && 'Strong'}
-                            {value.length >= 10 && 'Very strong'}
-                        </Typography>
                     </Stack>
 
                     <FormControlLabel

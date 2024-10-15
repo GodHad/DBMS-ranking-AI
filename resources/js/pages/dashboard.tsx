@@ -19,7 +19,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
 import { styled } from '@mui/material/styles';
 
-const pages = ['Products', 'Pricing', 'Blog'];
+const pages = ['Home', 'DB-Engines Ranking', 'Blog','Sponsors'];
 
 const Headerbar= () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -50,7 +50,7 @@ const Headerbar= () => {
       width: 'auto',
     },
   }));
-  
+
   const SearchIconWrapper = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 2),
     height: '100%',
@@ -127,11 +127,38 @@ const Headerbar= () => {
                 onClose={handleCloseNavMenu}
                 sx={{ display: { xs: 'block', md: 'none' } }}
             >
-                {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Typography sx={{ textAlign: 'center' }}>{page}</Typography>
-                </MenuItem>
-                ))}
+                <RouterLink to="/home" style={{ textDecoration: 'none' }}>
+                    <Typography
+                    noWrap
+                    sx={{backgroundColor:"#242526",fontWeight:'bold', color:'black',fontSize:'15px',fontFamily:'system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol'}}
+                    >
+                        Home
+                    </Typography>
+                </RouterLink>
+                <RouterLink to="/rankin_gpage" style={{ textDecoration: 'none' }}>
+                    <Typography
+                    noWrap
+                    sx={{fontWeight:'bold', color:'black',fontSize:'15px',fontFamily:'system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol'}}
+                    >
+                        DB_engines Lanking
+                    </Typography>
+                </RouterLink>
+                <RouterLink to="/blog_page" style={{ textDecoration: 'none' }}>
+                    <Typography
+                    noWrap
+                    sx={{fontWeight:'bold', color:'black',fontSize:'15px',fontFamily:'system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol'}}
+                    >
+                        Blog
+                    </Typography>
+                </RouterLink>
+                <RouterLink to="/sponsor_page" style={{ textDecoration: 'none' }}>
+                    <Typography
+                    noWrap
+                    sx={{fontWeight:'bold', color:'black',fontSize:'15px',fontFamily:'system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol'}}
+                    >
+                        Sponsors
+                    </Typography>
+                </RouterLink>
             </Menu>
             </Box>
             <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -154,7 +181,7 @@ const Headerbar= () => {
             LOGO
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                <RouterLink to="/login" style={{ textDecoration: 'none',paddingLeft:'50px' }}>
+                <RouterLink to="/" style={{ textDecoration: 'none',paddingLeft:'50px' }}>
                     <Typography
                     noWrap
                     sx={{fontWeight:'bold', color:'white',fontSize:'20px',fontFamily:'system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol'}}
@@ -162,7 +189,7 @@ const Headerbar= () => {
                         Home
                     </Typography>
                 </RouterLink>
-                <RouterLink to="/login" style={{ textDecoration: 'none',paddingLeft:'50px' }}>
+                <RouterLink to="/db_ranking" style={{ textDecoration: 'none',paddingLeft:'50px' }}>
                     <Typography
                     noWrap
                     sx={{fontWeight:'bold', color:'white',fontSize:'20px',fontFamily:'system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol'}}
@@ -170,7 +197,7 @@ const Headerbar= () => {
                         DB-Engines Ranking
                     </Typography>
                 </RouterLink>
-                <RouterLink to="/login" style={{ textDecoration: 'none',paddingLeft:'50px' }}>
+                <RouterLink to="/blog_page" style={{ textDecoration: 'none',paddingLeft:'50px' }}>
                     <Typography
                     noWrap
                     sx={{fontWeight:'bold', color:'white',fontSize:'20px',fontFamily:'system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol'}}
@@ -178,7 +205,7 @@ const Headerbar= () => {
                         Blog
                     </Typography>
                 </RouterLink>
-                <RouterLink to="/login" style={{ textDecoration: 'none',paddingLeft:'50px' }}>
+                <RouterLink to="/sponsor_page" style={{ textDecoration: 'none',paddingLeft:'50px' }}>
                     <Typography
                     noWrap
                     sx={{fontWeight:'bold', color:'white',fontSize:'20px',fontFamily:'system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol'}}
