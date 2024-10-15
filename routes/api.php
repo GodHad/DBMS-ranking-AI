@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\SponsorController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DbmsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,4 +32,7 @@ Route::group([
 
     // categories routes
     Route::get('/get-categories', [CategoryController::class, 'categories']);
+
+    // testing route for fetching data
+    Route::get('/test', [DbmsController::class, 'create']);
 });
