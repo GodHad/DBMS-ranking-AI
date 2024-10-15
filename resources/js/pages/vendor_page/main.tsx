@@ -19,6 +19,7 @@ const Main = () => {
         description: '',
         category_id: '',
         initial_release: '',
+        db_name: '',
         current_release: '',
     });
     const [formErrors, setFormErrors] = useState({});
@@ -100,6 +101,7 @@ const Main = () => {
             category_id: vendor.category_id,
             initial_release: vendor.initial_release,
             current_release: vendor.current_release,
+            db_name: vendor.db_name
         });
         setOpen(true);
     };
@@ -187,6 +189,9 @@ const Main = () => {
                                 <Typography variant="body2" color="textSecondary">
                                     {vendor.description}
                                 </Typography>
+                                <Typography variant="body2" color="textSecondary">
+                                    {vendor.db_name}
+                                </Typography>
                                 <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
                                     <strong>Website:</strong> {vendor.website_url}
                                 </Typography>
@@ -247,6 +252,17 @@ const Main = () => {
                         required
                         error={!!formErrors.company_name}
                         helperText={formErrors.company_name}
+                    />
+                    <TextField
+                        margin="dense"
+                        label="DBMS name"
+                        name="db_name"
+                        value={formData.db_name}
+                        onChange={handleInputChange}
+                        fullWidth
+                        required
+                        error={!!formErrors.db_name}
+                        helperText={formErrors.db_name}
                     />
                     <TextField
                         margin="dense"
