@@ -32,6 +32,9 @@ Route::group([
 
     // categories routes
     Route::get('/get-categories', [CategoryController::class, 'categories']);
+    Route::post('/create-category', [CategoryController::class, 'create']);
+    Route::put('/update-category', [CategoryController::class, 'update']);
+    Route::delete('/delete-category', [CategoryController::class, 'delete']);
 
     // testing route for fetching data
     Route::get('/test', [DbmsController::class, 'create']);

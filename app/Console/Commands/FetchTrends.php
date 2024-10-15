@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Models\Dbms;
+use App\Models\Vendor;
 use App\Models\CountryTrend;
 use App\Models\Trend;
 use Illuminate\Support\Facades\Log;
@@ -33,7 +33,7 @@ class FetchTrends extends Command
         if ($this->option('all')) {
             Trend::truncate();
             CountryTrend::truncate();
-            $keywords = Dbms::pluck('name')->toArray();
+            $keywords = Vendor::pluck('db_name')->toArray();
             $keywordsString = implode(',', $keywords);
             $command = escapeshellcmd($exePath) . " " . escapeshellarg($keywordsString);
         } else {
@@ -56,15 +56,15 @@ class FetchTrends extends Command
                 $header = fgetcsv($handle);
                 $len = count($header);
 
-                $dbms = Dbms::whereIn('name', array_slice($header, 1, $len - 2))->get();
-                $dbms_ids = $dbms->pluck('id', 'name')->toArray();
+                $vendors = Vendor::whereIn('db_name', array_slice($header, 1, $len - 2))->get();
+                $vendor_ids = $vendors->pluck('id', 'db_name')->toArray();
                 $countryTrends = [];
 
                 while (($row = fgetcsv($handle)) !== false) {
                     for ($i = 1; $i < $len - 1; $i++) {
-                        if (isset($dbms_ids[$header[$i]])) {
+                        if (isset($vendor_ids[$header[$i]])) {
                             $countryTrends[] = [
-                                'dbms_id' => $dbms_ids[$header[$i]],
+                                'vendor_id' => $vendor_ids[$header[$i]],
                                 'score' => $row[$i],
                                 'date' => $row[$len - 1],
                                 'country_code' => $row[0],
@@ -81,15 +81,15 @@ class FetchTrends extends Command
                 $header = fgetcsv($handle1);
                 $len = count($header);
 
-                $dbms = Dbms::whereIn('name', array_slice($header, 1, $len - 2))->get();
-                $dbms_ids = $dbms->pluck('id', 'name')->toArray();
+                $vendors = Vendor::whereIn('db_name', array_slice($header, 1, $len - 2))->get();
+                $vendor_ids = $vendors->pluck('id', 'db_name')->toArray();
                 $trends = [];
 
                 while (($row = fgetcsv($handle1)) !== false) {
                     for ($i = 1; $i < $len - 1; $i++) {
-                        if (isset($dbms_ids[$header[$i]])) { // Check if DBMS ID exists
+                        if (isset($vendor_ids[$header[$i]])) { // Check if DBMS ID exists
                             $trends[] = [
-                                'dbms_id' => $dbms_ids[$header[$i]],
+                                'vendor_id' => $vendor_ids[$header[$i]],
                                 'score' => $row[$i],
                                 'date' => $row[0],
                             ];

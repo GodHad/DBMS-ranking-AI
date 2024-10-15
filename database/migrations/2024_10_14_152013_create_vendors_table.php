@@ -23,6 +23,7 @@ class CreateVendorsTable extends Migration
             $table->string('initial_release', 255);
             $table->string('current_release', 255);
             $table->integer('profile_views')->default(0);
+            $table->string('db_name', 255);
             $table->boolean('approved')->default(false);
             $table->timestamps();
 

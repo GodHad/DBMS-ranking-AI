@@ -20,6 +20,7 @@ const VendorsPage = () => {
         category_id: '',
         initial_release: '',
         current_release: '',
+        db_name: ''
     });
     const [formErrors, setFormErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -100,6 +101,7 @@ const VendorsPage = () => {
             category_id: vendor.category_id,
             initial_release: vendor.initial_release,
             current_release: vendor.current_release,
+            db_name: vendor.db_name
         });
         setOpen(true);
     };
@@ -186,6 +188,12 @@ const VendorsPage = () => {
                                 </Typography>
                                 <Typography variant="body2" color="textSecondary">
                                     {vendor.description}
+                                </Typography>
+                                <Typography variant="body2" color="textSecondary" sx={{ mt: 1, display: 'flex' }}>
+                                    <strong>DB Name:</strong>
+                                    <div>
+                                        {vendor.db_name}
+                                    </div>
                                 </Typography>
                                 <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
                                     <strong>Website:</strong> {vendor.website_url}
@@ -282,6 +290,18 @@ const VendorsPage = () => {
                         rows={4}
                         error={!!formErrors.description}
                         helperText={formErrors.description}
+                    />
+
+                    <TextField
+                        margin="dense"
+                        label="DB name"
+                        name="db_name"
+                        value={formData.db_name}
+                        onChange={handleInputChange}
+                        fullWidth
+                        required
+                        error={!!formErrors.db_name}
+                        helperText={formErrors.db_name}
                     />
 
                     <FormControl fullWidth margin="dense" required error={!!formErrors.category_id}>

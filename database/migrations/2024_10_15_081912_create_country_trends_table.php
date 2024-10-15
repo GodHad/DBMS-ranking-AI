@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('country_trends', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('dbms_id')->nullable();
+            $table->unsignedInteger('vendor_id')->nullable();
             $table->string('country_code', 10);
             $table->integer('score');
             $table->string('date');
             $table->timestamps();
-            $table->foreign('dbms_id')->references('id')->on('dbms');
+            $table->foreign('vendor_id')->references('id')->on('vendors');
         });
     }
 

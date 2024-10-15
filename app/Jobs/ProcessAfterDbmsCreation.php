@@ -10,7 +10,6 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use App\Models\Dbms; // Assuming you're using a Dbms model
 
 class ProcessAfterDbmsCreation implements ShouldQueue
 {
@@ -24,7 +23,7 @@ class ProcessAfterDbmsCreation implements ShouldQueue
      * @param Dbms $dbms
      * @return void
      */
-    public function __construct(Dbms $dbms)
+    public function __construct($dbms)
     {
         $this->dbms = $dbms;
     }
@@ -38,7 +37,7 @@ class ProcessAfterDbmsCreation implements ShouldQueue
     {
         Log::info('start fetch:trends command executed successfully. Output: ');
         try {
-            Artisan::call('fetch:trends', ['keywords' => $this->dbms->name]);
+            Artisan::call('fetch:trends', ['keywords' => $this->dbms]);
 
             // Log a summary of the command's output
             $output = Artisan::output();
@@ -46,16 +45,5 @@ class ProcessAfterDbmsCreation implements ShouldQueue
         } catch (\Exception $e) {
             Log::error('Error running fetch:trends command: ' . $e->getMessage());
         }
-    }
-
-    /**
-     * Handle a job failure.
-     *
-     * @param \Exception $exception
-     * @return void
-     */
-    public function failed(\Exception $exception)
-    {
-        Log::error('ProcessAfterDbmsCreation job failed: ' . $exception->getMessage());
     }
 }

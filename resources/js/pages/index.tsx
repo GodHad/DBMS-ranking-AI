@@ -7,6 +7,7 @@ import SponsorPage from './Sponsor_page/index'
 import VendorPage from './components/Vendor'
 import Vsponsor from '../pages/Sponsor_page/logged/index'
 import VendorsPage from './vendor_page';
+import { RankingPage } from './Ranking_page';
 
 function App() {
     return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/vendors" element={<VendorsPage/>}/>
+          <Route path="/ranking" element={<RankingPage />} />
         </Routes>
       </Router>
     );

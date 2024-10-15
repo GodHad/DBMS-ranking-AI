@@ -21,6 +21,7 @@ class Vendor extends Model
         'initial_release',
         'current_release',
         'profile_views',
+        'db_name',
         'approved'
     ];
 

@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('trends', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('dbms_id')->nullable();
+            $table->unsignedInteger('vendor_id')->nullable();
             $table->integer('score');
             $table->string('date');
             $table->timestamps();
-            $table->foreign('dbms_id')->references('id')->on('dbms');
+            $table->foreign('vendor_id')->references('id')->on('vendors');
         });
     }
 

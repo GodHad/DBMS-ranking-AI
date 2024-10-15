@@ -1,7 +1,7 @@
 import React from 'react';
 
-
-const function RankingPage = () => {
-
+export const RankingPage = () => {
+    return (
+        <div>Ranking Page</div>
+    )
 }
-export default RankingPage;
