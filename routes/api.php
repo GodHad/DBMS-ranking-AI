@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\SponsorController;
+use App\Http\Controllers\CategoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,4 +28,7 @@ Route::group([
     Route::post('/create-sponsor', [SponsorController::class, 'create']);
     Route::put('/update-sponsor', [SponsorController::class, 'update']);
     Route::delete('/delete-sponsor', [SponsorController::class, 'delete']);
+
+    // categories routes
+    Route::get('/get-categories', [CategoryController::class, 'categories']);
 });
