@@ -13,7 +13,6 @@ class Vendor extends Model
     protected $table = 'vendors';
 
     protected $fillable = [
-        'user_id',
         'company_name',
         'website_url',
         'contact_info',
@@ -25,13 +24,12 @@ class Vendor extends Model
         'approved'
     ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    protected $hidden = [
+        'category_id'
+    ];
 
     public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, 'category_id');
     }
 }
