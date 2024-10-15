@@ -193,7 +193,7 @@ const VendorsPage = () => {
                                 <Typography variant="body2" color="textSecondary" sx={{ mt: 1, display: 'flex' }}>
                                     <strong>Category:</strong>
                                     <div>
-                                        Title: {vendor.category.title}<br /> Name: {vendor.category.shortname}
+                                        {vendor.category.title}
                                     </div>
                                 </Typography>
 

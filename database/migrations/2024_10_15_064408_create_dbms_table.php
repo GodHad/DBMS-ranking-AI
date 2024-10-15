@@ -10,7 +10,7 @@ class CreateDbmsTable extends Migration
     {
         Schema::create('dbms', function (Blueprint $table) {
             $table->increments('id'); // or $table->bigIncrements('id');
-            $table->string('name', 255);
+            $table->string('name', 255)->unique();
             $table->unsignedInteger('vendor_id')->nullable();
             $table->timestamps();
 
