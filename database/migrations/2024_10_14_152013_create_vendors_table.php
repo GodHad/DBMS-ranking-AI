@@ -14,20 +14,18 @@ class CreateVendorsTable extends Migration
     public function up()
     {
         Schema::create('vendors', function (Blueprint $table) {
-            $table->id(); 
-            $table->unsignedBigInteger('user_id'); 
+            $table->id();
             $table->string('company_name', 255);
             $table->string('website_url', 255);
             $table->text('contact_info');
             $table->text('description');
-            $table->unsignedBigInteger('category_id')->nullable(); 
+            $table->unsignedBigInteger('category_id')->nullable();
             $table->string('initial_release', 255);
             $table->string('current_release', 255);
-            $table->integer('profile_views')->default(0); 
-            $table->boolean('approved')->default(false); 
-            $table->timestamps(); 
-            
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->integer('profile_views')->default(0);
+            $table->boolean('approved')->default(false);
+            $table->timestamps();
+
             $table->foreign('category_id')->references('id')->on('categories');
         });
     }

@@ -74,7 +74,7 @@ const VendorsPage = () => {
             let response;
             if (formData.id) {
                 // Edit existing vendor
-                response = await axios.put(`/api/edit-vendor?id=${formData.id}`, formData);
+                response = await axios.put(`/api/update-vendor?id=${formData.id}`, formData);
             } else {
                 // Create new vendor
                 response = await axios.post('/api/create-vendor', formData);

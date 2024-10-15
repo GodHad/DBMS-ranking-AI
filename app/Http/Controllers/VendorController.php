@@ -50,10 +50,10 @@ class VendorController extends Controller
                 return response()->json(['success' => false, 'errors' => $validator->errors()]);
             }
 
-            $user = User::where('email', Auth::user()->email)->first();
+            // $user = User::where('email', Auth::user()->email)->first();
 
             Vendor::create([
-                'user_id' => $user->id,
+                // 'user_id' => $user->id,
                 'company_name' => $data['company_name'],
                 'website_url' => $data['website_url'],
                 'contact_info' => $data['contact_info'],
@@ -65,7 +65,7 @@ class VendorController extends Controller
 
             return response()->json(['success' => true]);
         } catch (\Exception $th) {
-            return response()->json(['success' => false, 'errors' => ['current_release' => 'Failed to create vendor']]);
+            return response()->json(['success' => false, 'errors' => ['current_release' => 'Failed to create vendor'], 'erorr' => $th->getMessage()]);
         }
     }
 
@@ -75,7 +75,7 @@ class VendorController extends Controller
             $data = $request->all();
             $vendor_id = $request->query('id');
             $vendor = Vendor::find($vendor_id);
-            
+
             if (!$vendor) {
                 return response()->json(['success' => false, 'errors' => ['current_release' => 'Vendor not found']]);
             }
@@ -94,9 +94,9 @@ class VendorController extends Controller
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'errors' => $validator->errors()]);
             }
-    
+
             $vendor->update($validator->validated());
-            
+
             return response()->json(['success' => true, 'vendor' => $vendor]);
         } catch (\Exception $th) {
             return response()->json(['success' => false, 'error' => 'Failed to update vendor', 'hey' => $th->getMessage()]);
@@ -106,7 +106,7 @@ class VendorController extends Controller
     public function delete(Request $request)
     {
         try {
-            $vendor_id = $request->query('id'); 
+            $vendor_id = $request->query('id');
             $vendor = Vendor::find($vendor_id);
 
             if (!$vendor) {
