@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Vendor;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class VendorController extends Controller
@@ -39,7 +41,7 @@ class VendorController extends Controller
                 'website_url' => ['required', 'string', 'url'],
                 'contact_info' => ['required', 'string'],
                 'description' => ['required', 'string'],
-                'category_id' => ['required', 'number'],
+                'category_id' => ['required', 'integer'],
                 'initial_release' => ['required', 'string'],
                 'current_release' => ['required', 'string']
             ]);
@@ -48,8 +50,10 @@ class VendorController extends Controller
                 return response()->json(['success' => false, 'errors' => $validator->errors()]);
             }
 
+            $user = User::where('email', Auth::user()->email)->first();
+
             Vendor::create([
-                'user_id' => Auth::user()->id,
+                'user_id' => $user->id,
                 'company_name' => $data['company_name'],
                 'website_url' => $data['website_url'],
                 'contact_info' => $data['contact_info'],
@@ -60,7 +64,7 @@ class VendorController extends Controller
             ]);
 
             return response()->json(['success' => true]);
-        } catch (\Throwable $th) {
+        } catch (\Exception $th) {
             return response()->json(['success' => false, 'errors' => ['current_release' => 'Failed to create vendor']]);
         }
     }
@@ -68,8 +72,8 @@ class VendorController extends Controller
     public function update(Request $request)
     {
         try {
-            $vendor_id = $request->query('id');
             $data = $request->all();
+            $vendor_id = $request->query('id');
             $vendor = Vendor::find($vendor_id);
             
             if (!$vendor) {
@@ -91,11 +95,11 @@ class VendorController extends Controller
                 return response()->json(['success' => false, 'errors' => $validator->errors()]);
             }
     
-            $vendor.update($data);
+            $vendor->update($validator->validated());
             
             return response()->json(['success' => true, 'vendor' => $vendor]);
-        } catch (\Throwable $th) {
-            return response()->json(['success' => false, 'error' => 'Failed to update vendor']);
+        } catch (\Exception $th) {
+            return response()->json(['success' => false, 'error' => 'Failed to update vendor', 'hey' => $th->getMessage()]);
         }
     }
 

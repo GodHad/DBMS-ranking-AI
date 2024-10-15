@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Sponsor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class SponsorController extends Controller
 {
@@ -44,8 +46,8 @@ class SponsorController extends Controller
                 return response()->json(['success' => false, 'errors' => $validator->errors()]);
             }
 
-            $logoPath = $request->file('logo')->store('logos', 'public/sponsors/logos');
-            $bannerPath = $request->file('banner')->store('banners', 'public/sponsors/banners');
+            $logoPath = $request->file('logo_file')->store('sponsors/logos', 'public');
+            $bannerPath = $request->file('banner_file')->store('sponsors/banners', 'public');
 
             Sponsor::create([
                 'name' => $data['name'],
@@ -55,8 +57,8 @@ class SponsorController extends Controller
             ]);
 
             return response()->json(['success' => true]);
-        } catch (\Throwable $th) {
-            return response()->json(['success' => false, 'errors' => ['current_release' => 'Failed to create vendor']]);
+        } catch (\Exception $th) {
+            return response()->json(['success' => false, 'errors' => ['current_release' => 'Failed to create sponsor.']]);
         }
     }
 
@@ -83,7 +85,7 @@ class SponsorController extends Controller
                 if ($sponsor->logo_url) {
                     Storage::disk('public')->delete($sponsor->logo_url);
                 }
-                $logoPath = $request->file('logo_file')->store('logos', 'public/sponsors/logos');
+                $logoPath = $request->file('logo_file')->store('sponsors/logos', 'public');
                 $sponsor->logo_url = $logoPath;
             }
 
@@ -91,17 +93,23 @@ class SponsorController extends Controller
                 if ($sponsor->banner) {
                     Storage::disk('public')->delete($sponsor->banner);
                 }
-                $bannerPath = $request->file('banner_file')->store('banners', 'public/sponsors/banners');
+                $bannerPath = $request->file('banner_file')->store('sponsors/banners', 'public');
                 $sponsor->banner = $bannerPath;
             }
 
-            $sponsor->name = $data['name'];
-            $sponsor->link = $data['link'];
+            if (!empty($data['name'])) {
+                $sponsor->name = $data['name'];
+            }
+            
+            if (!empty($data['link'])) {
+                $sponsor->link = $data['link'];
+            }
+
             $sponsor->save();
 
             return response()->json(['success' => true]);
 
-        } catch (\Throwable $th) {
+        } catch (\Exception $th) {
             return response()->json(['success' => false, 'errors' => ['current_release' => 'Failed to update sponsor']]);
         }
     }
