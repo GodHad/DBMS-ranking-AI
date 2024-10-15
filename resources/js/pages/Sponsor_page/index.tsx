@@ -1,11 +1,11 @@
 import React from 'react';
-import HomePage from './header_nav'
+import Header from './../components/Admin/header'
 import Main from './main'
 
 const SponsorPage =() => {
     return(
         <>
-        <HomePage/>
+        <Header/>
         <Main/>
         </>
     )
