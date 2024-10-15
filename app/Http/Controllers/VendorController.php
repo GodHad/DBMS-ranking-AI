@@ -13,7 +13,7 @@ class VendorController extends Controller
     public function vendors()
     {
         try {
-            $vendors = Vendor::all();
+            $vendors = Vendor::with('category')->get();
             return response()->json(['success' => true, 'vendors' => $vendors]);
         } catch (\Throwable $th) {
             return response()->json(['success' => false, 'error' => 'Failed to get vendors']);
@@ -24,7 +24,7 @@ class VendorController extends Controller
     {
         try {
             $vendor_id = $request->query('id');
-            $vendor = Vendor::find($vendor_id);
+            $vendor = Vendor::with('category')->find($vendor_id);
             return response()->json(['success' => true, 'vendor' => $vendor]);
         } catch (\Throwable $th) {
             return response()->json(['success' => false, 'error' => 'Failed to get vendor']);
