@@ -18,10 +18,12 @@ import { Link as RouterLink } from "react-router-dom";
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
 import { styled } from '@mui/material/styles';
+import logoFile from '../../img/1.png';
+
 
 const pages = ['Home', 'DB-Engines Ranking', 'Blog','Sponsors'];
 
-const Headerbar= () => {
+const HomePage= () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -81,25 +83,7 @@ const Headerbar= () => {
     <AppBar position="static" style={{backgroundColor:'#242526'}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-            <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-            <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-                mr: 2,
-                display: { xs: 'none', md: 'flex' },
-                fontFamily: 'monospace',
-                fontWeight: 700,
-                letterSpacing: '.3rem',
-                color: 'inherit',
-                textDecoration: 'none',
-            }}
-            >
-            LOGO
-            </Typography>
-
+            <Box component="img" sx={{ height: '70px',width:'150px'}} alt="Logo" src={logoFile} />
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
                 size="large"
@@ -159,6 +143,14 @@ const Headerbar= () => {
                         Sponsors
                     </Typography>
                 </RouterLink>
+                <RouterLink to="/vendo_login" style={{ textDecoration: 'none' }}>
+                    <Typography
+                    noWrap
+                    sx={{fontWeight:'bold', color:'black',fontSize:'15px',fontFamily:'system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol'}}
+                    >
+                        Vendor Login
+                    </Typography>
+                </RouterLink>
             </Menu>
             </Box>
             <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -213,6 +205,14 @@ const Headerbar= () => {
                         Sponsors
                     </Typography>
                 </RouterLink>
+                <RouterLink to="/vendor_login" style={{ textDecoration: 'none',paddingLeft:'50px' }}>
+                    <Typography
+                    noWrap
+                    sx={{fontWeight:'bold', color:'white',fontSize:'20px',fontFamily:'system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol'}}
+                    >
+                        Vendor Login
+                    </Typography>
+                </RouterLink>
             </Box>
             <Search>
                 <SearchIconWrapper>
@@ -233,4 +233,4 @@ const Headerbar= () => {
     </AppBar>
   );
 }
-export default Headerbar;
+export default HomePage;

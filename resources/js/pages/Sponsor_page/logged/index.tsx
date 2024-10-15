@@ -1,8 +1,10 @@
 import React from 'react';
+// import HomePage from './../header_nav'
+// import Main from './../main'
 import HomePage from './header_nav'
 import Main from './main'
 
-const SponsorPage =() => {
+const Vsponsor =() => {
     return(
         <>
         <HomePage/>
@@ -10,4 +12,4 @@ const SponsorPage =() => {
         </>
     )
 }
-export default SponsorPage;
+export default Vsponsor;

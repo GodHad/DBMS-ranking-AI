@@ -50,7 +50,7 @@ const LoginPage = () => {
             if (response.status === 200 && response.data.token) {
                 // Store token in localStorage and navigate to dashboard
                 localStorage.setItem('token', response.data.token);
-                navigate('/'); // Redirect after login success
+                navigate('/vendors'); // Redirect after login success
             } else {
                 // If there's no token or the response isn't valid, set an error
                 setError('Login failed. Please check your credentials and try again.');
