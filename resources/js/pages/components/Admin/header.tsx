@@ -24,7 +24,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 
 const pages = ['Home', 'DB-Engines Ranking', 'Blog','Sponsors'];
 
-const HomePage= () => {
+const Header= () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -136,12 +136,20 @@ const HomePage= () => {
                         Blog
                     </Typography>
                 </RouterLink>
-                <RouterLink to="/sponsor_page" style={{ textDecoration: 'none' }}>
+                <RouterLink to="/sponsors" style={{ textDecoration: 'none' }}>
                     <Typography
                     noWrap
                     sx={{fontWeight:'bold', color:'black',fontSize:'15px',fontFamily:'system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol'}}
                     >
                         Sponsors
+                    </Typography>
+                </RouterLink>
+                <RouterLink to="/vendors" style={{ textDecoration: 'none' }}>
+                    <Typography
+                    noWrap
+                    sx={{fontWeight:'bold', color:'black',fontSize:'15px',fontFamily:'system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol'}}
+                    >
+                        Vendors
                     </Typography>
                 </RouterLink>
             </Menu>
@@ -190,12 +198,20 @@ const HomePage= () => {
                         Blog
                     </Typography>
                 </RouterLink>
-                <RouterLink to="/v_sponsor_page" style={{ textDecoration: 'none',paddingLeft:'50px' }}>
+                <RouterLink to="/sponsors" style={{ textDecoration: 'none',paddingLeft:'50px' }}>
                     <Typography
                     noWrap
                     sx={{fontWeight:'bold', color:'white',fontSize:'20px',fontFamily:'system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol'}}
                     >
                         Sponsors
+                    </Typography>
+                </RouterLink>
+                <RouterLink to="/vendors" style={{ textDecoration: 'none',paddingLeft:'50px' }}>
+                    <Typography
+                    noWrap
+                    sx={{fontWeight:'bold', color:'white',fontSize:'20px',fontFamily:'system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol'}}
+                    >
+                        Vendors
                     </Typography>
                 </RouterLink>
             </Box>
@@ -209,4 +225,4 @@ const HomePage= () => {
     </AppBar>
   );
 }
-export default HomePage;
+export default Header;

@@ -17,6 +17,7 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/vendors" element={<VendorsPage/>}/>
+          <Route path="/sponsors" element={<SponsorPage/>}/>
         </Routes>
       </Router>
     );

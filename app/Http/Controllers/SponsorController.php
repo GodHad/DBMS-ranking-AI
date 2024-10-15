@@ -67,7 +67,7 @@ class SponsorController extends Controller
         try {
             $data = $request->all();
             $id = $request->query('id');
-            
+
             $validator = Validator::make($data, [
                 'name' => ['sometimes', 'string', 'max:255'],
                 'link' => ['sometimes', 'string', 'max:255'],
@@ -100,7 +100,7 @@ class SponsorController extends Controller
             if (!empty($data['name'])) {
                 $sponsor->name = $data['name'];
             }
-            
+
             if (!empty($data['link'])) {
                 $sponsor->link = $data['link'];
             }
@@ -117,7 +117,7 @@ class SponsorController extends Controller
     public function delete(Request $request)
     {
         try {
-            $sponsor_id = $request->query('id'); 
+            $sponsor_id = $request->query('id');
             $sponsor = Sponsor::find($sponsor_id);
 
             if (!$sponsor) {
