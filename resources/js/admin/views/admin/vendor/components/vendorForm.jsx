@@ -8,7 +8,8 @@ import {
     Icon,
     Text,
     Select,
-    Box
+    Box,
+    useToast
 } from '@chakra-ui/react'
 import { useDisclosure, useColorModeValue } from '@chakra-ui/react'
 import { Store } from 'react-notifications-component';
@@ -17,6 +18,7 @@ import { useQueryClient, useMutation } from 'react-query';
 import { createVendor, updateVendor } from '../requests/use-request';
 
 export default function VendorForm({ vendor, categories, setOpenedPage }) {
+    const toast = useToast();
     const queryClient = useQueryClient();
 
     const {
@@ -149,32 +151,23 @@ export default function VendorForm({ vendor, categories, setOpenedPage }) {
             if (data.success) {
                 queryClient.invalidateQueries('vendors');
                 setOpenedPage(0)
-                Store.addNotification({
-                    title: "Create Vendor Successfully",
-                    type: "success",
+                toast({
+                    title: "Create vendor successfully",
+                    position: 'top-right',
+                    status: "success",
                     insert: "top",
-                    container: "top-right",
-                    animationIn: ["animate__animated", "animate__fadeIn"],
-                    animationOut: ["animate__animated", "animate__fadeOut"],
-                    dismiss: {
-                        duration: 5000,
-                        onScreen: true
-                    }
+                    duration: 5000,
+                    isClosable: true
                 })
             }
             else {
-                Store.addNotification({
-                    title: "Failed to create Vendor",
-                    message: data.error,
-                    type: "danger",
+                toast({
+                    title: "Failed to create vendor successfully",
+                    position: 'top-right',
+                    status: "error",
                     insert: "top",
-                    container: "top-right",
-                    animationIn: ["animate__animated", "animate__fadeIn"],
-                    animationOut: ["animate__animated", "animate__fadeOut"],
-                    dismiss: {
-                        duration: 5000,
-                        onScreen: true
-                    }
+                    duration: 5000,
+                    isClosable: true
                 })
             }
         }
@@ -185,32 +178,23 @@ export default function VendorForm({ vendor, categories, setOpenedPage }) {
             if (data.success) {
                 queryClient.invalidateQueries('vendors');
                 setOpenedPage(0)
-                Store.addNotification({
-                    title: "Update Vendor Successfully",
-                    type: "success",
+                toast({
+                    title: "Update vendor successfully",
+                    position: 'top-right',
+                    status: "success",
                     insert: "top",
-                    container: "top-right",
-                    animationIn: ["animate__animated", "animate__fadeIn"],
-                    animationOut: ["animate__animated", "animate__fadeOut"],
-                    dismiss: {
-                        duration: 5000,
-                        onScreen: true
-                    }
+                    duration: 5000,
+                    isClosable: true
                 })
             }
             else {
-                Store.addNotification({
-                    title: "Failed to update Vendor",
-                    message: data.error,
-                    type: "danger",
+                toast({
+                    title: "Failed to update vendor successfully",
+                    position: 'top-right',
+                    status: "error",
                     insert: "top",
-                    container: "top-right",
-                    animationIn: ["animate__animated", "animate__fadeIn"],
-                    animationOut: ["animate__animated", "animate__fadeOut"],
-                    dismiss: {
-                        duration: 5000,
-                        onScreen: true
-                    }
+                    duration: 5000,
+                    isClosable: true
                 })
             }
 

@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import {
     Flex,
     Box,
@@ -22,9 +23,16 @@ import {
     useColorModeValue,
     useToast
 } from '@chakra-ui/react';
-import { MdDelete, MdEdit, MdArrowLeft, MdArrowRight, MdChevronLeft, MdChevronRight } from 'react-icons/md';
-import React, { useState } from 'react';
-
+import {
+    MdDelete,
+    MdEdit,
+    MdArrowLeft,
+    MdArrowRight,
+    MdChevronLeft,
+    MdChevronRight,
+    MdCheckCircle,
+    MdOutlineRemoveCircle
+} from 'react-icons/md';
 import {
     createColumnHelper,
     flexRender,
@@ -37,25 +45,24 @@ import {
 // Custom components
 import Card from '../../../components/card/Card';
 import Menu from '../../../components/menu/MainMenu';
-import EncyclopediaForm from './components/EncyclopediaForm';
+import SponsorForm from './components/SponsorForm';
 import { MdAdd } from 'react-icons/md'
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { getEncyclopedia, getEncyclopedias, deleteEncyclopedia } from './requests/use-request';
+import { getSponsors, deleteSponsor } from './requests/use-request';
 
 const columnHelper = createColumnHelper();
 
-const initialEncyclopedia = {
+const initialSponsor = {
     id: null,
-    title: '',
-    content: ''
+    name: '',
+    description: '',
+    link: '',
+    logo_url: '',
+    banner: '',
+    featured: 0
 }
 
-const stripHTML = (html) => {
-    const doc = new DOMParser().parseFromString(html, 'text/html');
-    return doc.body.textContent || "";
-};
-
-export default function Encyclopedia() {
+export default function Sponsor() {
     const toast = useToast();
     const queryClient = useQueryClient();
 
@@ -65,18 +72,18 @@ export default function Encyclopedia() {
 
     const [openedPage, setOpenedPage] = useState(0);
 
-    const [encyclopedia, setEncyclopedia] = useState(initialEncyclopedia);
-    const { data: encyclopedias, isLoadingEncyclopedia } = useQuery('encyclopedias', getEncyclopedias);
+    const [sponsor, setSponsor] = useState(initialSponsor);
+    const { data: sponsors, isLoadingSponsors } = useQuery('sponsors', getSponsors);
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: 10,
     })
 
-    const handleDeleteEncyclopedia = useMutation(deleteEncyclopedia, {
+    const handleDeleteSponsor = useMutation(deleteSponsor, {
         onSuccess: () => {
-            queryClient.invalidateQueries('encyclopedias');
+            queryClient.invalidateQueries('sponsors');
             toast({
-                title: "Delete Encyclopedia successfully",
+                title: "Delete sponsor successfully",
                 position: 'top-right',
                 status: "success",
                 insert: "top",
@@ -86,7 +93,7 @@ export default function Encyclopedia() {
         },
         onError: () => {
             toast({
-                title: "Delete Encyclopedia successfully",
+                title: "Failed to delete sponsor",
                 position: 'top-right',
                 status: "error",
                 insert: "top",
@@ -115,8 +122,8 @@ export default function Encyclopedia() {
                 </Text>
             ),
         }),
-        columnHelper.accessor('title', {
-            id: 'title',
+        columnHelper.accessor('name', {
+            id: 'name',
             header: () => (
                 <Text
                     justifyContent="center"
@@ -124,7 +131,7 @@ export default function Encyclopedia() {
                     fontSize={{ sm: '10px', lg: '12px' }}
                     color="gray.400"
                 >
-                    Title
+                    Name
                 </Text>
             ),
             cell: (info) => (
@@ -133,8 +140,8 @@ export default function Encyclopedia() {
                 </Text>
             ),
         }),
-        columnHelper.accessor('content', {
-            id: 'content',
+        columnHelper.accessor('link', {
+            id: 'link',
             header: () => (
                 <Text
                     justifyContent="center"
@@ -142,16 +149,43 @@ export default function Encyclopedia() {
                     fontSize={{ sm: '10px', lg: '12px' }}
                     color="gray.400"
                 >
-                    Content
+                    Link
+                </Text>
+            ),
+            cell: (info) => (
+                <a href={info.getValue()} target='_blank'>
+                    <Text color={textColor} fontSize="sm" fontWeight="700" _hover={{ color: 'blue.400' }}>
+                        {info.getValue()}
+                    </Text>
+                </a>
+            )
+        }),
+        columnHelper.accessor('featured', {
+            id: 'featured',
+            header: () => (
+                <Text
+                    justifyContent="center"
+                    align="center"
+                    fontSize={{ sm: '10px', lg: '12px' }}
+                    color="gray.400"
+                >
+                    Featured
                 </Text>
             ),
             cell: (info) => {
                 return (
-                    <Box maxW={"400px"}>
-                        <Text color={textColor} fontSize="sm" fontWeight="700" isTruncated>
-                            {stripHTML(info.getValue())}
+                    <Flex align="center">
+                            <Icon
+                                w="24px"
+                                h="24px"
+                                me="5px"
+                                color={info.getValue() === 1 ? 'green.500' : 'gray.500'}
+                                as={info.getValue() === 1 ? MdCheckCircle : MdOutlineRemoveCircle}
+                            />
+                        <Text color={textColor} fontSize="sm" fontWeight="700">
+                            {info.getValue() === 1 ? 'Featured' : 'Not Featured'}
                         </Text>
-                    </Box>
+                    </Flex>
                 )
             },
         }),
@@ -174,7 +208,7 @@ export default function Encyclopedia() {
                         me='16px'
                         ms='auto'
                         p='0px !important'
-                        onClick={() => { setEncyclopedia(info.row.original); setOpenedPage(1) }}
+                        onClick={() => { setSponsor(info.row.original); setOpenedPage(1) }}
                     >
                         <Icon as={MdEdit} color='secondaryGray.500' h='18px' w='18px' />
                     </Link>
@@ -183,7 +217,7 @@ export default function Encyclopedia() {
                         me='16px'
                         ms='auto'
                         p='0px !important'
-                        onClick={() => handleDeleteEncyclopedia.mutate(info.row.original.id)}
+                        onClick={() => handleDeleteSponsor.mutate(info.row.original.id)}
                     >
                         <Icon as={MdDelete} color='secondaryGray.500' h='18px' w='18px' />
                     </Link>
@@ -193,7 +227,7 @@ export default function Encyclopedia() {
     ];
 
     const table = useReactTable({
-        data: encyclopedias || [],
+        data: sponsors || [],
         columns,
         state: {
             sorting,
@@ -225,7 +259,7 @@ export default function Encyclopedia() {
                                 fontWeight="700"
                                 lineHeight="100%"
                             >
-                                Encyclopedias
+                                Sponsors
                             </Text>
                             <Menu />
                         </Flex>
@@ -236,9 +270,9 @@ export default function Encyclopedia() {
                                 ml={{ base: "20px" }}
                                 variant='brand'
                                 fontWeight='500'
-                                onClick={() => { setOpenedPage(1); setEncyclopedia(initialEncyclopedia) }}
+                                onClick={() => { setOpenedPage(1); setSponsor(sponsor) }}
                             >
-                                <Icon as={MdAdd} h='18px' w='18px' />New Encyclopedia
+                                <Icon as={MdAdd} h='18px' w='18px' />New Sponsor
                             </Button>
                         </Flex>
                         <Box>
@@ -316,7 +350,7 @@ export default function Encyclopedia() {
                                                     fontWeight="700"
                                                     lineHeight="100%"
                                                 >
-                                                    No Encyclopedias
+                                                    No Sponsors
                                                 </Text>
                                             </Td>
                                         </Tr>
@@ -413,7 +447,7 @@ export default function Encyclopedia() {
                         </Box>
                     </>
                 )}
-                {openedPage === 1 && <EncyclopediaForm encyclopedia={encyclopedia} setOpenedPage={() => { setOpenedPage(0); }} />}
+                {openedPage === 1 && <SponsorForm sponsor={sponsor} setOpenedPage={() => { setOpenedPage(0); }} />}
             </Card>
         </Box >
     );

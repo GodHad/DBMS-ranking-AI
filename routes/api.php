@@ -31,7 +31,7 @@ Route::group([
     Route::get('/get-sponsors', [SponsorController::class, 'sponsors']);
     Route::get('/get-sponsor', [SponsorController::class, 'sponsor']);
     Route::post('/create-sponsor', [SponsorController::class, 'create']);
-    Route::put('/update-sponsor', [SponsorController::class, 'update']);
+    Route::post('/update-sponsor', [SponsorController::class, 'update']);
     Route::delete('/delete-sponsor', [SponsorController::class, 'delete']);
 
     // categories routes

@@ -21,9 +21,10 @@ import {
     NumberIncrementStepper,
     NumberDecrementStepper,
     Select as SimpleSelect,
+    useToast,
 } from '@chakra-ui/react';
 import { Select } from 'chakra-react-select';
-import { MdDelete, MdEdit, MdArrowLeft, MdArrowRight, MdChevronLeft, MdChevronRight, MdArrowUpward, MdArrowDownward } from 'react-icons/md';
+import { MdDelete, MdEdit, MdArrowLeft, MdArrowRight, MdChevronLeft, MdChevronRight, MdArrowUpward, MdArrowDownward, MdRemove } from 'react-icons/md';
 import React, { useState, useEffect } from 'react'
 
 import {
@@ -87,11 +88,12 @@ const initialVendor = {
 }
 
 export default function Vendor() {
+    const toast = useToast();
     const queryClient = useQueryClient();
 
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
-    
+
     const [showingCategory, setShowingCategory] = useState('');
     const [data, setData] = useState([]);
     const [openedPage, setOpenedPage] = useState(0)
@@ -107,32 +109,23 @@ export default function Vendor() {
     const deleteUser = useMutation(deleteVendor, {
         onSuccess: () => {
             queryClient.invalidateQueries('vendors');
-            Store.addNotification({
+            toast({
                 title: "Delete vendor successfully",
-                type: "success",
+                position: 'top-right',
+                status: "success",
                 insert: "top",
-                container: "top-right",
-                animationIn: ["animate__animated", "animate__fadeIn"],
-                animationOut: ["animate__animated", "animate__fadeOut"],
-                dismiss: {
-                    duration: 5000,
-                    onScreen: true
-                }
+                duration: 5000,
+                isClosable: true
             })
         },
         onError: () => {
-            Store.addNotification({
+            toast({
                 title: "Failed to delete vendor",
-                message: res.data.error,
-                type: "danger",
+                position: 'top-right',
+                status: "error",
                 insert: "top",
-                container: "top-right",
-                animationIn: ["animate__animated", "animate__fadeIn"],
-                animationOut: ["animate__animated", "animate__fadeOut"],
-                dismiss: {
-                    duration: 5000,
-                    onScreen: true
-                }
+                duration: 5000,
+                isClosable: true
             })
         }
     })
@@ -322,7 +315,7 @@ export default function Vendor() {
                                 {overall_avg_score < info.getValue() &&
                                     <>
                                         <Text color={'red.600'} fontSize="sm" fontWeight="700" position={"relative"} marginLeft={"25px"}>
-                                            <Icon as={MdArrowDownward} h='18px' w='18px' color={'red.600'} boxSize={5} position={"absolute"} left={"-25px"} />
+                                            <Icon as={MdRemove} h='18px' w='18px' color={'red.600'} boxSize={5} position={"absolute"} left={"-25px"} />
                                             {Number(info.getValue() - overall_avg_score).toFixed(2)}
                                         </Text>
                                     </>
@@ -330,7 +323,7 @@ export default function Vendor() {
                                 {overall_avg_score > info.getValue() &&
                                     <>
                                         <Text color={'green.300'} fontSize="sm" fontWeight="700" position={"relative"} marginLeft={"25px"}>
-                                            <Icon as={MdArrowUpward} h='18px' w='18px' color={'green.300'} boxSize={5} position={"absolute"} left={"-25px"} />
+                                            <Icon as={MdAdd} h='18px' w='18px' color={'green.300'} boxSize={5} position={"absolute"} left={"-25px"} />
                                             {Number(overall_avg_score - info.getValue()).toFixed(2)}
                                         </Text>
                                     </>
@@ -358,7 +351,7 @@ export default function Vendor() {
                                 {overall_avg_score < info.getValue() &&
                                     <>
                                         <Text color={'red.600'} fontSize="sm" fontWeight="700" position={"relative"} marginLeft={"25px"}>
-                                            <Icon as={MdArrowDownward} h='18px' w='18px' color={'red.600'} boxSize={5} position={"absolute"} left={"-25px"} />
+                                            <Icon as={MdRemove} h='18px' w='18px' color={'red.600'} boxSize={5} position={"absolute"} left={"-25px"} />
                                             {Number(info.getValue() - overall_avg_score).toFixed(2)}
                                         </Text>
                                     </>
@@ -366,7 +359,7 @@ export default function Vendor() {
                                 {overall_avg_score > info.getValue() &&
                                     <>
                                         <Text color={'green.300'} fontSize="sm" fontWeight="700" position={"relative"} marginLeft={"25px"}>
-                                            <Icon as={MdArrowUpward} h='18px' w='18px' color={'green.300'} boxSize={5} position={"absolute"} left={"-25px"} />
+                                            <Icon as={MdAdd} h='18px' w='18px' color={'green.300'} boxSize={5} position={"absolute"} left={"-25px"} />
                                             {Number(overall_avg_score - info.getValue()).toFixed(2)}
                                         </Text>
                                     </>
@@ -567,91 +560,93 @@ export default function Vendor() {
                                     )}
                                 </Tbody>
                             </Table>
-                            <Flex justifyContent="space-between" m={4} alignItems="center" >
-                                <Flex>
-                                    <Tooltip label="First Page" >
-                                        <IconButton
-                                            onClick={() => table.firstPage()}
-                                            isDisabled={!table.getCanPreviousPage()}
-                                            icon={<MdArrowLeft h={3} w={3} />}
-                                            mr={4}
-                                        />
-                                    </Tooltip>
-                                    <Tooltip label="Previous Page" >
-                                        <IconButton
-                                            onClick={() => table.previousPage()}
-                                            isDisabled={!table.getCanPreviousPage()}
-                                            icon={<MdChevronLeft h={6} w={6} />}
-                                        />
-                                    </Tooltip>
-                                </Flex>
+                            {table.getRowModel().rows.length !== 0 &&
+                                <Flex justifyContent="space-between" m={4} alignItems="center" >
+                                    <Flex>
+                                        <Tooltip label="First Page" >
+                                            <IconButton
+                                                onClick={() => table.firstPage()}
+                                                isDisabled={!table.getCanPreviousPage()}
+                                                icon={<MdArrowLeft h={3} w={3} />}
+                                                mr={4}
+                                            />
+                                        </Tooltip>
+                                        <Tooltip label="Previous Page" >
+                                            <IconButton
+                                                onClick={() => table.previousPage()}
+                                                isDisabled={!table.getCanPreviousPage()}
+                                                icon={<MdChevronLeft h={6} w={6} />}
+                                            />
+                                        </Tooltip>
+                                    </Flex>
 
-                                <Flex alignItems="center" >
-                                    <Text flexShrink="0" mr={8} >
-                                        Page{" "}
-                                        <Text fontWeight="bold" as="span" >
-                                            {table.getState().pagination.pageIndex + 1}
-                                        </Text>{" "}
-                                        of{" "}
-                                        <Text fontWeight="bold" as="span" >
-                                            {table.getPageCount().toLocaleString()}
+                                    <Flex alignItems="center" >
+                                        <Text flexShrink="0" mr={8} >
+                                            Page{" "}
+                                            <Text fontWeight="bold" as="span" >
+                                                {table.getState().pagination.pageIndex + 1}
+                                            </Text>{" "}
+                                            of{" "}
+                                            <Text fontWeight="bold" as="span" >
+                                                {table.getPageCount().toLocaleString()}
+                                            </Text>
                                         </Text>
-                                    </Text>
-                                    <Text flexShrink="0" > Go to page: </Text>{" "}
-                                    <NumberInput
-                                        ml={2}
-                                        mr={8}
-                                        w={28}
-                                        min={1}
-                                        max={table.getPageCount()}
-                                        onChange={value => {
-                                            const page = Number(value) - 1;
-                                            table.setPageIndex(page)
-                                        }}
-                                        defaultValue={table.getState().pagination.pageIndex + 1}
-                                    >
-                                        <NumberInputField />
-                                        <NumberInputStepper >
-                                            <NumberIncrementStepper />
-                                            <NumberDecrementStepper />
-                                        </NumberInputStepper>
-                                    </NumberInput>
-                                    <SimpleSelect
-                                        w={32}
-                                        color={textColor}
-                                        value={table.getState().pagination.pageSize}
-                                        onChange={e => {
-                                            table.setPageSize(Number(e.target.value))
-                                        }}
-                                    >
-                                        {
-                                            [10, 20, 30, 40, 50].map((pageSize) => (
-                                                <option key={pageSize} value={pageSize} >
-                                                    Show {pageSize}
-                                                </option>
-                                            ))
-                                        }
-                                    </SimpleSelect>
-                                </Flex>
+                                        <Text flexShrink="0" > Go to page: </Text>{" "}
+                                        <NumberInput
+                                            ml={2}
+                                            mr={8}
+                                            w={28}
+                                            min={1}
+                                            max={table.getPageCount()}
+                                            onChange={value => {
+                                                const page = Number(value) - 1;
+                                                table.setPageIndex(page)
+                                            }}
+                                            defaultValue={table.getState().pagination.pageIndex + 1}
+                                        >
+                                            <NumberInputField />
+                                            <NumberInputStepper >
+                                                <NumberIncrementStepper />
+                                                <NumberDecrementStepper />
+                                            </NumberInputStepper>
+                                        </NumberInput>
+                                        <SimpleSelect
+                                            w={32}
+                                            color={textColor}
+                                            value={table.getState().pagination.pageSize}
+                                            onChange={e => {
+                                                table.setPageSize(Number(e.target.value))
+                                            }}
+                                        >
+                                            {
+                                                [10, 20, 30, 40, 50].map((pageSize) => (
+                                                    <option key={pageSize} value={pageSize} >
+                                                        Show {pageSize}
+                                                    </option>
+                                                ))
+                                            }
+                                        </SimpleSelect>
+                                    </Flex>
 
-                                <Flex >
-                                    <Tooltip label="Next Page" >
-                                        <IconButton
-                                            onClick={() => table.nextPage()}
-                                            isDisabled={!table.getCanNextPage()}
-                                            icon={<MdChevronRight h={10} w={10} />}
-                                        />
-                                    </Tooltip>
-                                    <Tooltip label="Last Page" >
-                                        <IconButton
-                                            onClick={() => table.lastPage()}
-                                            isDisabled={!table.getCanNextPage()}
-                                            icon={<MdArrowRight h={10} w={10} />}
-                                            ml={4}
-                                        />
-                                    </Tooltip>
+                                    <Flex >
+                                        <Tooltip label="Next Page" >
+                                            <IconButton
+                                                onClick={() => table.nextPage()}
+                                                isDisabled={!table.getCanNextPage()}
+                                                icon={<MdChevronRight h={10} w={10} />}
+                                            />
+                                        </Tooltip>
+                                        <Tooltip label="Last Page" >
+                                            <IconButton
+                                                onClick={() => table.lastPage()}
+                                                isDisabled={!table.getCanNextPage()}
+                                                icon={<MdArrowRight h={10} w={10} />}
+                                                ml={4}
+                                            />
+                                        </Tooltip>
+                                    </Flex>
                                 </Flex>
-                            </Flex>
+                            }
                         </Box>
                     </>
                 )}

@@ -15,7 +15,7 @@ class SponsorController extends Controller
             $sponsors = Sponsor::all();
             return response()->json(['success' => true, 'sponsors' => $sponsors]);
         } catch (\Throwable $th) {
-            return response()->json(['success' => false, 'error' => 'Failed to get sponsors']);
+            return response()->json(['success' => false, 'error' => 'Failed to get sponsors'], 500);
         }
     }
 
@@ -26,7 +26,7 @@ class SponsorController extends Controller
             $sponsor = Sponsor::find($sponsor_id);
             return response()->json(['success' => true, 'sponsor' => $sponsor]);
         } catch (\Throwable $th) {
-            return response()->json(['success' => false, 'error' => 'Failed to get sponsor']);
+            return response()->json(['success' => false, 'error' => 'Failed to get sponsor'], 500);
         }
     }
 
@@ -37,13 +37,15 @@ class SponsorController extends Controller
 
             $validator = Validator::make($data, [
                 'name' => ['required', 'string', 'max:255'],
+                'description' => ['required', 'string'],
                 'link' => ['required', 'string', 'max:255'],
+                'featured' => ['required', 'integer'],
                 'logo_file' => ['required', 'file', 'mimes:jpeg,png,jpg,gif'],
                 'banner_file' => ['required', 'file', 'mimes:jpeg,png,jpg,gif']
             ]);
 
             if ($validator->fails()) {
-                return response()->json(['success' => false, 'errors' => $validator->errors()]);
+                return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
             }
 
             $logoPath = $request->file('logo_file')->store('sponsors/logos', 'public');
@@ -51,14 +53,16 @@ class SponsorController extends Controller
 
             Sponsor::create([
                 'name' => $data['name'],
+                'description' => $data['description'],
                 'link' => $data['link'],
+                'featured' => $data['featured'],
                 'logo_url' => $logoPath,
                 'banner' => $bannerPath,
             ]);
 
             return response()->json(['success' => true]);
         } catch (\Exception $th) {
-            return response()->json(['success' => false, 'errors' => ['current_release' => 'Failed to create sponsor.']]);
+            return response()->json(['success' => false, 'errors' => $th->getMessage()], 500);
         }
     }
 
@@ -66,20 +70,21 @@ class SponsorController extends Controller
     {
         try {
             $data = $request->all();
-            $id = $request->query('id');
-
             $validator = Validator::make($data, [
-                'name' => ['sometimes', 'string', 'max:255'],
-                'link' => ['sometimes', 'string', 'max:255'],
-                'logo_file' => ['sometimes', 'file', 'mimes:jpeg,png,jpg,gif'],
-                'banner_file' => ['sometimes', 'file', 'mimes:jpeg,png,jpg,gif'],
+                'id' => ['required', 'integer'],
+                'name' => ['required', 'string', 'max:255'],
+                'featured' => ['required', 'integer'],
+                'description' => ['required', 'string'],
+                'link' => ['required', 'string', 'max:255'],
+                'logo_file' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif'],
+                'banner_file' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif']
             ]);
 
             if ($validator->fails()) {
-                return response()->json(['success' => false, 'errors' => $validator->errors()]);
+                return response()->json(['success' => false, 'errors' => $validator->errors(), 'hello' => $request->banner_file], 422);
             }
 
-            $sponsor = Sponsor::findOrFail($id);
+            $sponsor = Sponsor::findOrFail($data['id']);
 
             if ($request->hasFile('logo_file')) {
                 if ($sponsor->logo_url) {
@@ -97,20 +102,17 @@ class SponsorController extends Controller
                 $sponsor->banner = $bannerPath;
             }
 
-            if (!empty($data['name'])) {
-                $sponsor->name = $data['name'];
-            }
-
-            if (!empty($data['link'])) {
-                $sponsor->link = $data['link'];
-            }
+            $sponsor->name = $data['name'] ?? $sponsor->name;
+            $sponsor->description = $data['description'] ?? $sponsor->description;
+            $sponsor->link = $data['link'] ?? $sponsor->link;
+            $sponsor->featured = $data['featured'] ?? $sponsor->featured;
 
             $sponsor->save();
 
             return response()->json(['success' => true]);
 
         } catch (\Exception $th) {
-            return response()->json(['success' => false, 'errors' => ['current_release' => 'Failed to update sponsor']]);
+            return response()->json(['success' => false, 'errors' => $th->getMessage()], 500);
         }
     }
 
@@ -121,13 +123,13 @@ class SponsorController extends Controller
             $sponsor = Sponsor::find($sponsor_id);
 
             if (!$sponsor) {
-                return response()->json(['success' => false, 'error' => 'Sponsor not found']);
+                return response()->json(['success' => false, 'error' => 'Sponsor not found'], 404);
             }
 
             $sponsor->delete();
             return response()->json(['success' => true]);
         } catch (\Throwable $th) {
-            return response()->json(['success' => false, 'error' => 'Failed to delete sponsor']);
+            return response()->json(['success' => false, 'error' => 'Failed to delete sponsor'], 500);
         }
     }
 

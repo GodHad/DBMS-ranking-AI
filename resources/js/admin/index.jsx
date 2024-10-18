@@ -30,7 +30,7 @@ export function Main() {
       <Routes>
         <Route path="auth/*" element={<AuthLayout />} />
         <Route
-          path="/admin*"
+          path="/admin/*"
           element={
             <AdminLayout theme={currentTheme} setTheme={setCurrentTheme} />
           }

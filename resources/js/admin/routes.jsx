@@ -11,6 +11,8 @@ import {
   MdHandshake,
   MdAutoGraph,
   MdTranslate,
+  MdCommentBank,
+  MdAttachMoney,
 } from 'react-icons/md';
 
 // Admin Imports
@@ -21,7 +23,8 @@ import Profile from './views/admin/profile';
 import DataTables from './views/admin/dataTables';
 import Vendor from './views/admin/vendor';
 import RankChart from './views/admin/RankCharts';
-import Encyclopedia from './views/admin/encyclopedia'
+import Encyclopedia from './views/admin/encyclopedia';
+import Sponsor from './views/admin/sponsors';
 // Auth Imports
 import SignInCentered from './views/auth/signIn';
 import SignUpCentered from './views/auth/signup';
@@ -49,18 +52,25 @@ const routes = [
     component: <Vendor />
   },
   {
-    name: 'Charts',
+    name: 'Chart',
     layout: '/admin',
     path: '/chart',
     icon: <Icon as={MdAutoGraph} width={"20px"} height={"20px"} color="inherit" />,
     component: <RankChart />
   },
   {
-    name: 'Encylopedia',
+    name: 'Encylopedias',
     layout: '/admin',
     path: '/encyclopedia',
     icon: <Icon as={MdTranslate} width={"20px"} height={"20px"} color="inherit" />,
     component: <Encyclopedia />
+  },
+  {
+    name: 'Sponsors',
+    layout: '/admin',
+    path: '/sponsor',
+    icon: <Icon as={MdAttachMoney} width={"20px"} height={"20px"} color="inherit" />,
+    component: <Sponsor />
   },
   {
     name: 'NFT Marketplace',

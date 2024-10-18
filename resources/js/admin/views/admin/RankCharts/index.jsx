@@ -42,9 +42,6 @@ export default function RankChart(props) {
         dataLabels: {
             enabled: false,
         },
-        stroke: {
-            curve: "smooth",
-        },
         grid: {
             padding: {
                 right: 30,

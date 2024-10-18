@@ -89,7 +89,7 @@ class VendorController extends Controller
 
             return response()->json(['success' => true, 'vendors' => $vendors->sortBy('overall_ranking')->values()]);
         } catch (\Exception $th) {
-            return response()->json(['success' => false, 'error' => 'Failed to get vendors', 'error' => $th->getMessage()]);
+            return response()->json(['success' => false, 'error' => 'Failed to get vendors', 'error' => $th->getMessage()], 500);
         }
     }
 
@@ -100,7 +100,7 @@ class VendorController extends Controller
             $vendor = Vendor::with('category')->find($vendor_id);
             return response()->json(['success' => true, 'vendor' => $vendor]);
         } catch (\Throwable $th) {
-            return response()->json(['success' => false, 'error' => 'Failed to get vendor']);
+            return response()->json(['success' => false, 'error' => 'Failed to get vendor'], 500);
         }
     }
 
@@ -146,7 +146,7 @@ class VendorController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return response()->json(['success' => false, 'errors' => $validator->errors()]);
+                return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
             }
 
             $vendor = Vendor::create($validator->validated());
@@ -167,7 +167,7 @@ class VendorController extends Controller
             $vendor = Vendor::find($vendor_id);
 
             if (!$vendor) {
-                return response()->json(['success' => false, 'errors' => ['current_release' => 'Vendor not found']]);
+                return response()->json(['success' => false, 'errors' => ['current_release' => 'Vendor not found']], 404);
             }
 
             $validator = Validator::make($data, [
@@ -207,7 +207,7 @@ class VendorController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return response()->json(['success' => false, 'errors' => $validator->errors()]);
+                return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
             }
 
             $dbNameChanged = false;
@@ -228,7 +228,7 @@ class VendorController extends Controller
 
             return response()->json(['success' => true, 'vendor' => $vendor]);
         } catch (\Exception $th) {
-            return response()->json(['success' => false, 'error' => 'Failed to update vendor', 'hey' => $th->getMessage()]);
+            return response()->json(['success' => false, 'error' => 'Failed to update vendor', 'hey' => $th->getMessage()], 500);
         }
     }
 
@@ -239,7 +239,7 @@ class VendorController extends Controller
             $vendor = Vendor::find($vendor_id);
 
             if (!$vendor) {
-                return response()->json(['success' => false, 'error' => 'Vendor not found']);
+                return response()->json(['success' => false, 'error' => 'Vendor not found'], 404);
             }
 
             Trend::where('vendor_id', $vendor->id)->delete();
@@ -247,7 +247,7 @@ class VendorController extends Controller
             $vendor->delete();
             return response()->json(['success' => true]);
         } catch (\Throwable $th) {
-            return response()->json(['success' => false, 'error' => 'Failed to delete vendor']);
+            return response()->json(['success' => false, 'error' => 'Failed to delete vendor'], 500);
         }
     }
 

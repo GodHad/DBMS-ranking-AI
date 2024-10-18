@@ -22,7 +22,7 @@ const updateVendor = async ({ vendor }) => {
     return data;
 }
 
-const deleteVendor = async ({ id }) => {
+const deleteVendor = async (id) => {
     await axios.delete(`/api/delete-vendor?id=${id}`);
 }
 
