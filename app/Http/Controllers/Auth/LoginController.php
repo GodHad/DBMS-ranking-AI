@@ -59,4 +59,10 @@ class LoginController extends Controller
             return response()->json(['success' => false, 'errors' => ['Login failed']]);
         }
     }
+
+    public function logout()
+    {
+        Auth::logout();
+        return response()->json(['success' => true]);
+    }
 }

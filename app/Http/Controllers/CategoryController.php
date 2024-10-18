@@ -27,16 +27,16 @@ class CategoryController extends Controller
                 'shortname' => ['required', 'string', 'max:255'],
             ]);
             
-            if ($validator->fails()) return response()->json(['status' => false, 'errors' => $validator->errors()]);
+            if ($validator->fails()) return response()->json(['success' => false, 'errors' => $validator->errors()]);
 
             Category::create([
                 'title' => $data['title'],
                 'shortname' => $data['shortname']
             ]);
 
-            return response()->json(['status' => true]);
-        } catch (\Throwable $th) {
-            return response()->json(['success' => false, 'errors' => ['shortname' => 'Failed to create vendor']]);
+            return response()->json(['success' => true]);
+        } catch (\Exception $th) {
+            return response()->json(['success' => false, 'errors' => ['shortname' => 'Failed to create vendor'], 'error' => $th->getMessage()]);
         }
     }
 
@@ -55,7 +55,7 @@ class CategoryController extends Controller
                 'shortname' => ['sometimes', 'string', 'max:255']
             ]);
 
-            if ($validator->fails()) return response()->json(['status' => false, 'errors' => $validator->errors()]);
+            if ($validator->fails()) return response()->json(['success' => false, 'errors' => $validator->errors()]);
 
             $category->update($validator->validated());
 

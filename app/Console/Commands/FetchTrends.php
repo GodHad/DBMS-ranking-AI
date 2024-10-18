@@ -30,28 +30,53 @@ class FetchTrends extends Command
     public function handle()
     {
         $exePath = __DIR__ . '/main.exe';
+    
         if ($this->option('all')) {
-            Trend::truncate();
-            CountryTrend::truncate();
-            $keywords = Vendor::pluck('db_name')->toArray();
-            $keywordsString = implode(',', $keywords);
-            $command = escapeshellcmd($exePath) . " " . escapeshellarg($keywordsString);
+            
+            $keywords = Vendor::pluck('id', 'db_name')->toArray();
+            
+            foreach ($keywords as $keyword) {
+                $command = escapeshellcmd($exePath) . " " . escapeshellarg($keyword->db_name);
+                Log::info('Running command for keyword: ' . $keyword);
+
+                $output = [];
+                $returnVar = 0;
+                exec($command . ' 2>&1', $output, $returnVar);
+                
+                Log::info('Command executed, returnVar: ' . $returnVar);
+                Log::info('Output: ' . implode("\n", $output));
+                
+                Trend::where('id', $keyword->id)->delete();
+                CountryTrend::where('id', $keyword->id)->delete();
+                $this->processTrendData(); // Process the trend data after each command
+            }
+            
         } else {
             $keyword = $this->argument('keywords');
             $command = escapeshellcmd($exePath) . " " . escapeshellarg($keyword);
+            
+            Log::info('Running command for single keyword: ' . $keyword);
+            $output = [];
+            $returnVar = 0;
+            exec($command . ' 2>&1', $output, $returnVar);
+            
+            Log::info('Command executed, returnVar: ' . $returnVar);
+            Log::info('Output: ' . implode("\n", $output));
+            
+            $this->processTrendData(); // Process the trend data for single keyword
         }
 
-        Log::info('Running command: ' . $command);
+        $this->info("Trends fetched and processed");
+        $this->error("An error occurred while fetching trends: " . implode("\n", $output));
+    }
 
-        $output = [];
-        $returnVar = 0;
-        exec($command, $output, $returnVar);
-    
+    private function processTrendData()
+    {
         $country_score_file = 'trends_data_by_country_weekly.csv';
         $score_file = 'trends_data.csv';
 
-        
-        if ($returnVar === 0) {
+        // Process country trends
+        if (file_exists($country_score_file)) {
             if (($handle = fopen($country_score_file, 'r')) !== false) {
                 $header = fgetcsv($handle);
                 $len = count($header);
@@ -77,6 +102,10 @@ class FetchTrends extends Command
                     CountryTrend::insert($countryTrends);
                 }
             }
+        }
+
+        // Process trends
+        if (file_exists($score_file)) {
             if (($handle1 = fopen($score_file, 'r')) !== false) {
                 $header = fgetcsv($handle1);
                 $len = count($header);
@@ -87,7 +116,7 @@ class FetchTrends extends Command
 
                 while (($row = fgetcsv($handle1)) !== false) {
                     for ($i = 1; $i < $len - 1; $i++) {
-                        if (isset($vendor_ids[$header[$i]])) { // Check if DBMS ID exists
+                        if (isset($vendor_ids[$header[$i]])) {
                             $trends[] = [
                                 'vendor_id' => $vendor_ids[$header[$i]],
                                 'score' => $row[$i],
@@ -101,10 +130,44 @@ class FetchTrends extends Command
                     Trend::insert($trends);
                 }
             }
-            $this->info("Trends fetched");
-        } else {
-            $this->error("An error occurred while fetching trends: " . implode("\n", $output));
         }
+
+        // Optional: Update rankings after processing
+        $this->updateRankings();
     }
 
+    private function updateRankings()
+    {
+        Log::info('Start to re-ranking');
+        $latestDate = Trend::max('date');
+        $latestTrends = Trend::where('date', $latestDate)->orderBy('score', 'desc')->get();
+
+        $rank = 1;
+        foreach ($latestTrends as $trend) {
+            $vendor = Vendor::find($trend->vendor_id);
+            $vendor->overall_ranking = $rank++;
+            $vendor->primary_ranking = '';
+            $vendor->save();
+        }
+
+        Log::info('Update overall ranking');
+        $vendors = Vendor::all();
+        foreach ($vendors as $vendor) {
+            $primaryCategoryIds = explode(',', $vendor->primary_category);
+            $vendor->primary_ranking = '';
+
+            foreach ($primaryCategoryIds as $category_id) {
+                $sameCategoryVendors = Vendor::where('primary_category', 'like', '%' . $category_id . '%')->orderBy('overall_ranking', 'asc')->get();
+
+                foreach ($sameCategoryVendors as $index => $sameVendor) {
+                    if ($sameVendor->id === $vendor->id) {
+                        $vendor->primary_ranking .= ($index + 1) . ' ';
+                    }
+                }
+            }
+            $vendor->primary_ranking = trim($vendor->primary_ranking);
+            $vendor->save();
+        }
+        Log::info('Finish re-ranking');
+    }
 }

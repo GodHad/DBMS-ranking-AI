@@ -18,7 +18,6 @@ import { Link as RouterLink } from "react-router-dom";
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
 import { styled } from '@mui/material/styles';
-import logoFile from '../../img/1.png';
 
 
 const pages = ['Home', 'DB-Engines Ranking', 'Blog','Sponsors'];

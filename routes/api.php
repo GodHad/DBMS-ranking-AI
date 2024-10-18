@@ -6,6 +6,9 @@ use App\Http\Controllers\VendorController;
 use App\Http\Controllers\SponsorController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DbmsController;
+use App\Http\Controllers\TrendsController;
+use App\Http\Controllers\EncyclopediaController;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,6 +18,7 @@ Route::group([
     // auth routes
     Route::post('/register', [RegisterController::class, 'index']);
     Route::post('/login', [LoginController::class, 'index']);
+    Route::get('/logout', [LoginController::class, 'logout']);
 
     // vendor routes
     Route::get('/get-vendors', [VendorController::class, 'vendors']);
@@ -36,6 +40,16 @@ Route::group([
     Route::put('/update-category', [CategoryController::class, 'update']);
     Route::delete('/delete-category', [CategoryController::class, 'delete']);
 
+    // trends routes
+    Route::get('/get-trends-data-for-chart', [TrendsController::class, 'getChartData']);
+
+    // encyclopedia routes
+    Route::get('/get-encyclopedias', [EncyclopediaController::class, 'encyclopedias']);
+    Route::get('/get-encyclopedia', [EncyclopediaController::class, 'encyclopedia']);
+    Route::post('/create-encyclopedia', [EncyclopediaController::class, 'create']);
+    Route::put('/update-encyclopedia', [EncyclopediaController::class, 'update']);
+    Route::delete('/delete-encyclopedia', [EncyclopediaController::class, 'delete']);
+
     // testing route for fetching data
-    Route::get('/test', [DbmsController::class, 'create']);
+    Route::get('/test', [VendorController::class, 'test']);
 });

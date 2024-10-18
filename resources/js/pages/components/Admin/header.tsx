@@ -18,7 +18,6 @@ import { Link as RouterLink } from "react-router-dom";
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
 import { styled } from '@mui/material/styles';
-import logoFile from '../../../../img/1.png';
 import LogoutIcon from '@mui/icons-material/Logout';
 
 
@@ -84,7 +83,6 @@ const Header= () => {
     <AppBar position="static" style={{backgroundColor:'#242526'}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-            <Box component="img" sx={{ height: 70,width:150}} alt="Logo" src={logoFile} />
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
                 size="large"
