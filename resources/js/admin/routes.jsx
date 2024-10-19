@@ -24,6 +24,7 @@ import DataTables from './views/admin/dataTables';
 import Vendor from './views/admin/vendor';
 import RankChart from './views/admin/RankCharts';
 import Encyclopedia from './views/admin/encyclopedia';
+import Blog from './views/admin/blog';
 import Sponsor from './views/admin/sponsors';
 // Auth Imports
 import SignInCentered from './views/auth/signIn';
@@ -45,9 +46,9 @@ const routes = [
     component: <Categories />
   },
   {
-    name: 'Vendors',
+    name: 'DBMS',
     layout: '/admin',
-    path: '/vendor',
+    path: '/dbms',
     icon: <Icon as={MdHandshake} width={"20px"} height={"20px"} color="inherit" />,
     component: <Vendor />
   },
@@ -66,41 +67,48 @@ const routes = [
     component: <Encyclopedia />
   },
   {
+    name: 'Blogs',
+    layout: '/admin',
+    path: '/blog',
+    icon: <Icon as={MdCommentBank} width={"20px"} height={"20px"} color="inherit" />,
+    component: <Blog />
+  },
+  {
     name: 'Sponsors',
     layout: '/admin',
     path: '/sponsor',
     icon: <Icon as={MdAttachMoney} width={"20px"} height={"20px"} color="inherit" />,
     component: <Sponsor />
   },
-  {
-    name: 'NFT Marketplace',
-    layout: '/admin',
-    path: '/nft-marketplace',
-    icon: (
-      <Icon
-        as={MdOutlineShoppingCart}
-        width="20px"
-        height="20px"
-        color="inherit"
-      />
-    ),
-    component: <NFTMarketplace />,
-    secondary: true,
-  },
-  {
-    name: 'Data Tables',
-    layout: '/admin',
-    icon: <Icon as={MdBarChart} width="20px" height="20px" color="inherit" />,
-    path: '/data-tables',
-    component: <DataTables />,
-  },
-  {
-    name: 'Profile',
-    layout: '/admin',
-    path: '/profile',
-    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-    component: <Profile />,
-  },
+  // {
+  //   name: 'NFT Marketplace',
+  //   layout: '/admin',
+  //   path: '/nft-marketplace',
+  //   icon: (
+  //     <Icon
+  //       as={MdOutlineShoppingCart}
+  //       width="20px"
+  //       height="20px"
+  //       color="inherit"
+  //     />
+  //   ),
+  //   component: <NFTMarketplace />,
+  //   secondary: true,
+  // },
+  // {
+  //   name: 'Data Tables',
+  //   layout: '/admin',
+  //   icon: <Icon as={MdBarChart} width="20px" height="20px" color="inherit" />,
+  //   path: '/data-tables',
+  //   component: <DataTables />,
+  // },
+  // {
+  //   name: 'Profile',
+  //   layout: '/admin',
+  //   path: '/profile',
+  //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+  //   component: <Profile />,
+  // },
   {
     name: 'Sign In',
     layout: '/auth',

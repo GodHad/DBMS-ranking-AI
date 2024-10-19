@@ -69,15 +69,15 @@ class CategoryController extends Controller
     {
         try {
             $id = $request->query('id');
-            $category = Category::find($id);
+            $blog = Blog::find($id);
 
-            if (!$category)
-                return response()->json(['success' => false, 'errors' => ['shorname' => 'Can\'t find the category']]);
+            if (!$blog)
+                return response()->json(['success' => false, 'errors' => [ 'Can\'t find the blog']], 422);
 
-            $category->delete();
+            $blog->delete();
             return response()->json(['success' => true]);
         } catch (\Throwable $e) {
-            return response()->json(['success' => false, 'errors' => ['shorname' => 'Failed to delete vendor']]);
+            return response()->json(['success' => false, 'errors' => ['shorname' => 'Failed to delete blog']]);
         }
     }
 }

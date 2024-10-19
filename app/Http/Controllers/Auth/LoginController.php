@@ -34,6 +34,8 @@ class LoginController extends Controller
 
     public function index(Request $request)
     {
+        // var_dump(Auth::check());
+        // die();
         $data = $request->all();
 
         $validator = Validator::make($data, [
@@ -53,7 +55,7 @@ class LoginController extends Controller
             return response()->json(['success' => false, 'errors' => ['Incorrect password']]);
         }
 
-        if ($token = auth()->attempt(['email' => $data['email'], 'password' => $data['password']])) {
+        if ($token = Auth::attempt(['email' => $data['email'], 'password' => $data['password']])) {
             return response()->json(['success' => true, 'user' => Auth::user(), 'token' => $token]);
         } else {
             return response()->json(['success' => false, 'errors' => ['Login failed']]);

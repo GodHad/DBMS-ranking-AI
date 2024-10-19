@@ -448,7 +448,7 @@ export default function Vendor() {
                                 fontWeight="700"
                                 lineHeight="100%"
                             >
-                                Vendors
+                                DBMS
                             </Text>
                             <Menu />
                         </Flex>
@@ -462,7 +462,7 @@ export default function Vendor() {
                                     fontWeight='500'
                                     onClick={() => { setOpenedPage(1); setVendor(clearedVendor) }}
                                 >
-                                    <Icon as={MdAdd} h='18px' w='18px' />New Vendor
+                                    <Icon as={MdAdd} h='18px' w='18px' />New DBMS
                                 </Button>
                             </Flex>
                             <FormControl p={4} w={"50%"} minW={"200px"} maxW={"300px"}>

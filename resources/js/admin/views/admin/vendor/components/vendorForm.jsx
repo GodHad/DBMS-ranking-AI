@@ -216,9 +216,9 @@ export default function VendorForm({ vendor, categories, setOpenedPage }) {
 
     return (
         <Box p={"20px"}>
-            <Text mb={"32px"} fontSize={22}>{!vendor.id ? "Create" : "Update"} Vendor</Text>
+            <Text mb={"32px"} fontSize={22}>{!vendor.id ? "Create" : "Update"} DBMS</Text>
             <FormControl>
-                <CustomInput title="Vendor Name" name="company_name" value={form.company_name} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                <CustomInput title="Company Name" name="company_name" value={form.company_name} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 <CustomInput title="Database Name" name="db_name" value={form.db_name} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 <CustomInput title="Description" name="description" value={form.description} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 <CustomMultiSelect title="Primary Categories" name="primary_category" value={form.primary_category} handleChangeMultiSelect={handleChangeMultiSelect} options={categories.map(category => ({ id: category.id, value: category.title, label: category.title }))} />
