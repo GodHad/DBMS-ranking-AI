@@ -67,7 +67,7 @@ const Main = () => {
         try {
             let response;
             if (formData.id) {
-                response = await axios.put(`/api/update-vendor?id=${formData.id}`, formData);
+                response = await axios.post(`/api/update-vendor?id=${formData.id}`, formData);
             } else {
                 response = await axios.post('/api/create-vendor', formData);
             }
@@ -124,7 +124,7 @@ const Main = () => {
     // Handle the checkbox change for approval
     const handleApprovalChange = async (vendorId, approved) => {
         try {
-            const response = await axios.put(`/api/update-vendor?id=${vendorId}`, { approved });
+            const response = await axios.post(`/api/update-vendor?id=${vendorId}`, { approved });
             if (response.data.success) {
                 // Update the local state
                 setVendors(prevVendors =>

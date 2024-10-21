@@ -65,7 +65,7 @@ const Main = () => {
         try {
             if (isEdit) {
                 // Update existing sponsor
-                const response = await axios.put(`/api/update-sponsor/?id=${formData.id}`, formDataToSend, {
+                const response = await axios.post(`/api/update-sponsor/?id=${formData.id}`, formDataToSend, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },

@@ -17,6 +17,7 @@ import { MdUploadFile } from 'react-icons/md';
 import { useQueryClient, useMutation } from 'react-query';
 import { createSponsor, updateSponsor } from '../requests/use-request';
 import { APP_URL } from '../../../../variables/statics';
+import { CustomInput } from '../../../../components/form/CustomInput';
 
 export default function SponsorForm({ sponsor, setOpenedPage }) {
     const queryClient = useQueryClient();
@@ -128,8 +129,8 @@ export default function SponsorForm({ sponsor, setOpenedPage }) {
     }, [sponsor])
 
     const [imagePreview, setImagePreview] = useState({
-        logo_file: APP_URL + 'storage/' + logo_url,
-        banner_file: APP_URL + 'storage/' + banner
+        logo_file: APP_URL + 'images/storage/' + logo_url,
+        banner_file: APP_URL + 'images/storage/' + banner
     });
 
     const handleFileChange = (event) => {
@@ -298,37 +299,5 @@ export default function SponsorForm({ sponsor, setOpenedPage }) {
             </Button>
             <Button mt={3} onClick={() => setOpenedPage(0)}>Cancel</Button>
         </Box>
-    )
-}
-
-const CustomInput = ({ type = 'text', title, name, value, handleChangeForm, textColor, brandStars }) => {
-    return (
-        <>
-            <FormLabel
-                display='flex'
-                ms='4px'
-                fontSize='sm'
-                fontWeight='500'
-                color={textColor}
-                mb='8px'
-            >
-                {title}<Text color={brandStars}>*</Text>
-            </FormLabel>
-            <Input
-                isRequired={true}
-                variant='auth'
-                fontSize='sm'
-                ms={{ base: "0px", md: "0px" }}
-                type={type}
-                placeholder=''
-                mb='24px'
-                fontWeight='500'
-                size='lg'
-                borderColor={"gray"}
-                name={name}
-                value={value}
-                onChange={handleChangeForm}
-            />
-        </>
     )
 }

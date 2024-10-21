@@ -48,8 +48,8 @@ class SponsorController extends Controller
                 return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
             }
 
-            $logoPath = $request->file('logo_file')->store('sponsors/logos', 'public');
-            $bannerPath = $request->file('banner_file')->store('sponsors/banners', 'public');
+            $logoPath = $request->file('logo_file')->store('images/sponsors/logos', 'public');
+            $bannerPath = $request->file('banner_file')->store('images/sponsors/banners', 'public');
 
             Sponsor::create([
                 'name' => $data['name'],

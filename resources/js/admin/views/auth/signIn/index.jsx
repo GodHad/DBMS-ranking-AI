@@ -24,11 +24,12 @@ import illustration from "../../../assets/img/auth/Demo.jpg";
 import { FcGoogle } from "react-icons/fc";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiEyeCloseLine } from "react-icons/ri";
-import axios from "axios";
+import axios from "../../../variables/axiosConfig";
 import { Store } from "react-notifications-component";
 import { UserContext } from "../../../../contexts/UserContext";
 
 function SignIn() {
+  console.log(axios.defaults.headers)
   // Chakra color mode
   const navigate = useNavigate();
   const { setUser } = useContext(UserContext);

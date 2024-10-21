@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import LoginPage from './auth/LoginPage';
@@ -8,13 +8,22 @@ import SponsorPage from './Sponsor_page/index'
 import VendorPage from './components/Vendor'
 import VendorsPage from './vendor_page';
 import { Main } from '../admin';
+import axios from '../admin/variables/axiosConfig';
 
 import { UserContext } from '../contexts/UserContext';
 
 const queryClient = new QueryClient();
 
 function App() {
+  const getUser = async () => {
+    const response = await axios.get('/api/user');
+    setUser(response.data.user)
+  };
   const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    getUser();
+  }, [])
   return (
     <QueryClientProvider client={queryClient}>
       <UserContext.Provider value={{ user, setUser }}>

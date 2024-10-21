@@ -1,6 +1,4 @@
-import React from 'react';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
-import axios from 'axios';
+import axios from "../../../../variables/axiosConfig";
 
 const getCategories = async () => {
     const { data } = await axios.get('/api/get-categories');
@@ -18,7 +16,7 @@ const createVendor = async ({ vendor }) => {
 }
 
 const updateVendor = async ({ vendor }) => {
-    const { data } = await axios.put(`/api/update-vendor?id=${vendor.id}`, vendor);
+    const { data } = await axios.post(`/api/update-vendor?id=${vendor.id}`, vendor);
     return data;
 }
 

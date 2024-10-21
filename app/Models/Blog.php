@@ -2,26 +2,42 @@
 
 namespace App\Models;
 
-use App\Model\User;
+use App\Models\User;
+use App\Models\BCategory;
+use App\Models\Tag;
+use App\Models\FeaturedImage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class blog extends Model
+class Blog extends Model
 {
     use HasFactory;
     
-    protected $table = 'blog';
+    protected $table = 'blogs';
     protected $fillable = [
-        'name',
-        'email',
-        'phone_number',
-        'job_title',
-        'role',
+        'title',
+        'description',
+        'content',
         'user_id'
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function categories()
+    {
+        return $this->belongsToMany(BCategory::class, 'blog_category');
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'blog_tag');
+    }
+
+    public function featured_images()
+    {
+        return $this->hasMany(FeaturedImage::class);
     }
 }

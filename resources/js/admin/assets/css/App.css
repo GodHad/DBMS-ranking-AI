@@ -15,5 +15,9 @@ option {
 
 .toolbarClassName {
   border-radius: 16px;
+}
+
+.toolbarClassName input {
+  background-color: white;
   color: black;
 }

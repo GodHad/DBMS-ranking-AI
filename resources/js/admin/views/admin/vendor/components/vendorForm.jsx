@@ -2,20 +2,16 @@ import React, { useState } from 'react'
 import {
     Button,
     FormControl,
-    FormLabel,
-    Input,
-    Flex,
-    Icon,
     Text,
-    Select,
     Box,
     useToast
 } from '@chakra-ui/react'
 import { useDisclosure, useColorModeValue } from '@chakra-ui/react'
-import { Store } from 'react-notifications-component';
-import { Select as MultiSelect } from 'chakra-react-select';
 import { useQueryClient, useMutation } from 'react-query';
 import { createVendor, updateVendor } from '../requests/use-request';
+import { CustomMultiSelect } from '../../../../components/form/CustomMultiSelect';
+import { CustomInput } from '../../../../components/form/CustomInput';
+import { CustomSelect } from '../../../../components/form/CustomSelect';
 
 export default function VendorForm({ vendor, categories, setOpenedPage }) {
     const toast = useToast();
@@ -260,111 +256,5 @@ export default function VendorForm({ vendor, categories, setOpenedPage }) {
             </Button>
             <Button onClick={() => setOpenedPage(0)}>Cancel</Button>
         </Box>
-    )
-}
-
-const CustomInput = ({ type = 'text', title, name, value, handleChangeForm, textColor, brandStars }) => {
-    return (
-        <>
-            <FormLabel
-                display='flex'
-                ms='4px'
-                fontSize='sm'
-                fontWeight='500'
-                color={textColor}
-                mb='8px'
-            >
-                {title}<Text color={brandStars}>*</Text>
-            </FormLabel>
-            <Input
-                isRequired={true}
-                variant='auth'
-                fontSize='sm'
-                ms={{ base: "0px", md: "0px" }}
-                type={type}
-                placeholder=''
-                mb='24px'
-                fontWeight='500'
-                size='lg'
-                borderColor={"gray"}
-                name={name}
-                value={value}
-                onChange={handleChangeForm}
-            />
-        </>
-    )
-}
-
-const CustomSelect = ({ title, name, value, handleChangeForm, textColor, brandStars }) => {
-    return (
-        <>
-            <FormLabel
-                display='flex'
-                ms='4px'
-                fontSize='sm'
-                fontWeight='500'
-                color={textColor}
-                mb='8px'
-            >
-                {title}<Text color={brandStars}>*</Text>
-            </FormLabel>
-            <Select
-                placeholder='Select option'
-                variant='auth'
-                fontSize='sm'
-                ms={{ base: "0px", md: "0px" }}
-                type='text'
-                mb='24px'
-                fontWeight='500'
-                size='lg'
-                borderColor={"gray"}
-                value={value}
-                name={name}
-                onChange={handleChangeForm}
-            >
-                <option value={0}>No</option>
-                <option value={1}>Yes</option>
-            </Select>
-        </>
-    )
-}
-
-const CustomMultiSelect = ({ title, name, value, handleChangeMultiSelect, textColor, brandStars, options }) => {
-    const handleChange = (selected) => {
-        handleChangeMultiSelect(name, selected.map(category => category.id));
-        setSelectedOptions(selected)
-    }
-    const [selectedOptions, setSelectedOptions] = useState([])
-
-    React.useEffect(() => {
-        const selected = value.map(id => options.find(option => option.id == id)).filter(option => option)
-        setSelectedOptions(selected)
-    }, [])
-    return (
-        <FormControl mb={"24px"}>
-            <FormLabel
-                display='flex'
-                ms='4px'
-                fontSize='sm'
-                fontWeight='500'
-                color={textColor}
-                mb='8px'
-            >
-                {title}<Text color={brandStars}>*</Text>
-            </FormLabel>
-            <MultiSelect
-                isMulti
-                value={selectedOptions}
-                placeholder='Select categories'
-                variant='auth'
-                fontSize='sm'
-                ms={{ base: "0px", md: "0px" }}
-                type='text'
-                fontWeight='500'
-                size='lg'
-                options={options}
-                onChange={handleChange}
-            />
-        </FormControl>
     )
 }

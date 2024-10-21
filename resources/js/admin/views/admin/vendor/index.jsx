@@ -460,7 +460,7 @@ export default function Vendor() {
                                     minW='140px'
                                     variant='brand'
                                     fontWeight='500'
-                                    onClick={() => { setOpenedPage(1); setVendor(clearedVendor) }}
+                                    onClick={() => { setOpenedPage(1); setVendor(initialVendor) }}
                                 >
                                     <Icon as={MdAdd} h='18px' w='18px' />New DBMS
                                 </Button>

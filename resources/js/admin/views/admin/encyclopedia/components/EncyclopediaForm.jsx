@@ -15,6 +15,7 @@ import { Editor } from 'react-draft-wysiwyg';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { convertFromHTML, convertToRaw, EditorState, Modifier, ContentState } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
+import { CustomInput } from '../../../../components/form/CustomInput';
 
 export default function EncyclopediaForm({ encyclopedia, setOpenedPage }) {
     const queryClient = useQueryClient();
@@ -178,37 +179,5 @@ export default function EncyclopediaForm({ encyclopedia, setOpenedPage }) {
             </Button>
             <Button mt={3} onClick={() => setOpenedPage(0)}>Cancel</Button>
         </Box>
-    )
-}
-
-const CustomInput = ({ type = 'text', title, name, value, handleChangeForm, textColor, brandStars }) => {
-    return (
-        <>
-            <FormLabel
-                display='flex'
-                ms='4px'
-                fontSize='sm'
-                fontWeight='500'
-                color={textColor}
-                mb='8px'
-            >
-                {title}<Text color={brandStars}>*</Text>
-            </FormLabel>
-            <Input
-                isRequired={true}
-                variant='auth'
-                fontSize='sm'
-                ms={{ base: "0px", md: "0px" }}
-                type={type}
-                placeholder=''
-                mb='24px'
-                fontWeight='500'
-                size='lg'
-                borderColor={"gray"}
-                name={name}
-                value={value}
-                onChange={handleChangeForm}
-            />
-        </>
     )
 }

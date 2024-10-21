@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "../../../../variables/axiosConfig";
 
 const getEncyclopedias = async () => {
     const { data } = await axios.get('/api/get-encyclopedias');
@@ -16,7 +16,7 @@ const createEncyclopedia = async ({ encyclopedia }) => {
 }
 
 const updateEncyclopedia = async ({ encyclopedia }) => {
-    const { data } = await axios.put(`/api/update-encyclopedia?id=${encyclopedia.id}`, encyclopedia);
+    const { data } = await axios.post(`/api/update-encyclopedia?id=${encyclopedia.id}`, encyclopedia);
     return data;
 }
 

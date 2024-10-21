@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "../../../../variables/axiosConfig";
 
 const getSponsors = async () => {
     const { data } = await axios.get('/api/get-sponsors');
