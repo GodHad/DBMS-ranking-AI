@@ -15,11 +15,15 @@ import {
 } from '@chakra-ui/react'
 import { MdUploadFile } from 'react-icons/md';
 import { useQueryClient, useMutation } from 'react-query';
-import { createSponsor, updateSponsor } from '../requests/use-request';
+import { createFeaturedProduct, updateFeaturedProduct } from '../requests/use-request';
 import { APP_URL } from '../../../../variables/statics';
 import { CustomInput } from '../../../../../../components/form/CustomInput';
+import { Editor } from 'react-draft-wysiwyg';
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { convertFromHTML, convertToRaw, EditorState, Modifier, ContentState } from 'draft-js';
+import draftToHtml from 'draftjs-to-html';
 
-export default function SponsorForm({ sponsor, setOpenedPage }) {
+export default function FeaturedProductForm({ featuredProduct, setOpenedPage }) {
     const queryClient = useQueryClient();
     const toast = useToast();
     const textColor = useColorModeValue("navy.400", "white");
@@ -28,32 +32,37 @@ export default function SponsorForm({ sponsor, setOpenedPage }) {
 
     const {
         id,
-        name,
-        description,
+        title,
+        content,
         link,
-        logo_url,
         banner,
-        featured
-    } = sponsor;
+        published,
+    } = featuredProduct;
 
     const [form, setForm] = useState({
         id,
-        name,
-        description,
+        title,
+        content,
         link,
-        logo_url,
         banner,
-        logo_file: null,
+        published,
         banner_file: null,
-        featured
     })
 
-    const createSponsorMutation = useMutation(createSponsor, {
+    const [editorState, setEditorState] = useState(EditorState.createEmpty());
+    const onEditorStateChange = function (editorState) {
+        setEditorState(editorState);
+        setForm((prevState) => (
+            { ...prevState, content: draftToHtml(convertToRaw(editorState.getCurrentContent())) }
+        ))
+    };
+
+    const createFeaturedProductMutation = useMutation(createFeaturedProduct, {
         onSuccess: () => {
-            queryClient.invalidateQueries('sponsors');
+            queryClient.invalidateQueries('featured_products');
             setOpenedPage(0)
             toast({
-                title: "Create new sponsor successfully",
+                title: "Create new featured product successfully",
                 position: 'top-right',
                 status: "success",
                 insert: "top",
@@ -65,7 +74,7 @@ export default function SponsorForm({ sponsor, setOpenedPage }) {
             const errors = error.response.data.errors ? error.response.data.errors : {error: error.response.data.error};
             const key = errors[Object.keys(errors)[0]];
             toast({
-                title: "Failed to create sponsor",
+                title: "Failed to create featured product",
                 description: key,
                 position: 'top-right',
                 status: "success",
@@ -76,12 +85,12 @@ export default function SponsorForm({ sponsor, setOpenedPage }) {
         }
     })
 
-    const updateSponsorMutation = useMutation(updateSponsor, {
+    const updateFeaturedProductMutation = useMutation(updateFeaturedProduct, {
         onSuccess: () => {
-            queryClient.invalidateQueries('sponsors');
+            queryClient.invalidateQueries('featured_products');
             setOpenedPage(0)
             toast({
-                title: "Update sponsor successfully",
+                title: "Update featured product successfully",
                 position: 'top-right',
                 status: "success",
                 insert: "top",
@@ -93,7 +102,7 @@ export default function SponsorForm({ sponsor, setOpenedPage }) {
             const errors = error.response.data.errors ? error.response.data.errors : {error: error.response.data.error};
             const key = errors[Object.keys(errors)[0]];
             toast({
-                title: "Failed to update sponsor successfully",
+                title: "Failed to update featured product successfully",
                 description: key,
                 position: 'top-right',
                 status: "error",
@@ -104,37 +113,71 @@ export default function SponsorForm({ sponsor, setOpenedPage }) {
         }
     })
 
-    const handleSponsor = () => {
+    const handleFeaturedProduct = () => {
         const formData = new FormData();
         formData.append('id', form.id);
-        formData.append('name', form.name);
-        formData.append('description', form.description);
+        formData.append('title', form.title);
+        formData.append('content', form.content);
         formData.append('link', form.link);
-        formData.append('featured', form.featured);
-        if (form.logo_file) formData.append('logo_file', form.logo_file);
+        formData.append('banner', banner);
+        formData.append('published', form.published);
         if (form.banner_file) formData.append('banner_file', form.banner_file);
-        if (!form.id) createSponsorMutation.mutate({ sponsor: formData });
-        else updateSponsorMutation.mutate({ id: sponsor.id, sponsor: formData });
+        if (!form.id) createFeaturedProductMutation.mutate({ featuredProduct: formData });
+        else updateFeaturedProductMutation.mutate({ id: featuredProduct.id, featuredProduct: formData });
     }
 
     const handleChangeForm = (e) => {
         setForm(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
     }
 
+    const handlePastedText = (text, html, editorState) => {
+        const contentState = editorState.getCurrentContent();
+        const selection = editorState.getSelection();
+
+        const newContentState = Modifier.insertText(contentState, selection, text);
+
+        const newEditorState = EditorState.push(editorState, newContentState, 'insert-characters');
+        setEditorState(newEditorState);
+
+        return true;
+    };
+
+    useEffect(() => {
+        const currentContent = editorState.getCurrentContent();
+        const selection = editorState.getSelection();
+
+        const contentWithColor = Modifier.applyInlineStyle(
+            currentContent,
+            selection,
+            'COLOR_' + textColor
+        );
+        const newEditorState = EditorState.push(editorState, contentWithColor, 'change-inline-style');
+        setEditorState(newEditorState);
+
+    }, [textColor, editorState]);
+
     useEffect(() => {
         setForm(prevState => ({
-            ...prevState, id,
-            name,
-            description,
-            logo_url,
+            ...prevState,
+            id,
+            title,
+            content,
+            link,
             banner,
-            featured
+            published
         }));
-    }, [sponsor])
+    }, [featuredProduct])
+
+    useEffect(() => {
+        if (content) {
+            const blocksFromHTML = convertFromHTML(content);
+            const contentState = ContentState.createFromBlockArray(blocksFromHTML.contentBlocks, blocksFromHTML.entityMap);
+            setEditorState(EditorState.createWithContent(contentState));
+        }
+    }, [content])
 
     const [imagePreview, setImagePreview] = useState({
-        logo_file: APP_URL + 'storage/images/' + logo_url,
-        banner_file: APP_URL + 'storage/images/' + banner
+        banner_file: APP_URL + 'storage/' + banner
     });
 
     const handleFileChange = (event) => {
@@ -152,87 +195,49 @@ export default function SponsorForm({ sponsor, setOpenedPage }) {
         }
     };
 
-    const logoFileRef = useRef(null);
     const bannerFileRef = useRef(null);
-
-    useEffect(() => {
-
-    }, [])
 
     return (
         <Box p={"20px"}>
-            <Text mb={"32px"} fontSize={22}>{!sponsor.id ? "Create" : "Update"} Sponsor</Text>
+            <Text mb={"32px"} fontSize={22}>{!featuredProduct.id ? "Create" : "Update"} Featured Product</Text>
             <FormControl>
-                <CustomInput title="Sponsor name" name="name" value={form.name} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                <FormLabel
-                    display='flex'
-                    ms='4px'
-                    fontSize='sm'
-                    fontWeight='500'
-                    color={textColor}
-                    mb='8px'
-                >
-                    Description<Text color={brandStars}>*</Text>
-                </FormLabel>
-                <Textarea
-                    isRequired={true}
-                    variant='auth'
-                    fontSize='sm'
-                    ms={{ base: "0px", md: "0px" }}
-                    placeholder=''
-                    mb='24px'
-                    fontWeight='500'
-                    size='lg'
-                    bgColor={bgColor}
-                    border={'1px'}
-                    borderColor={"grey"}
-                    borderRadius={'16px'}
-                    name="description"
-                    value={form.description}
-                    onChange={handleChangeForm}
-                />
-                <CustomInput title="Website Link" name="link" value={form.link} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                <FormLabel
-                    display='flex'
-                    ms='4px'
-                    fontSize='sm'
-                    fontWeight='500'
-                    color={textColor}
-                    mb='8px'
-                >
-                    Logo File<Text color={brandStars}>*</Text>
-                </FormLabel>
-                <Box
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="space-between"
-                    p={4}
-                    border="2px dashed"
-                    borderColor="grey"
-                    borderRadius="md"
-                    cursor="pointer"
-                    _hover={{ borderColor: 'gray.400' }}
-                    as="label"
-                    mb='24px'
-                >
-                    <Box display="flex" alignItems="center" onClick={() => logoFileRef.current.click()}>
-                        <Icon as={MdUploadFile} mr={2} />
-                        <Text>{form.logo_file ? 'Choose other file' : 'Choose a file...'}</Text>
-                    </Box>
-                    {imagePreview.logo_file && (
-                        <Box mt={4}>
-                            <Image src={imagePreview.logo_file} alt="Image Preview" boxSize="200px" objectFit="cover" />
-                        </Box>
-                    )}
-                    <Input
-                        ref={logoFileRef}
-                        type="file"
-                        display="none"
-                        accept='image/*'
-                        name='logo_file'
-                        onChange={handleFileChange}
+                <CustomInput title="Title" name="title" value={form.title} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                <FormControl mb={"24px"}>
+                    <FormLabel
+                        display='flex'
+                        ms='4px'
+                        fontSize='sm'
+                        fontWeight='500'
+                        color={textColor}
+                        mb='8px'
+                    >
+                        Content<Text color={brandStars}>*</Text>
+                    </FormLabel>
+                    <Editor
+                        editorState={editorState}
+                        toolbarClassName="toolbarClassName"
+                        wrapperClassName="wrapperClassName"
+                        editorClassName="editorClassName"
+                        editorStyle={{ color: textColor, minHeight: 300 }}
+                        toolbarStyle={{ backgroundColor: 'white', color: 'black' }}
+                        onEditorStateChange={onEditorStateChange}
+                        handlePastedText={handlePastedText}
+                        toolbar={{
+                            options: ['inline', 'blockType', 'fontSize', 'list', 'textAlign', 'colorPicker', 'link', 'history'],
+                            inline: { inDropdown: false },
+                            blockType: { inDropdown: true },
+                            fontSize: { inDropdown: true },
+                            list: { inDropdown: false },
+                            textAlign: { inDropdown: true },
+                            link: { inDropdown: false },
+                            history: { inDropdown: false },
+                            // Remove image and embed
+                            image: { visible: false },
+                            embed: { visible: false }
+                        }}
                     />
-                </Box>
+                </FormControl>
+                <CustomInput title="Website Link" name="link" value={form.link} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 <FormLabel
                     display='flex'
                     ms='4px'
@@ -254,13 +259,12 @@ export default function SponsorForm({ sponsor, setOpenedPage }) {
                     borderRadius="md"
                     cursor="pointer"
                     _hover={{ borderColor: 'gray.400' }}
-                    as="label"
                 >
                     <Box display="flex" alignItems="center" onClick={() => bannerFileRef.current.click()}>
                         <Icon as={MdUploadFile} mr={2} />
                         <Text>{form.banner_file ? 'Choose other file' : 'Choose a file...'}</Text>
                     </Box>
-                    {imagePreview.banner_file && (
+                    {(form.banner || form.banner_file) && (
                         <Box mt={4}>
                             <Image src={imagePreview.banner_file} alt="Image Preview" boxSize="200px" objectFit="cover" />
                         </Box>
@@ -283,23 +287,23 @@ export default function SponsorForm({ sponsor, setOpenedPage }) {
                         fontWeight='500'
                         color={textColor}
                     >
-                        Featured
+                        Published
                     </FormLabel>
                     <Switch
                         size={'lg'}
                         colorScheme={"brand"}
-                        isChecked={form.featured === 1}
+                        isChecked={form.published === 1}
                         onChange={() => {
                             setForm(prevState => ({
                                 ...prevState,
-                                featured: 1 - form.featured
+                                published: 1 - form.published
                             }))
                         }}
                     />
                 </FormControl>
 
             </FormControl>
-            <Button variant={"brand"} mt={3} mr={3} onClick={handleSponsor}>
+            <Button variant={"brand"} mt={3} mr={3} onClick={handleFeaturedProduct}>
                 Save
             </Button>
             <Button mt={3} onClick={() => setOpenedPage(0)}>Cancel</Button>

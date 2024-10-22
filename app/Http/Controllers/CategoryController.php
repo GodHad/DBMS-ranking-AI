@@ -36,7 +36,7 @@ class CategoryController extends Controller
 
             return response()->json(['success' => true]);
         } catch (\Exception $th) {
-            return response()->json(['success' => false, 'errors' => ['shortname' => 'Failed to create vendor'], 'error' => $th->getMessage()]);
+            return response()->json(['success' => false, 'error' => $th->getMessage()]);
         }
     }
 
@@ -48,7 +48,7 @@ class CategoryController extends Controller
             $category = Category::find($id);
 
             if (!$category) 
-                return response()->json(['success' => false, 'errors' => ['shortname' => 'Can\'t find the category']]);
+                return response()->json(['success' => false, 'errors' => ['shortname' => 'Category is not found']]);
             
             $validator = Validator::make($data, [
                 'title' => ['sometimes', 'string', 'max:255'],
@@ -60,8 +60,8 @@ class CategoryController extends Controller
             $category->update($validator->validated());
 
             return response()->json(['success' => true, 'category' => $category]);
-        } catch (\Throwable $th) {
-            return response()->json(['success' => false, 'errors' => ['shortname' => 'Failed to update vendor']]);
+        } catch (\Exception $th) {
+            return response()->json(['success' => false, 'errors' => ['shortname' => $th->getMessage()]]);
         }
     }
 
@@ -72,12 +72,12 @@ class CategoryController extends Controller
             $category = Category::find($id);
 
             if (!$category)
-                return response()->json(['success' => false, 'errors' => [ 'Can\'t find the category']], 422);
+                return response()->json(['success' => false, 'errors' => [ 'Category is not found']], 422);
 
             $category->delete();
             return response()->json(['success' => true]);
-        } catch (\Throwable $e) {
-            return response()->json(['success' => false, 'errors' => ['shorname' => 'Failed to delete blog']]);
+        } catch (\Exception $th) {
+            return response()->json(['success' => false, 'errors' => ['shorname' => $th->getMessage()]]);
         }
     }
 }

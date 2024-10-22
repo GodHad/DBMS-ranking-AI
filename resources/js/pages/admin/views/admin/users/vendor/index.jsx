@@ -43,8 +43,8 @@ import {
 } from '@tanstack/react-table';
 
 // Custom components
-import Card from '../../../../../../../components/card/Card';
-import Menu from '../../../../../../../components/menu/MainMenu';
+import Card from '../../../../../../components/card/Card';
+import Menu from '../../../../../../components/menu/MainMenu';
 import VendorForm from './components/VendorForm';
 import { MdAdd } from 'react-icons/md'
 import { useMutation, useQuery, useQueryClient } from 'react-query';
@@ -59,6 +59,8 @@ const initialVendor = {
     phone_number: '',
     job_title: '',
     company: '',
+    approved: 0,
+    userRoleId: null
 }
 
 const Vendor = () => {
@@ -73,7 +75,6 @@ const Vendor = () => {
 
     const [vendor, setVendor] = useState(initialVendor);
     const { data: vendors, isLoadingSponsors } = useQuery('vendors', getVendors);
-    console.log(vendors)
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: 10,
@@ -91,9 +92,12 @@ const Vendor = () => {
                 isClosable: true
             })
         },
-        onError: () => {
+        onError: (error) => {
+            const errors = error.response.data.errors ? error.response.data.errors : {error: error.response.data.error};
+            const key = errors[Object.keys(errors)[0]];
             toast({
                 title: "Failed to delete vendor",
+                description: key,
                 position: 'top-right',
                 status: "error",
                 insert: "top",
@@ -153,7 +157,7 @@ const Vendor = () => {
                 </Text>
             ),
             cell: (info) => (
-                <Text color={textColor} fontSize="sm" fontWeight="700" _hover={{ color: 'blue.400' }}>
+                <Text color={textColor} fontSize="sm" fontWeight="700">
                     {info.getValue()}
                 </Text>
             )
@@ -171,7 +175,7 @@ const Vendor = () => {
                 </Text>
             ),
             cell: (info) => (
-                <Text color={textColor} fontSize="sm" fontWeight="700" _hover={{ color: 'blue.400' }}>
+                <Text color={textColor} fontSize="sm" fontWeight="700">
                     {info.getValue()}
                 </Text>
             )
@@ -189,29 +193,29 @@ const Vendor = () => {
                 </Text>
             ),
             cell: (info) => (
-                <Text color={textColor} fontSize="sm" fontWeight="700" _hover={{ color: 'blue.400' }}>
+                <Text color={textColor} fontSize="sm" fontWeight="700">
                     {info.getValue()}
                 </Text>
             )
         }),
-        columnHelper.accessor('job_title', {
-            id: 'job_title',
-            header: () => (
-                <Text
-                    justifyContent="center"
-                    align="center"
-                    fontSize={{ sm: '10px', lg: '12px' }}
-                    color="gray.400"
-                >
-                    Job Title
-                </Text>
-            ),
-            cell: (info) => (
-                <Text color={textColor} fontSize="sm" fontWeight="700" _hover={{ color: 'blue.400' }}>
-                    {info.getValue()}
-                </Text>
-            )
-        }),
+        // columnHelper.accessor('job_title', {
+        //     id: 'job_title',
+        //     header: () => (
+        //         <Text
+        //             justifyContent="center"
+        //             align="center"
+        //             fontSize={{ sm: '10px', lg: '12px' }}
+        //             color="gray.400"
+        //         >
+        //             Job Title
+        //         </Text>
+        //     ),
+        //     cell: (info) => (
+        //         <Text color={textColor} fontSize="sm" fontWeight="700">
+        //             {info.getValue()}
+        //         </Text>
+        //     )
+        // }),
         columnHelper.accessor('company', {
             id: 'company',
             header: () => (
@@ -225,9 +229,33 @@ const Vendor = () => {
                 </Text>
             ),
             cell: (info) => (
-                <Text color={textColor} fontSize="sm" fontWeight="700" _hover={{ color: 'blue.400' }}>
+                <Text color={textColor} fontSize="sm" fontWeight="700">
                     {info.getValue()}
                 </Text>
+            )
+        }),
+        columnHelper.accessor('approved', {
+            id: 'aproved',
+            header: () => (
+                <Text
+                    justifyContent="center"
+                    align="center"
+                    fontSize={{ sm: '10px', lg: '12px' }}
+                    color="gray.400"
+                >
+                    Approved
+                </Text>
+            ),
+            cell: (info) => (
+                <Flex align="center">
+                    <Icon
+                        w="24px"
+                        h="24px"
+                        me="5px"
+                        color={info.getValue() === 1 ? 'green.500' : 'gray.500'}
+                        as={info.getValue() === 1 ? MdCheckCircle : MdOutlineRemoveCircle}
+                    />
+                </Flex>
             )
         }),
         columnHelper.accessor('action', {
@@ -310,7 +338,7 @@ const Vendor = () => {
                             ml={{ base: "20px" }}
                             variant='brand'
                             fontWeight='500'
-                            onClick={() => { setOpenedPage(1); setVendor(vendor) }}
+                            onClick={() => { setOpenedPage(1); setVendor(initialVendor) }}
                         >
                             <Icon as={MdAdd} h='18px' w='18px' />New Vendor
                         </Button>

@@ -43,16 +43,16 @@ import {
 } from '@tanstack/react-table';
 
 // Custom components
-import Card from '../../../../../../../components/card/Card';
-import Menu from '../../../../../../../components/menu/MainMenu';
-import VendorForm from './components/VendorForm';
+import Card from '../../../../../../components/card/Card';
+import Menu from '../../../../../../components/menu/MainMenu';
+import AuthorForm from './components/AuthorForm';
 import { MdAdd } from 'react-icons/md'
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { getVendors, getVendor, deleteVendor } from './requests/use-request';
+import { getAuthors, getAuthor, deleteAuthor } from './requests/use-request';
 
 const columnHelper = createColumnHelper();
 
-const initialVendor = {
+const initialAuthor = {
     id: null,
     name: '',
     surname: '',
@@ -63,7 +63,7 @@ const initialVendor = {
     userRoleId: null
 }
 
-const Vendor = () => {
+const Author = () => {
     const toast = useToast();
     const queryClient = useQueryClient();
 
@@ -73,18 +73,18 @@ const Vendor = () => {
 
     const [openedPage, setOpenedPage] = useState(0);
 
-    const [vendor, setVendor] = useState(initialVendor);
-    const { data: vendors, isLoadingSponsors } = useQuery('vendors', getVendors);
+    const [author, setAuthor] = useState(initialAuthor);
+    const { data: authors, isLoadingSponsors } = useQuery('authors', getAuthors);
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: 10,
     })
 
-    const handleDeleteVendor = useMutation(deleteVendor, {
+    const handleDeleteAuthor = useMutation(deleteAuthor, {
         onSuccess: () => {
-            queryClient.invalidateQueries('vendors');
+            queryClient.invalidateQueries('authors');
             toast({
-                title: "Delete vendor successfully",
+                title: "Delete author successfully",
                 position: 'top-right',
                 status: "success",
                 insert: "top",
@@ -92,9 +92,12 @@ const Vendor = () => {
                 isClosable: true
             })
         },
-        onError: () => {
+        onError: (error) => {
+            const errors = error.response.data.errors ? error.response.data.errors : {error: error.response.data.error};
+            const key = errors[Object.keys(errors)[0]];
             toast({
-                title: "Failed to delete vendor",
+                title: "Failed to delete author",
+                description: key,
                 position: 'top-right',
                 status: "error",
                 insert: "top",
@@ -154,7 +157,7 @@ const Vendor = () => {
                 </Text>
             ),
             cell: (info) => (
-                <Text color={textColor} fontSize="sm" fontWeight="700" _hover={{ color: 'blue.400' }}>
+                <Text color={textColor} fontSize="sm" fontWeight="700">
                     {info.getValue()}
                 </Text>
             )
@@ -172,7 +175,7 @@ const Vendor = () => {
                 </Text>
             ),
             cell: (info) => (
-                <Text color={textColor} fontSize="sm" fontWeight="700" _hover={{ color: 'blue.400' }}>
+                <Text color={textColor} fontSize="sm" fontWeight="700">
                     {info.getValue()}
                 </Text>
             )
@@ -190,7 +193,7 @@ const Vendor = () => {
                 </Text>
             ),
             cell: (info) => (
-                <Text color={textColor} fontSize="sm" fontWeight="700" _hover={{ color: 'blue.400' }}>
+                <Text color={textColor} fontSize="sm" fontWeight="700">
                     {info.getValue()}
                 </Text>
             )
@@ -208,7 +211,7 @@ const Vendor = () => {
         //         </Text>
         //     ),
         //     cell: (info) => (
-        //         <Text color={textColor} fontSize="sm" fontWeight="700" _hover={{ color: 'blue.400' }}>
+        //         <Text color={textColor} fontSize="sm" fontWeight="700">
         //             {info.getValue()}
         //         </Text>
         //     )
@@ -226,7 +229,7 @@ const Vendor = () => {
                 </Text>
             ),
             cell: (info) => (
-                <Text color={textColor} fontSize="sm" fontWeight="700" _hover={{ color: 'blue.400' }}>
+                <Text color={textColor} fontSize="sm" fontWeight="700">
                     {info.getValue()}
                 </Text>
             )
@@ -274,7 +277,7 @@ const Vendor = () => {
                         me='16px'
                         ms='auto'
                         p='0px !important'
-                        onClick={() => { setVendor(info.row.original); setOpenedPage(1) }}
+                        onClick={() => { setAuthor(info.row.original); setOpenedPage(1) }}
                     >
                         <Icon as={MdEdit} color='secondaryGray.500' h='18px' w='18px' />
                     </Link>
@@ -283,7 +286,7 @@ const Vendor = () => {
                         me='16px'
                         ms='auto'
                         p='0px !important'
-                        onClick={() => handleDeleteVendor.mutate(info.row.original.id)}
+                        onClick={() => handleDeleteAuthor.mutate(info.row.original.id)}
                     >
                         <Icon as={MdDelete} color='secondaryGray.500' h='18px' w='18px' />
                     </Link>
@@ -293,7 +296,7 @@ const Vendor = () => {
     ];
 
     const table = useReactTable({
-        data: vendors || [],
+        data: authors || [],
         columns,
         state: {
             sorting,
@@ -324,7 +327,7 @@ const Vendor = () => {
                             fontWeight="700"
                             lineHeight="100%"
                         >
-                            Vendors
+                            Authors
                         </Text>
                         <Menu />
                     </Flex>
@@ -335,9 +338,9 @@ const Vendor = () => {
                             ml={{ base: "20px" }}
                             variant='brand'
                             fontWeight='500'
-                            onClick={() => { setOpenedPage(1); setVendor(initialVendor) }}
+                            onClick={() => { setOpenedPage(1); setAuthor(initialAuthor) }}
                         >
-                            <Icon as={MdAdd} h='18px' w='18px' />New Vendor
+                            <Icon as={MdAdd} h='18px' w='18px' />New Author
                         </Button>
                     </Flex>
                     <Box>
@@ -415,7 +418,7 @@ const Vendor = () => {
                                                 fontWeight="700"
                                                 lineHeight="100%"
                                             >
-                                                No Vendors
+                                                No Authors
                                             </Text>
                                         </Td>
                                     </Tr>
@@ -512,9 +515,9 @@ const Vendor = () => {
                     </Box>
                 </>
             )}
-            {openedPage === 1 && <VendorForm vendor={vendor} setOpenedPage={() => { setOpenedPage(0); }} />}
+            {openedPage === 1 && <AuthorForm author={author} setOpenedPage={() => { setOpenedPage(0); }} />}
         </Card>
     )
 }
 
-export default Vendor;
+export default Author;

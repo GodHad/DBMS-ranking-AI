@@ -1,4 +1,4 @@
-import axios from "../../../../variables/axiosConfig";
+import axios from "../../../../../variables/axiosConfig";
 
 const getCategories = async () => {
     const { data } = await axios.get('/api/get-categories');

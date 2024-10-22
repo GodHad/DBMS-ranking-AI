@@ -56,10 +56,12 @@ export default function EncyclopediaForm({ encyclopedia, setOpenedPage }) {
                 isClosable: true
             })
         },
-        onError: ({ errors }) => {
+        onError: (error) => {
+            const errors = error.response.data.errors ? error.response.data.errors : {error: error.response.data.error};
+            const key = errors[Object.keys(errors)[0]];
             toast({
                 title: "Failed to create Encyclopedia",
-                description: errors,
+                description: key,
                 position: 'top-right',
                 status: "success",
                 insert: "top",
@@ -82,10 +84,12 @@ export default function EncyclopediaForm({ encyclopedia, setOpenedPage }) {
                 isClosable: true
             })
         },
-        onError: ({ errors }) => {
+        onError: (error) => {
+            const errors = error.response.data.errors ? error.response.data.errors : {error: error.response.data.error};
+            const key = errors[Object.keys(errors)[0]];
             toast({
                 title: "Failed to update Encyclopedia successfully",
-                description: errors,
+                description: key,
                 position: 'top-right',
                 status: "error",
                 insert: "top",
@@ -117,14 +121,6 @@ export default function EncyclopediaForm({ encyclopedia, setOpenedPage }) {
     };
 
     useEffect(() => {
-        setForm({
-            id,
-            title,
-            content
-        });
-    }, [encyclopedia])
-
-    useEffect(() => {
         const currentContent = editorState.getCurrentContent();
         const selection = editorState.getSelection();
 
@@ -137,6 +133,14 @@ export default function EncyclopediaForm({ encyclopedia, setOpenedPage }) {
         setEditorState(newEditorState);
 
     }, [textColor, editorState]);
+
+    useEffect(() => {
+        setForm({
+            id,
+            title,
+            content
+        });
+    }, [encyclopedia])
 
     useEffect(() => {
         if (form.content) {
@@ -158,6 +162,7 @@ export default function EncyclopediaForm({ encyclopedia, setOpenedPage }) {
                 wrapperClassName="wrapperClassName"
                 editorClassName="editorClassName"
                 editorStyle={{ color: textColor, minHeight: 300 }}
+                toolbarStyle={{ backgroundColor: 'white', color: 'black' }}
                 onEditorStateChange={onEditorStateChange}
                 handlePastedText={handlePastedText}
                 toolbar={{

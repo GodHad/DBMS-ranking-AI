@@ -14,8 +14,8 @@ class SponsorController extends Controller
         try {
             $sponsors = Sponsor::all();
             return response()->json(['success' => true, 'sponsors' => $sponsors]);
-        } catch (\Throwable $th) {
-            return response()->json(['success' => false, 'error' => 'Failed to get sponsors'], 500);
+        } catch (\Exception $th) {
+            return response()->json(['success' => false, 'error' => $th->getMessage()], 500);
         }
     }
 
@@ -25,8 +25,8 @@ class SponsorController extends Controller
             $sponsor_id = $request->query('id');
             $sponsor = Sponsor::find($sponsor_id);
             return response()->json(['success' => true, 'sponsor' => $sponsor]);
-        } catch (\Throwable $th) {
-            return response()->json(['success' => false, 'error' => 'Failed to get sponsor'], 500);
+        } catch (\Exception $th) {
+            return response()->json(['success' => false, 'error' => $th->getMessage()], 500);
         }
     }
 
@@ -62,7 +62,7 @@ class SponsorController extends Controller
 
             return response()->json(['success' => true]);
         } catch (\Exception $th) {
-            return response()->json(['success' => false, 'errors' => $th->getMessage()], 500);
+            return response()->json(['success' => false, 'error' => $th->getMessage()], 500);
         }
     }
 
@@ -90,7 +90,7 @@ class SponsorController extends Controller
                 if ($sponsor->logo_url) {
                     Storage::disk('public')->delete($sponsor->logo_url);
                 }
-                $logoPath = $request->file('logo_file')->store('sponsors/logos', 'public');
+                $logoPath = $request->file('logo_file')->store('images/sponsors/logos', 'public');
                 $sponsor->logo_url = $logoPath;
             }
 
@@ -98,7 +98,7 @@ class SponsorController extends Controller
                 if ($sponsor->banner) {
                     Storage::disk('public')->delete($sponsor->banner);
                 }
-                $bannerPath = $request->file('banner_file')->store('sponsors/banners', 'public');
+                $bannerPath = $request->file('banner_file')->store('images/sponsors/banners', 'public');
                 $sponsor->banner = $bannerPath;
             }
 
@@ -128,8 +128,8 @@ class SponsorController extends Controller
 
             $sponsor->delete();
             return response()->json(['success' => true]);
-        } catch (\Throwable $th) {
-            return response()->json(['success' => false, 'error' => 'Failed to delete sponsor'], 500);
+        } catch (\Exception $th) {
+            return response()->json(['success' => false, 'error' => $th->getMessage()], 500);
         }
     }
 

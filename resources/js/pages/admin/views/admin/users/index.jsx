@@ -8,23 +8,23 @@ import {
     Tab
 } from '@chakra-ui/react';
 
-import Category from './Categories';
-import DBMS from './dbms';
+import Vendor from './vendor';
+import Author from './author';
 
 export default function Blog() {
     return (
         <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
             <Tabs>
                 <TabList>
-                    <Tab>DBMS</Tab>
-                    <Tab>Categories</Tab>
+                    <Tab>Vendors</Tab>
+                    <Tab>Authors</Tab>
                 </TabList>
                 <TabPanels>
                     <TabPanel>
-                        <DBMS />
+                        <Vendor />
                     </TabPanel>
                     <TabPanel>
-                        <Category />
+                        <Author />
                     </TabPanel>
                 </TabPanels>
             </Tabs>

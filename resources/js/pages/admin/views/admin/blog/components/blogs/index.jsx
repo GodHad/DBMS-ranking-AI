@@ -113,9 +113,12 @@ export default () => {
                 isClosable: true
             })
         },
-        onError: () => {
+        onError: (error) => {
+            const errors = error.response.data.errors ? error.response.data.errors : {error: error.response.data.error};
+            const key = errors[Object.keys(errors)[0]];
             toast({
                 title: "Failed to Delete Blog",
+                description: key,
                 position: 'top-right',
                 status: "error",
                 insert: "top",

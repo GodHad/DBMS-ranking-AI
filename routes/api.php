@@ -10,6 +10,8 @@ use App\Http\Controllers\TrendsController;
 use App\Http\Controllers\EncyclopediaController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\VendorRequestController;
+use App\Http\Controllers\AuthorRequestController;
+use App\Http\Controllers\FeaturedProductController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -78,10 +80,23 @@ Route::group([
     Route::post('/create-vendor-manager', [VendorRequestController::class, 'createVendor']);
     Route::post('/update-vendor-manager', [VendorRequestController::class, 'updateVendor']);
     Route::delete('/delete-vendor-manager', [VendorRequestController::class, 'deleteVendor']);
-
+    
     Route::get('/get-vendor-requests', [VendorRequestController::class, 'getAllRequests']);
     Route::post('/create-vendor-request', [VendorRequestController::class, 'createVendorRequest']);
     
+    // author requests
+    Route::get('/get-authors', [AuthorRequestController::class, 'getAllAuthors']);
+    Route::post('/create-author', [AuthorRequestController::class, 'createAuthor']);
+    Route::post('/update-author', [AuthorRequestController::class, 'updateAuthor']);
+    Route::delete('/delete-author', [AuthorRequestController::class, 'deleteAuthor']);
+
+    // featured product
+    Route::get('/get-featured-products', [FeaturedProductController::class, 'featured_products']);
+    Route::get('/get-featured-product', [FeaturedProductController::class, 'featured_product']);
+    Route::post('/create-featured-product', [FeaturedProductController::class, 'create']);
+    Route::post('/update-featured-product', [FeaturedProductController::class, 'update']);
+    Route::delete('/delete-featured-product', [FeaturedProductController::class, 'delete']);
+
     // testing route for fetching data
     Route::get('/test', [VendorController::class, 'test']);
 });

@@ -1,8 +1,8 @@
-import axios from "../../../../../../variables/axiosConfig";
+import axios from "../../../../../variables/axiosConfig";
 
 const getVendors = async () => {
     const { data } = await axios.get('/api/get-vendor-managers');
-    return data.vendors.map(vendor => (vendor.user));
+    return data.vendors.map(vendor => ({ ...vendor.user, approved: vendor.approved, userRoleId: vendor.id }));
 }
 
 const getVendor = async (id) => {

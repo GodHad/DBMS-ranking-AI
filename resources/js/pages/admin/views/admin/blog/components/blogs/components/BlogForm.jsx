@@ -75,10 +75,10 @@ export default function BlogForm({ blog, setOpenedPage }) {
                 isClosable: true
             })
         },
-        onError: ({ errors }) => {
+        onError: (error) => {
             toast({
                 title: "Failed to create Blog",
-                description: errors,
+                description: error,
                 position: 'top-right',
                 status: "error",
                 insert: "top",
@@ -101,10 +101,12 @@ export default function BlogForm({ blog, setOpenedPage }) {
                 isClosable: true
             })
         },
-        onError: ({ errors }) => {
+        onError: (error) => {
+            const errors = error.response.data.errors ? error.response.data.errors : {error: error.response.data.error};
+            const key = errors[Object.keys(errors)[0]];
             toast({
                 title: "Failed to update Blog successfully",
-                description: errors,
+                description: key,
                 position: 'top-right',
                 status: "error",
                 insert: "top",

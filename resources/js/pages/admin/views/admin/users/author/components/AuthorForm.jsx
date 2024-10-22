@@ -13,13 +13,11 @@ import {
     useToast,
     useColorModeValue
 } from '@chakra-ui/react'
-import { MdUploadFile } from 'react-icons/md';
 import { useQueryClient, useMutation } from 'react-query';
-import { createVendor, updateVendor } from '../requests/use-request';
-import { APP_URL } from '../../../../../../variables/statics';
-import { CustomInput } from '../../../../../../../../components/form/CustomInput';
+import { createAuthor, updateAuthor } from '../requests/use-request';
+import { CustomInput } from '../../../../../../../components/form/CustomInput';
 
-export default function VendorForm({ vendor, setOpenedPage }) {
+export default function AuthorForm({ author, setOpenedPage }) {
     const queryClient = useQueryClient();
     const toast = useToast();
     const textColor = useColorModeValue("navy.400", "white");
@@ -34,7 +32,9 @@ export default function VendorForm({ vendor, setOpenedPage }) {
         phone_number,
         job_title,
         company,
-    } = vendor;
+        approved,
+        userRoleId
+    } = author;
 
     const [form, setForm] = useState({
         id,
@@ -44,15 +44,17 @@ export default function VendorForm({ vendor, setOpenedPage }) {
         phone_number,
         job_title,
         company,
-        password: ''
+        password: '',
+        approved,
+        userRoleId
     })
 
-    const createVendorMutation = useMutation(createVendor, {
+    const createAuthorMutation = useMutation(createAuthor, {
         onSuccess: () => {
-            queryClient.invalidateQueries('vendors');
+            queryClient.invalidateQueries('authors');
             setOpenedPage(0)
             toast({
-                title: "Create new vendor successfully",
+                title: "Create new author successfully",
                 position: 'top-right',
                 status: "success",
                 insert: "top",
@@ -60,10 +62,12 @@ export default function VendorForm({ vendor, setOpenedPage }) {
                 isClosable: true
             })
         },
-        onError: ({ errors }) => {
+        onError: (error) => {
+            const errors = error.response.data.errors ? error.response.data.errors : {error: error.response.data.error};
+            const key = errors[Object.keys(errors)[0]];
             toast({
-                title: "Failed to create vendor",
-                description: errors,
+                title: "Failed to create author",
+                description: key,
                 position: 'top-right',
                 status: "error",
                 insert: "top",
@@ -73,12 +77,12 @@ export default function VendorForm({ vendor, setOpenedPage }) {
         }
     })
 
-    const updateVendorMutation = useMutation(updateVendor, {
+    const updateAuthorMutation = useMutation(updateAuthor, {
         onSuccess: () => {
-            queryClient.invalidateQueries('vendors');
+            queryClient.invalidateQueries('authors');
             setOpenedPage(0)
             toast({
-                title: "Update vendor successfully",
+                title: "Update author successfully",
                 position: 'top-right',
                 status: "success",
                 insert: "top",
@@ -86,10 +90,12 @@ export default function VendorForm({ vendor, setOpenedPage }) {
                 isClosable: true
             })
         },
-        onError: ({ errors }) => {
+        onError: (error) => {
+            const errors = error.response.data.errors ? error.response.data.errors : {error: error.response.data.error};
+            const key = errors[Object.keys(errors)[0]];
             toast({
-                title: "Failed to update vendor",
-                description: errors,
+                title: "Failed to update author",
+                description: key,
                 position: 'top-right',
                 status: "error",
                 insert: "top",
@@ -99,9 +105,9 @@ export default function VendorForm({ vendor, setOpenedPage }) {
         }
     })
 
-    const handleVendor = () => {
-        if (!form.id) createVendorMutation.mutate({ vendor: form });
-        else updateVendorMutation.mutate({ vendor: form });
+    const handleAuthor = () => {
+        if (!form.id) createAuthorMutation.mutate({ author: form });
+        else updateAuthorMutation.mutate({ author: form });
     }
 
     const handleChangeForm = (e) => {
@@ -117,13 +123,15 @@ export default function VendorForm({ vendor, setOpenedPage }) {
             email,
             phone_number,
             job_title,
-            company
+            company,
+            approved,
+            userRoleId
         }));
-    }, [vendor])
+    }, [author])
 
     return (
         <Box p={"20px"}>
-            <Text mb={"32px"} fontSize={22}>{!vendor.id ? "Create" : "Update"} Vendor</Text>
+            <Text mb={"32px"} fontSize={22}>{!author.id ? "Create" : "Update"} Author</Text>
             <FormControl>
                 <CustomInput title="Name" name="name" value={form.name} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 <CustomInput title="Surname" name="surname" value={form.surname} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
@@ -131,10 +139,32 @@ export default function VendorForm({ vendor, setOpenedPage }) {
                 <CustomInput title="Phone Number" name="phone_number" value={form.phone_number} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 <CustomInput title="Job Title" name="job_title" value={form.job_title} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 <CustomInput title="Company" name="company" value={form.company} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                {!vendor.id && <CustomInput title="Password" name="password" type="password" value={form.password} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />}
-
+                {!author.id && <CustomInput title="Password" name="password" type="password" value={form.password} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />}
+                <FormControl display='flex' alignItems='center' mb={'24px'}>
+                    <FormLabel
+                        display='flex'
+                        ms='4px'
+                        mb={0}
+                        fontSize='sm'
+                        fontWeight='500'
+                        color={textColor}
+                    >
+                        Approved
+                    </FormLabel>
+                    <Switch
+                        size={'lg'}
+                        colorScheme={"brand"}
+                        isChecked={form.approved === 1}
+                        onChange={() => {
+                            setForm(prevState => ({
+                                ...prevState,
+                                approved: 1 - form.approved
+                            }))
+                        }}
+                    />
+                </FormControl>
             </FormControl>
-            <Button variant={"brand"} mt={3} mr={3} onClick={handleVendor}>
+            <Button variant={"brand"} mt={3} mr={3} onClick={handleAuthor}>
                 Save
             </Button>
             <Button mt={3} onClick={() => setOpenedPage(0)}>Cancel</Button>

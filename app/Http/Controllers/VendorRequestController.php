@@ -14,7 +14,7 @@ class VendorRequestController extends Controller
 {
     public function getAllVendors()
     {
-        $vendors = UserRole::with('user')->get();
+        $vendors = UserRole::where('role', 'vendor')->with('user')->get();
         return response()->json(['success' => true, 'vendors' => $vendors]);
     }
 
@@ -87,6 +87,26 @@ class VendorRequestController extends Controller
         ]);
 
         if ($validator->fails()) return response()->json(['errors' => $validator->errors()], 422);
+
+        $user = User::where('email', $data['email'])->first();
+
+        if ($user) {
+            $vendor = UserRole::where('user_id', $user->id)->where('role', 'vendor')->first();
+            if ($vendor) {
+                if ($vendor->approved === 0)
+                    return response()->json(['error' => 'You already sent request'], 405);
+                else return response()->json(['error' => 'You are approved now.'], 405);
+            }
+            else {
+                $user->update($validator->validated());
+                UserRole::create([
+                    'user_id' => $user->id,
+                    'approved' => $data['approved'],
+                    'role' => 'vendor'
+                ]);
+                return response()->json(['success' => true]);
+            }
+        }
 
         $vendor = User::create([
             'name' => $data['name'],

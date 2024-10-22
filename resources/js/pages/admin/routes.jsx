@@ -13,12 +13,12 @@ import {
   MdTranslate,
   MdCommentBank,
   MdAttachMoney,
-  MdStorage
+  MdStorage,
+  MdFavorite
 } from 'react-icons/md';
 
 // Admin Imports
 import MainDashboard from './views/admin/default';
-import Categories from './views/admin/Categories';
 // import NFTMarketplace from './views/admin/marketplace';
 // import Profile from './views/admin/profile';
 // import DataTables from './views/admin/dataTables';
@@ -27,7 +27,8 @@ import RankChart from './views/admin/RankCharts';
 import Encyclopedia from './views/admin/encyclopedia';
 import Blog from './views/admin/blog';
 import Sponsor from './views/admin/sponsors';
-import Vendor from './views/admin/vendor';
+import User from './views/admin/users';
+import FeaturedProduct from './views/admin/featured products'
 // Auth Imports
 import SignInCentered from './views/auth/signIn';
 import SignUpCentered from './views/auth/signup';
@@ -41,18 +42,11 @@ const routes = [
     component: <MainDashboard />,
   },
   {
-    name: 'Vendors',
+    name: 'Users',
     layout: '/admin',
-    path: '/vendor',
-    icon: <Icon as={MdHandshake} width="20px" height="20px" color="inherit" />,
-    component: <Vendor />
-  },
-  {
-    name: 'DBMS Categories',
-    layout: '/admin',
-    path: '/category',
-    icon: <Icon as={MdList} width={"20px"} height={"20px"} color={"inherit"} />,
-    component: <Categories />
+    path: '/user',
+    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+    component: <User />
   },
   {
     name: 'DBMS',
@@ -89,6 +83,13 @@ const routes = [
     icon: <Icon as={MdAttachMoney} width={"20px"} height={"20px"} color="inherit" />,
     component: <Sponsor />
   },
+  {
+    name: 'Featured Products',
+    layout: '/admin',
+    path: '/featured-products',
+    icon: <Icon as={MdFavorite} width="20px" height="20px" color="inherit" />,
+    component: <FeaturedProduct />
+  },
   // {
   //   name: 'NFT Marketplace',
   //   layout: '/admin',
@@ -118,20 +119,20 @@ const routes = [
   //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
   //   component: <Profile />,
   // },
-  {
-    name: 'Sign In',
-    layout: '/auth',
-    path: '/sign-in',
-    icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
-    component: <SignInCentered />,
-  },
-  {
-    name: 'Sign Up',
-    layout: '/auth',
-    path: '/sign-up',
-    icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
-    component: <SignUpCentered />,
-  },
+  // {
+  //   name: 'Sign In',
+  //   layout: '/auth',
+  //   path: '/sign-in',
+  //   icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
+  //   component: <SignInCentered />,
+  // },
+  // {
+  //   name: 'Sign Up',
+  //   layout: '/auth',
+  //   path: '/sign-up',
+  //   icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
+  //   component: <SignUpCentered />,
+  // },
 ];
 
 export default routes;

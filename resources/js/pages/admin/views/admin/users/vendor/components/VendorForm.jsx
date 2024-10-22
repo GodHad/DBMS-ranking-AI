@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react'
 import { useQueryClient, useMutation } from 'react-query';
 import { createVendor, updateVendor } from '../requests/use-request';
-import { CustomInput } from '../../../../../../../../components/form/CustomInput';
+import { CustomInput } from '../../../../../../../components/form/CustomInput';
 
 export default function VendorForm({ vendor, setOpenedPage }) {
     const queryClient = useQueryClient();
@@ -62,10 +62,12 @@ export default function VendorForm({ vendor, setOpenedPage }) {
                 isClosable: true
             })
         },
-        onError: ({ errors }) => {
+        onError: (error) => {
+            const errors = error.response.data.errors ? error.response.data.errors : {error: error.response.data.error};
+            const key = errors[Object.keys(errors)[0]];
             toast({
                 title: "Failed to create vendor",
-                description: errors,
+                description: key,
                 position: 'top-right',
                 status: "error",
                 insert: "top",
@@ -88,10 +90,12 @@ export default function VendorForm({ vendor, setOpenedPage }) {
                 isClosable: true
             })
         },
-        onError: ({ errors }) => {
+        onError: (error) => {
+            const errors = error.response.data.errors ? error.response.data.errors : {error: error.response.data.error};
+            const key = errors[Object.keys(errors)[0]];
             toast({
                 title: "Failed to update vendor",
-                description: errors,
+                description: key,
                 position: 'top-right',
                 status: "error",
                 insert: "top",
@@ -140,6 +144,7 @@ export default function VendorForm({ vendor, setOpenedPage }) {
                     <FormLabel
                         display='flex'
                         ms='4px'
+                        mb={0}
                         fontSize='sm'
                         fontWeight='500'
                         color={textColor}

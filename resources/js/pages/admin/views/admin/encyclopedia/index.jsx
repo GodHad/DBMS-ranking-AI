@@ -84,9 +84,12 @@ export default function Encyclopedia() {
                 isClosable: true
             })
         },
-        onError: () => {
+        onError: (error) => {
+            const errors = error.response.data.errors ? error.response.data.errors : {error: error.response.data.error};
+            const key = errors[Object.keys(errors)[0]];
             toast({
                 title: "Delete Encyclopedia successfully",
+                description: key,
                 position: 'top-right',
                 status: "error",
                 insert: "top",

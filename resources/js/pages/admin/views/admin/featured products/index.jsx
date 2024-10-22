@@ -45,24 +45,28 @@ import {
 // Custom components
 import Card from '../../../../../components/card/Card';
 import Menu from '../../../../../components/menu/MainMenu';
-import SponsorForm from './components/SponsorForm';
+import FeaturedProductForm from './components/FeaturedProductForm';
 import { MdAdd } from 'react-icons/md'
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { getSponsors, deleteSponsor } from './requests/use-request';
+import { getFeaturedProducts, deleteFeaturedProduct } from './requests/use-request';
 
 const columnHelper = createColumnHelper();
 
-const initialSponsor = {
+const initialFeaturedProduct = {
     id: null,
-    name: '',
-    description: '',
+    title: '',
+    content: '',
     link: '',
-    logo_url: '',
     banner: '',
-    featured: 0
+    published: 0
 }
 
-export default function Sponsor() {
+const stripHTML = (html) => {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return doc.body.textContent || "";
+};
+
+export default function FeaturedProduct() {
     const toast = useToast();
     const queryClient = useQueryClient();
 
@@ -72,18 +76,18 @@ export default function Sponsor() {
 
     const [openedPage, setOpenedPage] = useState(0);
 
-    const [sponsor, setSponsor] = useState(initialSponsor);
-    const { data: sponsors, isLoadingSponsors } = useQuery('sponsors', getSponsors);
+    const [featuredProduct, setFeaturedProduct] = useState(initialFeaturedProduct);
+    const { data: featured_products, isLoadingSponsors } = useQuery('featured_products', getFeaturedProducts);
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: 10,
     })
 
-    const handleDeleteSponsor = useMutation(deleteSponsor, {
+    const handleDeleteFeaturedProduct = useMutation(deleteFeaturedProduct, {
         onSuccess: () => {
-            queryClient.invalidateQueries('sponsors');
+            queryClient.invalidateQueries('featured_products');
             toast({
-                title: "Delete sponsor successfully",
+                title: "Delete featured product successfully",
                 position: 'top-right',
                 status: "success",
                 insert: "top",
@@ -95,7 +99,7 @@ export default function Sponsor() {
             const errors = error.response.data.errors ? error.response.data.errors : {error: error.response.data.error};
             const key = errors[Object.keys(errors)[0]];
             toast({
-                title: "Failed to delete sponsor",
+                title: "Failed to delete featured product",
                 description: key,
                 position: 'top-right',
                 status: "error",
@@ -125,8 +129,8 @@ export default function Sponsor() {
                 </Text>
             ),
         }),
-        columnHelper.accessor('name', {
-            id: 'name',
+        columnHelper.accessor('title', {
+            id: 'title',
             header: () => (
                 <Text
                     justifyContent="center"
@@ -134,7 +138,7 @@ export default function Sponsor() {
                     fontSize={{ sm: '10px', lg: '12px' }}
                     color="gray.400"
                 >
-                    Name
+                    Title
                 </Text>
             ),
             cell: (info) => (
@@ -143,6 +147,28 @@ export default function Sponsor() {
                 </Text>
             ),
         }),
+        // columnHelper.accessor('content', {
+        //     id: 'content',
+        //     header: () => (
+        //         <Text
+        //             justifyContent="center"
+        //             align="center"
+        //             fontSize={{ sm: '10px', lg: '12px' }}
+        //             color="gray.400"
+        //         >
+        //             Content
+        //         </Text>
+        //     ),
+        //     cell: (info) => {
+        //         return (
+        //             <Box maxW={"400px"}>
+        //                 <Text color={textColor} fontSize="sm" fontWeight="700" isTruncated>
+        //                     {stripHTML(info.getValue())}
+        //                 </Text>
+        //             </Box>
+        //         )
+        //     },
+        // }),
         columnHelper.accessor('link', {
             id: 'link',
             header: () => (
@@ -163,8 +189,8 @@ export default function Sponsor() {
                 </a>
             )
         }),
-        columnHelper.accessor('featured', {
-            id: 'featured',
+        columnHelper.accessor('published', {
+            id: 'published',
             header: () => (
                 <Text
                     justifyContent="center"
@@ -172,7 +198,7 @@ export default function Sponsor() {
                     fontSize={{ sm: '10px', lg: '12px' }}
                     color="gray.400"
                 >
-                    Featured
+                    Published
                 </Text>
             ),
             cell: (info) => {
@@ -211,7 +237,7 @@ export default function Sponsor() {
                         me='16px'
                         ms='auto'
                         p='0px !important'
-                        onClick={() => { setSponsor(info.row.original); setOpenedPage(1) }}
+                        onClick={() => { setFeaturedProduct(info.row.original); setOpenedPage(1) }}
                     >
                         <Icon as={MdEdit} color='secondaryGray.500' h='18px' w='18px' />
                     </Link>
@@ -220,7 +246,7 @@ export default function Sponsor() {
                         me='16px'
                         ms='auto'
                         p='0px !important'
-                        onClick={() => handleDeleteSponsor.mutate(info.row.original.id)}
+                        onClick={() => handleDeleteFeaturedProduct.mutate(info.row.original.id)}
                     >
                         <Icon as={MdDelete} color='secondaryGray.500' h='18px' w='18px' />
                     </Link>
@@ -230,7 +256,7 @@ export default function Sponsor() {
     ];
 
     const table = useReactTable({
-        data: sponsors || [],
+        data: featured_products || [],
         columns,
         state: {
             sorting,
@@ -262,7 +288,7 @@ export default function Sponsor() {
                                 fontWeight="700"
                                 lineHeight="100%"
                             >
-                                Sponsors
+                                Featured Product
                             </Text>
                             <Menu />
                         </Flex>
@@ -273,9 +299,9 @@ export default function Sponsor() {
                                 ml={{ base: "20px" }}
                                 variant='brand'
                                 fontWeight='500'
-                                onClick={() => { setOpenedPage(1); setSponsor(sponsor) }}
+                                onClick={() => { setOpenedPage(1); setFeaturedProduct(featuredProduct) }}
                             >
-                                <Icon as={MdAdd} h='18px' w='18px' />New Sponsor
+                                <Icon as={MdAdd} h='18px' w='18px' />New Featured Product
                             </Button>
                         </Flex>
                         <Box>
@@ -353,7 +379,7 @@ export default function Sponsor() {
                                                     fontWeight="700"
                                                     lineHeight="100%"
                                                 >
-                                                    No Sponsors
+                                                    No Featured Products
                                                 </Text>
                                             </Td>
                                         </Tr>
@@ -450,7 +476,7 @@ export default function Sponsor() {
                         </Box>
                     </>
                 )}
-                {openedPage === 1 && <SponsorForm sponsor={sponsor} setOpenedPage={() => { setOpenedPage(0); }} />}
+                {openedPage === 1 && <FeaturedProductForm featuredProduct={featuredProduct} setOpenedPage={() => { setOpenedPage(0); }} />}
             </Card>
         </Box >
     );

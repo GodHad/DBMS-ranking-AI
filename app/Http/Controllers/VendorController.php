@@ -89,7 +89,7 @@ class VendorController extends Controller
 
             return response()->json(['success' => true, 'vendors' => $vendors->sortBy('overall_ranking')->values()]);
         } catch (\Exception $th) {
-            return response()->json(['success' => false, 'error' => 'Failed to get vendors', 'error' => $th->getMessage()], 500);
+            return response()->json(['success' => false, 'error' => $th->getMessage()], 500);
         }
     }
 
@@ -99,8 +99,8 @@ class VendorController extends Controller
             $vendor_id = $request->query('id');
             $vendor = Vendor::with('category')->find($vendor_id);
             return response()->json(['success' => true, 'vendor' => $vendor]);
-        } catch (\Throwable $th) {
-            return response()->json(['success' => false, 'error' => 'Failed to get vendor'], 500);
+        } catch (\Exception $th) {
+            return response()->json(['success' => false, 'error' => $th->getMessage()], 500);
         }
     }
 
@@ -155,7 +155,7 @@ class VendorController extends Controller
 
             return response()->json(['success' => true]);
         } catch (\Exception $th) {
-            return response()->json(['success' => false, 'errors' => ['current_release' => 'Failed to create vendor'], 'erorr' => $th->getMessage()]);
+            return response()->json(['success' => false, 'error' => $th->getMessage()], 500);
         }
     }
 
@@ -246,115 +246,8 @@ class VendorController extends Controller
             CountryTrend::where('vendor_id', $vendor->id)->delete();
             $vendor->delete();
             return response()->json(['success' => true]);
-        } catch (\Throwable $th) {
-            return response()->json(['success' => false, 'error' => 'Failed to delete vendor'], 500);
+        } catch (\Exception $th) {
+            return response()->json(['success' => false, 'error' => $th->getMessage()], 500);
         }
-    }
-
-    public function test()
-    {
-        $now = Carbon::now();
-
-        // Current Month
-        $currentMonthStart = $now->copy()->startOfMonth()->format('Y-m-d');
-        $currentMonthEnd = $now->copy()->endOfMonth()->format('Y-m-d');
-
-        // Previous Month
-        $previousMonth = $now->copy()->subMonthNoOverflow();
-        $previousMonthStart = $previousMonth->startOfMonth()->format('Y-m-d');
-        $previousMonthEnd = $previousMonth->endOfMonth()->format('Y-m-d');
-
-        // Previous Year
-        $previousYear = $now->copy()->subYear();
-        $previousYearStart = $previousYear->startOfMonth()->format('Y-m-d');
-        $previousYearEnd = $previousYear->endOfMonth()->format('Y-m-d');
-
-        function getAverageTrends($startDate, $endDate) {
-            return Trend::whereBetween('date', [$startDate, $endDate])
-                ->selectRaw('vendor_id, AVG(score) as average_score')
-                ->groupBy('vendor_id')
-                ->orderBy('average_score', 'desc')
-                ->get();
-        }
-
-        $currentMonthTrends = getAverageTrends($currentMonthStart, $currentMonthEnd);
-        $previousMonthTrends = getAverageTrends($previousMonthStart, $previousMonthEnd);
-        $previousYearTrends = getAverageTrends($previousYearStart, $previousYearEnd);
-
-        $vendors = Vendor::all();
-
-        $rank = 1;
-        foreach ($currentMonthTrends as $trend) {
-            foreach ($vendors as $vendor) {
-                if ($vendor->id === $trend->vendor_id) {
-                    $vendor->overall_ranking = $rank ++;
-                    $vendor->overall_avg_score = $trend->average_score;
-                    break;
-                }
-            }
-        }
-
-        $rank = 1;
-        foreach ($previousMonthTrends as $trend) {
-            foreach ($vendors as $vendor) {
-                if ($vendor->id === $trend->vendor_id) {
-                    $vendor->prev_month_overall_ranking = $rank ++;
-                    $vendor->prev_month_overall_avg_score = $trend->average_score;
-                    break;
-                }
-            }
-        }
-
-        $rank = 1;
-        foreach ($previousYearTrends as $trend) {
-            foreach ($vendors as $vendor) {
-                if ($vendor->id === $trend->vendor_id) {
-                    $vendor->prev_year_overall_ranking = $rank ++;
-                    $vendor->prev_year_overall_avg_score = $trend->average_score;
-                    break;
-                }
-            }
-        }
-
-        return response()->json(['vendors' => $vendors, 'trend' => $previousMonthTrends]);
-
-        // $latestDate = Trend::max('date');
-
-        // $latestTrends = Trend::where('date', $latestDate)->orderBy('score', 'desc')->get();
-
-        // $rank = 1;
-        // foreach ($latestTrends as $key => $trend) {
-        //     $vendor = Vendor::find($trend->vendor_id);
-        //     $vendor->overall_ranking = $rank ++;
-        //     $vendor->primary_ranking = '';
-        //     $vendor->save();
-        // }
-
-        // $vendors = Vendor::all();
-        // foreach ($vendors as $vendor) {
-        //     $primaryCategoryIds = explode(',', $vendor->primary_category);
-        //     // Initialize primary ranking for each vendor
-        //     $vendor->primary_ranking = '';
-
-        //     foreach ($primaryCategoryIds as $category_id) {
-        //         // Get same category vendors ordered by overall ranking
-        //         $sameCategoryVendors = Vendor::where('primary_category', 'like', '%' . $category_id . '%')->orderBy('overall_ranking', 'asc')->get();
-
-        //         foreach ($sameCategoryVendors as $index => $sameVendor) {
-        //             if ($sameVendor->id === $vendor->id) {
-        //                 // Update primary ranking as a space-separated string
-        //                 $vendor->primary_ranking .= ($index + 1) . ' ';
-        //             }
-        //         }
-        //     }
-        //     $vendor->primary_ranking = trim($vendor->primary_ranking);
-
-        //     // Save the vendor's primary ranking
-        //     $vendor->save();
-        // }
-
-        
-        
-        // return response()->json(['trends' => $latestTrends]);
     }
 }

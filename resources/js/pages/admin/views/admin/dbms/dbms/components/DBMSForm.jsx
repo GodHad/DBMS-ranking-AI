@@ -9,9 +9,9 @@ import {
 import { useDisclosure, useColorModeValue } from '@chakra-ui/react'
 import { useQueryClient, useMutation } from 'react-query';
 import { createVendor, updateVendor } from '../requests/use-request';
-import { CustomMultiSelect } from '../../../../../../components/form/CustomMultiSelect';
-import { CustomInput } from '../../../../../../components/form/CustomInput';
-import { CustomSelect } from '../../../../../../components/form/CustomSelect';
+import { CustomMultiSelect } from '../../../../../../../components/form/CustomMultiSelect';
+import { CustomInput } from '../../../../../../../components/form/CustomInput';
+import { CustomSelect } from '../../../../../../../components/form/CustomSelect';
 
 export default function VendorForm({ vendor, categories, setOpenedPage }) {
     const toast = useToast();
@@ -144,56 +144,57 @@ export default function VendorForm({ vendor, categories, setOpenedPage }) {
 
     const createVendorMutation = useMutation(createVendor, {
         onSuccess: (data) => {
-            if (data.success) {
-                queryClient.invalidateQueries('vendors');
-                setOpenedPage(0)
-                toast({
-                    title: "Create vendor successfully",
-                    position: 'top-right',
-                    status: "success",
-                    insert: "top",
-                    duration: 5000,
-                    isClosable: true
-                })
-            }
-            else {
-                toast({
-                    title: "Failed to create vendor successfully",
-                    position: 'top-right',
-                    status: "error",
-                    insert: "top",
-                    duration: 5000,
-                    isClosable: true
-                })
-            }
+            queryClient.invalidateQueries('vendors');
+            setOpenedPage(0)
+            toast({
+                title: "Create vendor successfully",
+                position: 'top-right',
+                status: "success",
+                insert: "top",
+                duration: 5000,
+                isClosable: true
+            })
+        },
+        onError: (error) => {
+            const errors = error.response.data.errors ? error.response.data.errors : { error: error.response.data.error };
+            const key = errors[Object.keys(errors)[0]];
+            toast({
+                title: "Failed to create vendor successfully",
+                description: key,
+                position: 'top-right',
+                status: "error",
+                insert: "top",
+                duration: 5000,
+                isClosable: true
+            })
         }
     })
 
     const updateVendorMutation = useMutation(updateVendor, {
         onSuccess: (data) => {
-            if (data.success) {
-                queryClient.invalidateQueries('vendors');
-                setOpenedPage(0)
-                toast({
-                    title: "Update vendor successfully",
-                    position: 'top-right',
-                    status: "success",
-                    insert: "top",
-                    duration: 5000,
-                    isClosable: true
-                })
-            }
-            else {
-                toast({
-                    title: "Failed to update vendor successfully",
-                    position: 'top-right',
-                    status: "error",
-                    insert: "top",
-                    duration: 5000,
-                    isClosable: true
-                })
-            }
-
+            queryClient.invalidateQueries('vendors');
+            setOpenedPage(0)
+            toast({
+                title: "Update vendor successfully",
+                position: 'top-right',
+                status: "success",
+                insert: "top",
+                duration: 5000,
+                isClosable: true
+            })
+        },
+        onError: (error) => {
+            const errors = error.response.data.errors ? error.response.data.errors : { error: error.response.data.error };
+            const key = errors[Object.keys(errors)[0]];
+            toast({
+                title: "Failed to create vendor successfully",
+                description: key,
+                position: 'top-right',
+                status: "error",
+                insert: "top",
+                duration: 5000,
+                isClosable: true
+            })
         }
     })
 
