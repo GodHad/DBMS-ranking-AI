@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/api/user', function() {
-    return response()->json(['user' => Auth::user()]);
+    return response()->json(['user' => Auth::guard('web')->user()]);
 });
 
 Route::get('/{any}', function () {

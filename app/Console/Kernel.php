@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
 
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('fetch:trends --all')->weeklyOn(1, '09:15');
+        $schedule->command('fetch:trends --all')->weeklyOn(1, '09:35');
     }
 
     protected function commands()

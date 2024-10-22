@@ -34,7 +34,7 @@ class LoginController extends Controller
 
     public function index(Request $request)
     {
-        // var_dump(Auth::check());
+        // var_dump(Auth::user());
         // die();
         $data = $request->all();
 
@@ -55,8 +55,8 @@ class LoginController extends Controller
             return response()->json(['success' => false, 'errors' => ['Incorrect password']]);
         }
 
-        if ($token = Auth::attempt(['email' => $data['email'], 'password' => $data['password']])) {
-            return response()->json(['success' => true, 'user' => Auth::user(), 'token' => $token]);
+        if ($token = Auth::guard('web')->attempt(['email' => $data['email'], 'password' => $data['password']])) {
+            return response()->json(['success' => true, 'user' => Auth::guard('web')->user(), 'token' => $token]);
         } else {
             return response()->json(['success' => false, 'errors' => ['Login failed']]);
         }

@@ -9,6 +9,7 @@ use App\Http\Controllers\DbmsController;
 use App\Http\Controllers\TrendsController;
 use App\Http\Controllers\EncyclopediaController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\VendorRequestController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -72,6 +73,15 @@ Route::group([
     Route::post('/blog/update-category', [BlogController::class, 'updateCategory']);
     Route::delete('/blog/delete-category', [BlogController::class, 'deleteCategory']);
 
+    // vendor requests
+    Route::get('/get-vendor-managers', [VendorRequestController::class, 'getAllVendors']);
+    Route::post('/create-vendor-manager', [VendorRequestController::class, 'createVendor']);
+    Route::post('/update-vendor-manager', [VendorRequestController::class, 'updateVendor']);
+    Route::delete('/delete-vendor-manager', [VendorRequestController::class, 'deleteVendor']);
+
+    Route::get('/get-vendor-requests', [VendorRequestController::class, 'getAllRequests']);
+    Route::post('/create-vendor-request', [VendorRequestController::class, 'createVendorRequest']);
+    
     // testing route for fetching data
     Route::get('/test', [VendorController::class, 'test']);
 });

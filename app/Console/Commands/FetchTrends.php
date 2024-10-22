@@ -33,10 +33,10 @@ class FetchTrends extends Command
     
         if ($this->option('all')) {
             
-            $keywords = Vendor::pluck('id', 'db_name')->toArray();
+            $keywords = Vendor::pluck('db_name', 'id')->toArray();
             
-            foreach ($keywords as $keyword) {
-                $command = escapeshellcmd($exePath) . " " . escapeshellarg($keyword->db_name);
+            foreach ($keywords as $id => $keyword) {
+                $command = escapeshellcmd($exePath) . " " . escapeshellarg($keyword);
                 Log::info('Running command for keyword: ' . $keyword);
 
                 $output = [];
@@ -46,8 +46,8 @@ class FetchTrends extends Command
                 Log::info('Command executed, returnVar: ' . $returnVar);
                 Log::info('Output: ' . implode("\n", $output));
                 
-                Trend::where('id', $keyword->id)->delete();
-                CountryTrend::where('id', $keyword->id)->delete();
+                Trend::where('id', $id)->delete();
+                CountryTrend::where('id', $id)->delete();
                 $this->processTrendData(); // Process the trend data after each command
             }
             
