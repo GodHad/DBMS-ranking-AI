@@ -40,15 +40,16 @@ export function Main() {
     <ChakraProvider theme={currentTheme}>
       <Routes>
         <Route path="auth/*" element={<AuthLayout />} />
+        <Route path="/" element={<Navigate to="/admin" replace />} />
         <Route
           path="/admin/*"
           element={
             <AdminLayout theme={currentTheme} setTheme={setCurrentTheme} />
           }
         />
-        <Route path="/" element={
+        {/* <Route path="/" element={
           <UserLayout theme={currentTheme} setTheme={setCurrentTheme} />
-        } />
+        } /> */}
       </Routes>
     </ChakraProvider>
   );
