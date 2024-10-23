@@ -123,7 +123,8 @@ export default function SponsorForm({ sponsor, setOpenedPage }) {
 
     useEffect(() => {
         setForm(prevState => ({
-            ...prevState, id,
+            ...prevState, 
+            id,
             name,
             description,
             logo_url,
@@ -154,10 +155,6 @@ export default function SponsorForm({ sponsor, setOpenedPage }) {
 
     const logoFileRef = useRef(null);
     const bannerFileRef = useRef(null);
-
-    useEffect(() => {
-
-    }, [])
 
     return (
         <Box p={"20px"}>
@@ -212,14 +209,13 @@ export default function SponsorForm({ sponsor, setOpenedPage }) {
                     borderRadius="md"
                     cursor="pointer"
                     _hover={{ borderColor: 'gray.400' }}
-                    as="label"
                     mb='24px'
                 >
                     <Box display="flex" alignItems="center" onClick={() => logoFileRef.current.click()}>
                         <Icon as={MdUploadFile} mr={2} />
                         <Text>{form.logo_file ? 'Choose other file' : 'Choose a file...'}</Text>
                     </Box>
-                    {imagePreview.logo_file && (
+                    {(form.logo_url || form.logo_file) && (
                         <Box mt={4}>
                             <Image src={imagePreview.logo_file} alt="Image Preview" boxSize="200px" objectFit="cover" />
                         </Box>
@@ -254,13 +250,12 @@ export default function SponsorForm({ sponsor, setOpenedPage }) {
                     borderRadius="md"
                     cursor="pointer"
                     _hover={{ borderColor: 'gray.400' }}
-                    as="label"
                 >
                     <Box display="flex" alignItems="center" onClick={() => bannerFileRef.current.click()}>
                         <Icon as={MdUploadFile} mr={2} />
                         <Text>{form.banner_file ? 'Choose other file' : 'Choose a file...'}</Text>
                     </Box>
-                    {imagePreview.banner_file && (
+                    {(form.banner || form.banner_file) && (
                         <Box mt={4}>
                             <Image src={imagePreview.banner_file} alt="Image Preview" boxSize="200px" objectFit="cover" />
                         </Box>

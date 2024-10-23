@@ -261,7 +261,7 @@ export default function Vendor() {
                     cell: (info) => {
                         const primary_categories = info.getValue();
                         let text;
-                        if (!info.row.original.primary_categories || !info.row.original.secondary_category)
+                        if (!primary_categories || !info.row.original.secondary_category)
                             return <></>
                         if (isLoadingCategory || !categories) text = ''
                         else text = primary_categories.filter(category => category !== '').map(category => categories.find(_category => _category.id == category).shortname).join(', ');
@@ -442,7 +442,7 @@ export default function Vendor() {
         >
             {openedPage === 0 && (
                 <>
-                    <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
+                    {/* <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
                         <Text
                             color={textColor}
                             fontSize="22px"
@@ -453,7 +453,7 @@ export default function Vendor() {
                             DBMS
                         </Text>
                         <Menu />
-                    </Flex>
+                    </Flex> */}
                     <div style={{ display: 'flex', justifyContent: "space-between", marginTop: '20px', marginLeft: '20px', alignItems: 'center' }}>
                         <Flex w='100%'>
                             <Button

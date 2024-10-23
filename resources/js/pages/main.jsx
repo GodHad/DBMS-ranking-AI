@@ -6,24 +6,35 @@ import AdminLayout from './admin/layouts/admin';
 import UserLayout from './user/layouts/Content';
 import {
   ChakraProvider,
+  Spinner
   // extendTheme
 } from '@chakra-ui/react';
 import initialTheme from './admin/theme/theme'; //  { themeGreen }
 import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../contexts/UserContext';
+import { useQuery } from 'react-query';
+import axios from 'axios';
 // Chakra imports
 
 export function Main() {
   // eslint-disable-next-line
-  const { setUser } = useContext(UserContext);
   const [currentTheme, setCurrentTheme] = useState(initialTheme);
 
+  const { user, setUser } = useContext(UserContext);
+  // const [isLoading, setIsLoading] = useState(true)
+  const getUser = async () => {
+    const response = await axios.get('/api/user');
+    // setIsLoading(false)
+    return response.data.user;
+  };
+
+  const { data: resUser, isLoading } = useQuery('getUser', getUser);
+
   useEffect(() => {
-    const user = window.localStorage.getItem('user');
-    if (user) {
-      setUser(JSON.parse(user))
-    }
-  }, [])
+    setUser(resUser);
+  }, [resUser])
+
+  if (user === undefined) return <Spinner size={"lg"} />;
 
   return (
     <ChakraProvider theme={currentTheme}>

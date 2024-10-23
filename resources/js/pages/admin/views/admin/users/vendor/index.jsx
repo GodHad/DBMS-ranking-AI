@@ -319,7 +319,7 @@ const Vendor = () => {
         >
             {openedPage === 0 && (
                 <>
-                    <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
+                    {/* <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
                         <Text
                             color={textColor}
                             fontSize="22px"
@@ -330,7 +330,7 @@ const Vendor = () => {
                             Vendors
                         </Text>
                         <Menu />
-                    </Flex>
+                    </Flex> */}
                     <Flex w='100%'>
                         <Button
                             mb='50px'

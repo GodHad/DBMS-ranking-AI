@@ -34,13 +34,13 @@ import SignInCentered from './views/auth/signIn';
 import SignUpCentered from './views/auth/signup';
 
 const routes = [
-  {
-    name: 'Dashboard',
-    layout: '/admin',
-    path: '/default',
-    icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
-    component: <MainDashboard />,
-  },
+  // {
+  //   name: 'Dashboard',
+  //   layout: '/admin',
+  //   path: '/default',
+  //   icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
+  //   component: <MainDashboard />,
+  // },
   {
     name: 'Users',
     layout: '/admin',
@@ -58,12 +58,12 @@ const routes = [
   {
     name: 'Chart',
     layout: '/admin',
-    path: '/chart',
+    path: '/default',
     icon: <Icon as={MdAutoGraph} width={"20px"} height={"20px"} color="inherit" />,
     component: <RankChart />
   },
   {
-    name: 'Encylopedias',
+    name: 'Encyclopedias',
     layout: '/admin',
     path: '/encyclopedia',
     icon: <Icon as={MdTranslate} width={"20px"} height={"20px"} color="inherit" />,
@@ -119,20 +119,20 @@ const routes = [
   //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
   //   component: <Profile />,
   // },
-  // {
-  //   name: 'Sign In',
-  //   layout: '/auth',
-  //   path: '/sign-in',
-  //   icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
-  //   component: <SignInCentered />,
-  // },
-  // {
-  //   name: 'Sign Up',
-  //   layout: '/auth',
-  //   path: '/sign-up',
-  //   icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
-  //   component: <SignUpCentered />,
-  // },
+  {
+    name: 'Sign In',
+    layout: '/auth',
+    path: '/sign-in',
+    icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
+    component: <SignInCentered />,
+  },
+  {
+    name: 'Sign Up',
+    layout: '/auth',
+    path: '/sign-up',
+    icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
+    component: <SignUpCentered />,
+  },
 ];
 
 export default routes;

@@ -41,7 +41,7 @@ class FeaturedProductController extends Controller
                 'content' => ['required', 'string'],
                 'link' => ['required', 'string', 'max:255'],
                 'published' => ['required', 'integer'],
-                'banner_file' => ['required', 'file', 'mimes:jpeg,png,jpg,gif']
+                'banner_file' => ['required', 'file', 'mimes:jpeg,png,jpg,gif,webp']
             ]);
 
             if ($validator->fails()) {
@@ -74,7 +74,7 @@ class FeaturedProductController extends Controller
                 'content' => ['required', 'string'],
                 'link' => ['required', 'string', 'max:255'],
                 'published' => ['required', 'integer'],
-                'banner_file' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif']
+                'banner_file' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif,webp']
             ]);
 
             if ($validator->fails()) {

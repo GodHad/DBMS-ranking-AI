@@ -254,7 +254,7 @@ export default function Sponsor() {
             >
                 {openedPage === 0 && (
                     <>
-                        <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
+                        {/* <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
                             <Text
                                 color={textColor}
                                 fontSize="22px"
@@ -265,7 +265,7 @@ export default function Sponsor() {
                                 Sponsors
                             </Text>
                             <Menu />
-                        </Flex>
+                        </Flex> */}
                         <Flex w='100%'>
                             <Button
                                 mb='50px'

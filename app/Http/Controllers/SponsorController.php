@@ -40,8 +40,8 @@ class SponsorController extends Controller
                 'description' => ['required', 'string'],
                 'link' => ['required', 'string', 'max:255'],
                 'featured' => ['required', 'integer'],
-                'logo_file' => ['required', 'file', 'mimes:jpeg,png,jpg,gif'],
-                'banner_file' => ['required', 'file', 'mimes:jpeg,png,jpg,gif']
+                'logo_file' => ['required', 'file', 'mimes:jpeg,png,jpg,gif,webp'],
+                'banner_file' => ['required', 'file', 'mimes:jpeg,png,jpg,gif,webp']
             ]);
 
             if ($validator->fails()) {
@@ -76,8 +76,8 @@ class SponsorController extends Controller
                 'featured' => ['required', 'integer'],
                 'description' => ['required', 'string'],
                 'link' => ['required', 'string', 'max:255'],
-                'logo_file' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif'],
-                'banner_file' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif']
+                'logo_file' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif,webp'],
+                'banner_file' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif,webp']
             ]);
 
             if ($validator->fails()) {

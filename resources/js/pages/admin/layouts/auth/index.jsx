@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
+import { Navigate, Route, Routes, Outlet } from 'react-router-dom';
 import routes from '../../routes';
 import { ReactNotifications } from 'react-notifications-component'
 
@@ -8,12 +8,14 @@ import { Box, useColorModeValue } from '@chakra-ui/react';
 
 // Layout components
 import { SidebarContext } from '../../../../contexts/SidebarContext';
+import { UserContext } from '../../../../contexts/UserContext';
 
 // Custom Chakra theme
 export default function Auth() {
   // states and functions
   const [toggleSidebar, setToggleSidebar] = useState(false);
   // functions for changing the states from components
+  const { user } = useContext(UserContext);
   const getRoute = () => {
     return window.location.pathname !== '/auth/full-screen-maps';
   };
@@ -21,7 +23,7 @@ export default function Auth() {
     return routes.map((route, key) => {
       if (route.layout === '/auth') {
         return (
-          <Route path={`${route.path}`} element={route.component} key={key} />
+          <Route path={route.path} element={route.component} key={key} />
         );
       }
       if (route.collapse) {

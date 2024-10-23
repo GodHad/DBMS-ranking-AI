@@ -4,16 +4,21 @@ import Footer from '../../../../components/footer/FooterAdmin';
 import Navbar from '../../../../components/navbar/NavbarAdmin';
 import Sidebar from '../../../../components/sidebar/Sidebar';
 import { SidebarContext } from '../../../../contexts/SidebarContext';
-import React, { useState } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
+import { Navigate, Route, Routes, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import routes from '../../routes';
 import Header from '../../../user/layouts/Header';
+import { UserContext } from '../../../../contexts/UserContext';
+
 // Custom Chakra theme
 export default function Dashboard(props) {
   const { ...rest } = props;
   // states and functions
   const [fixed] = useState(false);
   const [toggleSidebar, setToggleSidebar] = useState(false);
+
+  const location = useLocation();
+
   // functions for changing the states from components
   const getRoute = () => {
     return window.location.pathname !== '/admin/full-screen-maps';
@@ -91,7 +96,9 @@ export default function Dashboard(props) {
     return routes.map((route, key) => {
       if (route.layout === '/admin') {
         return (
-          <Route path={`${route.path}`} element={route.component} key={key} />
+          <Route key={key} element={<AdminRoute />}>
+            <Route path={route.path} element={route.component} />
+          </Route>
         );
       }
       if (route.collapse) {
@@ -101,9 +108,7 @@ export default function Dashboard(props) {
       }
     });
   };
-  document.documentElement.dir = 'ltr';
   const { onOpen } = useDisclosure();
-  document.documentElement.dir = 'ltr';
   return (
     <Box>
       <Box>
@@ -169,3 +174,13 @@ export default function Dashboard(props) {
     </Box>
   );
 }
+
+const AdminRoute = () => {
+  const { user } = useContext(UserContext);
+  console.log("user", user)
+  return (user && user.admin) ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/auth/sign-in" />
+  );
+};

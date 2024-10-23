@@ -10,12 +10,43 @@ import {
     useColorModeValue
 } from '@chakra-ui/react'
 import { useQueryClient, useMutation } from 'react-query';
-import { createEncyclopedia, updateEncyclopedia } from '../requests/use-request';
-import { Editor } from 'react-draft-wysiwyg';
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { convertFromHTML, convertToRaw, EditorState, Modifier, ContentState } from 'draft-js';
-import draftToHtml from 'draftjs-to-html';
+import { createEncyclopedia, updateEncyclopedia } from '../requests/use-request';;
 import { CustomInput } from '../../../../../../components/form/CustomInput';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import {
+    ClassicEditor,
+    Essentials,
+    Autoformat,
+    BlockQuote,
+    Bold,
+    CloudServices,
+    Code,
+    CodeBlock,
+    Heading,
+    HorizontalLine,
+    Image,
+    ImageToolbar,
+    ImageUpload,
+    Base64UploadAdapter,
+    Italic,
+    Link,
+    List,
+    Markdown,
+    Mention,
+    Paragraph,
+    MediaEmbed,
+    SourceEditing,
+    Strikethrough,
+    Table,
+    TableToolbar,
+    TextTransformation,
+    TodoList,
+    ImageCaption,
+    ImageInsert,
+    ImageResize,
+    ImageStyle,
+} from 'ckeditor5'
+import 'ckeditor5/ckeditor5.css';
 
 export default function EncyclopediaForm({ encyclopedia, setOpenedPage }) {
     const queryClient = useQueryClient();
@@ -35,14 +66,6 @@ export default function EncyclopediaForm({ encyclopedia, setOpenedPage }) {
         content
     })
 
-    const [editorState, setEditorState] = useState(EditorState.createEmpty());
-    const onEditorStateChange = function (editorState) {
-        setEditorState(editorState);
-        setForm((prevState) => (
-            { ...prevState, content: draftToHtml(convertToRaw(editorState.getCurrentContent())) }
-        ))
-    };
-
     const createEncyclopediaMutation = useMutation(createEncyclopedia, {
         onSuccess: () => {
             queryClient.invalidateQueries('encyclopedias');
@@ -57,7 +80,7 @@ export default function EncyclopediaForm({ encyclopedia, setOpenedPage }) {
             })
         },
         onError: (error) => {
-            const errors = error.response.data.errors ? error.response.data.errors : {error: error.response.data.error};
+            const errors = error.response.data.errors ? error.response.data.errors : { error: error.response.data.error };
             const key = errors[Object.keys(errors)[0]];
             toast({
                 title: "Failed to create Encyclopedia",
@@ -85,7 +108,7 @@ export default function EncyclopediaForm({ encyclopedia, setOpenedPage }) {
             })
         },
         onError: (error) => {
-            const errors = error.response.data.errors ? error.response.data.errors : {error: error.response.data.error};
+            const errors = error.response.data.errors ? error.response.data.errors : { error: error.response.data.error };
             const key = errors[Object.keys(errors)[0]];
             toast({
                 title: "Failed to update Encyclopedia successfully",
@@ -108,32 +131,6 @@ export default function EncyclopediaForm({ encyclopedia, setOpenedPage }) {
         setForm({ ...form, [e.target.name]: e.target.value });
     }
 
-    const handlePastedText = (text, html, editorState) => {
-        const contentState = editorState.getCurrentContent();
-        const selection = editorState.getSelection();
-
-        const newContentState = Modifier.insertText(contentState, selection, text);
-
-        const newEditorState = EditorState.push(editorState, newContentState, 'insert-characters');
-        setEditorState(newEditorState);
-
-        return true;
-    };
-
-    useEffect(() => {
-        const currentContent = editorState.getCurrentContent();
-        const selection = editorState.getSelection();
-
-        const contentWithColor = Modifier.applyInlineStyle(
-            currentContent,
-            selection,
-            'COLOR_' + textColor
-        );
-        const newEditorState = EditorState.push(editorState, contentWithColor, 'change-inline-style');
-        setEditorState(newEditorState);
-
-    }, [textColor, editorState]);
-
     useEffect(() => {
         setForm({
             id,
@@ -142,43 +139,120 @@ export default function EncyclopediaForm({ encyclopedia, setOpenedPage }) {
         });
     }, [encyclopedia])
 
-    useEffect(() => {
-        if (form.content) {
-            const blocksFromHTML = convertFromHTML(form.content);
-            const contentState = ContentState.createFromBlockArray(blocksFromHTML.contentBlocks, blocksFromHTML.entityMap);
-            setEditorState(EditorState.createWithContent(contentState));
-        }
-    }, [])
-
     return (
         <Box p={"20px"}>
             <Text mb={"32px"} fontSize={22}>{!encyclopedia.id ? "Create" : "Update"} Encyclopedia</Text>
             <FormControl>
                 <CustomInput title="Encyclopedia Title" name="title" value={form.title} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
             </FormControl>
-            <Editor
-                editorState={editorState}
-                toolbarClassName="toolbarClassName"
-                wrapperClassName="wrapperClassName"
-                editorClassName="editorClassName"
-                editorStyle={{ color: textColor, minHeight: 300 }}
-                toolbarStyle={{ backgroundColor: 'white', color: 'black' }}
-                onEditorStateChange={onEditorStateChange}
-                handlePastedText={handlePastedText}
-                toolbar={{
-                    options: ['inline', 'blockType', 'fontSize', 'list', 'textAlign', 'colorPicker', 'link', 'history'],
-                    inline: { inDropdown: false },
-                    blockType: { inDropdown: true },
-                    fontSize: { inDropdown: true },
-                    list: { inDropdown: false },
-                    textAlign: { inDropdown: true },
-                    link: { inDropdown: false },
-                    history: { inDropdown: false },
-                    // Remove image and embed
-                    image: { visible: false },
-                    embed: { visible: false }
+            <FormLabel
+                display='flex'
+                ms='4px'
+                fontSize='sm'
+                fontWeight='500'
+                color={textColor}
+                mb='8px'
+            >
+                Content<Text color={brandStars}>*</Text>
+            </FormLabel>
+            <CKEditor
+                editor={ClassicEditor}
+                config={{
+                    plugins: [
+                        Autoformat,
+                        BlockQuote,
+                        Bold,
+                        CloudServices,
+                        Code,
+                        CodeBlock,
+                        Essentials,
+                        Heading,
+                        HorizontalLine,
+                        Image,
+                        ImageCaption,
+                        ImageInsert,
+                        ImageResize,
+                        ImageStyle,
+                        ImageToolbar,
+                        ImageUpload,
+                        MediaEmbed,
+                        Base64UploadAdapter,
+                        Italic,
+                        Link,
+                        List,
+                        Markdown,
+                        Mention,
+                        Paragraph,
+                        SourceEditing,
+                        Strikethrough,
+                        Table,
+                        TableToolbar,
+                        TextTransformation,
+                        TodoList,
+                    ],
+                    toolbar: [
+                        'undo',
+                        'redo',
+                        '|',
+                        'heading',
+                        '|',
+                        'bold',
+                        'italic',
+                        'strikethrough',
+                        'code',
+                        '|',
+                        'bulletedList',
+                        'numberedList',
+                        'todoList',
+                        '|',
+                        'link',
+                        'uploadImage',
+                        'mediaEmbed',
+                        'insertTable',
+                        'blockQuote',
+                        'codeBlock',
+                        'horizontalLine',
+                    ],
+                    image: {
+                        resizeOptions: [
+                            {
+                                name: 'resizeImage:original',
+                                label: 'Default image width',
+                                value: null,
+                            },
+                            {
+                                name: 'resizeImage:50',
+                                label: '50% page width',
+                                value: '50',
+                            },
+                            {
+                                name: 'resizeImage:75',
+                                label: '75% page width',
+                                value: '75',
+                            },
+                        ],
+                        toolbar: [
+                            'imageTextAlternative',
+                            'toggleImageCaption',
+                            '|',
+                            'imageStyle:inline',
+                            'imageStyle:wrapText',
+                            'imageStyle:breakText',
+                            '|',
+                            'resizeImage',
+                        ],
+                        insert: {
+                            integrations: ['url'],
+                        },
+                    },
+                }}
+                data={form.content}
+                onChange={(event, editor) => {
+                    const data = editor.getData();
+                    setForm(prev => ({...prev, content: data}))
                 }}
             />
+            
             <Button variant={"brand"} mt={3} mr={3} onClick={handleEncyclopedia}>
                 Save
             </Button>

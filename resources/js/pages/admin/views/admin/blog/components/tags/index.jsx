@@ -194,7 +194,7 @@ export default function ColumnTable(props) {
             overflowX={{ sm: 'scroll', lg: 'hidden' }}
         >
 
-            <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
+            {/* <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
                 <Text
                     color={textColor}
                     fontSize="22px"
@@ -205,7 +205,7 @@ export default function ColumnTable(props) {
                     Tags
                 </Text>
                 <Menu />
-            </Flex>
+            </Flex> */}
             <Flex w='100%'>
                 <Button
                     me='100%'

@@ -1,23 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
 import { Main } from './main';
-import axios from './admin/variables/axiosConfig';
 
 import { UserContext } from '../contexts/UserContext';
 
 const queryClient = new QueryClient();
 
 function App() {
-  const getUser = async () => {
-    const response = await axios.get('/api/user');
-    setUser(response.data.user)
-  };
-  const [user, setUser] = useState(null);
+  
+  const [user, setUser] = useState(undefined);
 
-  useEffect(() => {
-    getUser();
-  }, [])
   return (
     <QueryClientProvider client={queryClient}>
       <UserContext.Provider value={{ user, setUser }}>

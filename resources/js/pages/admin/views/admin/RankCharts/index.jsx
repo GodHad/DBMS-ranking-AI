@@ -147,7 +147,7 @@ export default function RankChart(props) {
                         />
                         Past a year
                     </Text>
-                    <FormControl w='200px'>
+                    {/* <FormControl w='200px'>
                         <Select
                             id="sort-select"
                             defaultValue={[{ label: 'all', value: 'all' }]}
@@ -162,7 +162,7 @@ export default function RankChart(props) {
                             size="sm"
                             onChange={(e) => setShowingCategory(e.id)}
                         />
-                    </FormControl>
+                    </FormControl> */}
                 </div>
                 <Flex w='100%' flexDirection={{ base: "column", lg: "row" }}>
                     <Box h={"650px"} w={"100%"} mt='auto'>

@@ -29,7 +29,6 @@ import { Store } from "react-notifications-component";
 import { UserContext } from "../../../../../contexts/UserContext";
 
 function SignIn() {
-  console.log(axios.defaults.headers)
   // Chakra color mode
   const navigate = useNavigate();
   const { setUser } = useContext(UserContext);
@@ -90,10 +89,7 @@ function SignIn() {
         }
       })
 
-      if (res.data.user.role === 'admin') navigate('/admin');
-      else navigate('/');
-
-      window.localStorage.setItem('user', JSON.stringify(res.data.user));
+      navigate('/admin');
 
       setUser(res.data.user);
     }

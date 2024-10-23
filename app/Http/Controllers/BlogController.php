@@ -43,16 +43,28 @@ class BlogController extends Controller
             'content' => ['required', 'string'],
             'tags' => ['required', 'string'],
             'categories' => ['required', 'string'],
-            'featured_files' => ['required', 'file', 'mimes:jpeg,png,jpg,gif']
+            'featured_files' => ['required', 'array'],
+            'featured_files.*' => ['file', 'mimes:jpeg,png,jpg,gif,webp,webp'],
+            'meta_title' => ['required', 'string'],
+            'meta_description' => ['required', 'string'],
+            'og_graph_file' => ['required', 'file', 'mimes:jpeg,png,jpg,gif,webp'],
+            'twitter_graph_file' => ['required', 'file', 'mimes:jpeg,png,jpg,gif,webp']
         ]);
 
         if ($validator->fails()) return response()->json(['errors' => $validator->errors()], 422);
+
+        $og_graph_image = $request->file('og_graph_file')->store('images/blogs/og_graph_images', 'public');
+        $twitter_graph_image = $request->file('twitter_graph_file')->store('images/blogs/twitter_graph_images', 'public');
 
         $blog = Blog::create([
             'title' => $data['title'],
             'description' => $data['description'],
             'content' => $data['content'],
-            'user_id' => Auth::user()->id
+            'user_id' => Auth::guard('web')->user()->id,
+            'meta_title' => $data['meta_title'],
+            'meta_description' => $data['meta_description'],
+            'og_graph_image' => $og_graph_image,
+            'twitter_graph_image' => $twitter_graph_image
         ]);
 
         $tags = explode(',', $data['tags']);
@@ -99,11 +111,15 @@ class BlogController extends Controller
             'featured_images' => ['nullable', 'array'],
             'featured_images.*' => ['string'],
             'featured_files' => ['nullable', 'array'],
-            'featured_files.*' => ['file', 'mimes:jpeg,png,jpg,gif,webp']
+            'featured_files.*' => ['file', 'mimes:jpeg,png,jpg,gif,webp,webp'],
+            'meta_title' => ['required', 'string'],
+            'meta_description' => ['required', 'string'],
+            'og_graph_file' => ['required', 'file', 'mimes:jpeg,png,jpg,gif,webp'],
+            'twitter_graph_file' => ['required', 'file', 'mimes:jpeg,png,jpg,gif,webp']
         ]);
 
         if ($validator->fails()) return response()->json(['errors' => $validator->errors()], 422);
-        if ((!isset($data['featured_files']) || !is_array($data['featured_files']) || count($data['featured_files']) === 0) && (!isset($data['featured_images']) || count($data['featured_images']) === 0)) {
+        if ((!isset($data['featured_files']) || !is_array($data['featured_files']) && count($data['featured_files']) === 0) && (!isset($data['featured_images']) || count($data['featured_images']) === 0)) {
             return response()->json(['errors' => 'Featured Images are required'], 422);
         }
 
@@ -111,11 +127,25 @@ class BlogController extends Controller
         $blog = Blog::find($id);
         
         if (!$blog) return response()->json(['error' => 'Blog is not found.'], 404);
-        if ($blog->user_id !== Auth::user()->id && Auth::user()->role !== 'admin') return response()->json(['error' => 'You can\'n edit this blog!'], 401);
+        if ($blog->user_id !== Auth::guard('web')->user()->id && Auth::guard('web')->user()->role !== 'admin') return response()->json(['error' => 'You can\'n edit this blog!'], 401);
 
         $blog->title = $data['title'];
         $blog->content = $data['content'];
         $blog->description = $data['description'];
+        $blog->meta_title = $data['meta_title'];
+        $blog->meta_description = $data['meta_description'];
+
+        if ($request->hasFile('og_graph_file')) {
+            Storage::disk('public')->delete($blog->og_graph_image);
+            $og_graph_image = $request->file('og_graph_file')->store('images/blogs/og_graph_images', 'public');
+            $blog->og_graph_image = $og_graph_image;
+        }
+
+        if ($request->hasFile('twitter_graph_file')) {
+            Storage::disk('public')->delete($blog->twitter_graph_image);
+            $twitter_graph_image = $request->file('twitter_graph_file')->store('images/blogs/twitter_graph_images', 'public');
+            $blog->twitter_graph_image = $twitter_graph_image;
+        }
         $blog->save();
 
         if ($request->hasFile('featured_files')) {
@@ -129,19 +159,22 @@ class BlogController extends Controller
             }
         }
 
-        $removed_images = $data['removed_images'];
-
-        foreach ($removed_images as $key => $imageId) {
-            $featuredImage = FeaturedImage::find($imageId);
+        if (isset($data['removed_images'])) {
+            $removed_images = $data['removed_images'];
     
-            if ($featuredImage) {
-                // Delete the file from storage
-                Storage::disk('public')->delete($featuredImage->url);
-                
-                // Delete the record from the database
-                $featuredImage->delete();
+            foreach ($removed_images as $key => $imageId) {
+                $featuredImage = FeaturedImage::find($imageId);
+        
+                if ($featuredImage) {
+                    // Delete the file from storage
+                    Storage::disk('public')->delete($featuredImage->url);
+                    
+                    // Delete the record from the database
+                    $featuredImage->delete();
+                }
             }
         }
+
 
         $tagIds = explode(',', $data['tags']);
         $blog->tags()->sync($tagIds);
@@ -276,7 +309,7 @@ class BlogController extends Controller
         $data = $request->all();
 
         $validator = Validator::make($data, [
-            'image' => ['required', 'file', 'mimes:jpeg,png,jpg,gif']
+            'image' => ['required', 'file', 'mimes:jpeg,png,jpg,gif,webp']
         ]);
 
         if ($validator->fails()) return response()->json(['errors' => $validator->errors()]);

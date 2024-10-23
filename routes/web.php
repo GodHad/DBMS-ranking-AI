@@ -4,7 +4,11 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/api/user', function() {
-    return response()->json(['user' => Auth::guard('web')->user()]);
+    $user = Auth::guard('web')->user();
+    $admins = env('admin');
+    if ($user) $user->admin = strpos($admins, $user->email) !== false;
+    
+    return response()->json(['user' => $user]);
 });
 
 Route::get('/{any}', function () {

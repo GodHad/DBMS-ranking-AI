@@ -40,7 +40,6 @@ import Menu from '../../../../../../../components/menu/MainMenu';
 import BlogForm from './components/BlogForm';
 import { MdAdd } from 'react-icons/md'
 import { getBlogs, getBlog, deleteBlog } from './requests/use-request';
-import { APP_URL } from '../../../../../variables/statics';
 
 const columnHelper = createColumnHelper();
 
@@ -51,7 +50,11 @@ const initialBlog = {
     content: '',
     tags: [],
     categories: [],
-    featured_images: []
+    featured_images: [],
+    meta_title: '',
+    meta_description: '',
+    og_graph_image: '',
+    twitter_graph_image: ''
 }
 
 const stripHTML = (html) => {
@@ -92,7 +95,7 @@ export default () => {
                 ..._blog, 
                 tags: _blog.tags.map(tag => tag.id), 
                 categories: _blog.categories.map(category => category.id), 
-                featured_images: _blog.featured_images.map(image => (APP_URL + 'storage/' + image.url)) || [],
+                // featured_images: _blog.featured_images.map(image => (APP_URL + 'storage/' + image.url)) || [],
             });
     }, [_blog])
 
@@ -248,7 +251,7 @@ export default () => {
         >
             {openedPage === 0 && (
                 <>
-                    <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
+                    {/* <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
                         <Text
                             color={textColor}
                             fontSize="22px"
@@ -259,7 +262,7 @@ export default () => {
                             Blogs
                         </Text>
                         <Menu />
-                    </Flex>
+                    </Flex> */}
                     <Flex w='100%'>
                         <Button
                             mb='50px'

@@ -7,7 +7,7 @@ import {
     Text,
     Box,
     Icon,
-    Image,
+    Image as ChakraImage,
     Spinner,
     useToast,
     useColorModeValue
@@ -15,12 +15,44 @@ import {
 import { MdUploadFile, MdClose } from 'react-icons/md';
 import { useQueryClient, useMutation, useQuery } from 'react-query';
 import { createBlog, getCategories, getTags, updateBlog } from '../requests/use-request';
-import { Editor } from 'react-draft-wysiwyg';
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { convertFromHTML, convertToRaw, EditorState, Modifier, ContentState } from 'draft-js';
-import draftToHtml from 'draftjs-to-html';
 import { CustomMultiSelect } from '../../../../../../../../components/form/CustomMultiSelect';
 import { CustomInput } from '../../../../../../../../components/form/CustomInput';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import {
+    ClassicEditor,
+    Essentials,
+    Autoformat,
+    BlockQuote,
+    Bold,
+    CloudServices,
+    Code,
+    CodeBlock,
+    Heading,
+    HorizontalLine,
+    Image,
+    ImageToolbar,
+    ImageUpload,
+    Base64UploadAdapter,
+    Italic,
+    Link,
+    List,
+    Markdown,
+    Mention,
+    Paragraph,
+    MediaEmbed,
+    SourceEditing,
+    Strikethrough,
+    Table,
+    TableToolbar,
+    TextTransformation,
+    TodoList,
+    ImageCaption,
+    ImageInsert,
+    ImageResize,
+    ImageStyle,
+} from 'ckeditor5'
+import 'ckeditor5/ckeditor5.css';
+import { APP_URL } from '../../../../../../variables/statics';
 
 export default function BlogForm({ blog, setOpenedPage }) {
     const queryClient = useQueryClient();
@@ -40,7 +72,11 @@ export default function BlogForm({ blog, setOpenedPage }) {
         content,
         tags,
         categories,
-        featured_images
+        featured_images,
+        meta_title,
+        meta_description,
+        og_graph_image,
+        twitter_graph_image
     } = blog;
 
     const [form, setForm] = useState({
@@ -51,16 +87,14 @@ export default function BlogForm({ blog, setOpenedPage }) {
         tags,
         categories,
         featured_files: [],
-        featured_images,
+        featured_images: featured_images.map(image => (APP_URL + 'storage/' + image.url)),
+        meta_title,
+        meta_description,
+        og_graph_image,
+        twitter_graph_image,
+        og_graph_file: null,
+        twitter_graph_file: null,
     })
-
-    const [editorState, setEditorState] = useState(EditorState.createEmpty());
-    const onEditorStateChange = function (editorState) {
-        setEditorState(editorState);
-        setForm((prevState) => (
-            { ...prevState, content: draftToHtml(convertToRaw(editorState.getCurrentContent())) }
-        ))
-    };
 
     const createBlogMutation = useMutation(createBlog, {
         onSuccess: () => {
@@ -76,9 +110,11 @@ export default function BlogForm({ blog, setOpenedPage }) {
             })
         },
         onError: (error) => {
+            const errors = error.response.data.errors ? error.response.data.errors : { error: error.response.data.error };
+            const key = errors[Object.keys(errors)[0]]
             toast({
                 title: "Failed to create Blog",
-                description: error,
+                description: key,
                 position: 'top-right',
                 status: "error",
                 insert: "top",
@@ -102,10 +138,10 @@ export default function BlogForm({ blog, setOpenedPage }) {
             })
         },
         onError: (error) => {
-            const errors = error.response.data.errors ? error.response.data.errors : {error: error.response.data.error};
+            const errors = error.response.data.errors ? error.response.data.errors : { error: error.response.data.error };
             const key = errors[Object.keys(errors)[0]];
             toast({
-                title: "Failed to update Blog successfully",
+                title: "Failed to update Blog",
                 description: key,
                 position: 'top-right',
                 status: "error",
@@ -123,6 +159,10 @@ export default function BlogForm({ blog, setOpenedPage }) {
         formData.append('content', form.content);
         formData.append('categories', form.categories);
         formData.append('tags', form.tags);
+        formData.append('meta_title', form.meta_title);
+        formData.append('meta_description', form.meta_description);
+        if (form.og_graph_file) formData.append('og_graph_file', form.og_graph_file);
+        if (form.twitter_graph_file) formData.append('twitter_graph_file', form.twitter_graph_file);
         form.featured_files.forEach(file => {
             formData.append('featured_files[]', file); // Use [] to indicate multiple files
         });
@@ -130,7 +170,7 @@ export default function BlogForm({ blog, setOpenedPage }) {
             createBlogMutation.mutate({ blog: formData });
         }
         else {
-            if (imageUrls.length > 0)
+            if (form.featured_images.length > 0)
                 formData.append('featured_images[]', form.featured_images);
             if (removedImages.length > 0)
                 formData.append('removed_images[]', removedImages);
@@ -142,20 +182,9 @@ export default function BlogForm({ blog, setOpenedPage }) {
         setForm({ ...form, [e.target.name]: e.target.value });
     }
 
-    const handlePastedText = (text, html, editorState) => {
-        const contentState = editorState.getCurrentContent();
-        const selection = editorState.getSelection();
-
-        const newContentState = Modifier.insertText(contentState, selection, text);
-
-        const newEditorState = EditorState.push(editorState, newContentState, 'insert-characters');
-        setEditorState(newEditorState);
-
-        return true;
-    };
-
     useEffect(() => {
-        setForm({
+        setForm(prev => ({
+            ...prev,
             id,
             title,
             content,
@@ -163,63 +192,43 @@ export default function BlogForm({ blog, setOpenedPage }) {
             tags,
             categories,
             featured_files: [],
-            featured_images,
-        });
-    }, [blog])
-
-    useEffect(() => {
-        const currentContent = editorState.getCurrentContent();
-        const selection = editorState.getSelection();
-
-        const contentWithColor = Modifier.applyInlineStyle(
-            currentContent,
-            selection,
-            'COLOR_' + textColor
-        );
-        const newEditorState = EditorState.push(editorState, contentWithColor, 'change-inline-style');
-        setEditorState(newEditorState);
-
-    }, [textColor, editorState]);
-
-    const customContentStateConverter = (contentState) => {
-        const newBlockMap = contentState.getBlockMap().map((block) => {
-            const entityKey = block.getEntityAt(0);
-            if (entityKey !== null) {
-                const entityBlock = contentState.getEntity(entityKey);
-                const entityType = entityBlock.getType();
-                switch (entityType) {
-                    case 'IMAGE': {
-                        const newBlock = block.merge({
-                            type: 'atomic',
-                            text: 'img',
-                        });
-                        return newBlock;
-                    }
-                    default:
-                        return block;
-                }
-            }
-            return block;
-        });
-        const newContentState = contentState.set('blockMap', newBlockMap);
-        return newContentState;
-    }
-
-    useEffect(() => {
-        if (blog.content) {
-            const blocksFromHTML = convertFromHTML(blog.content);
-            const contentState = ContentState.createFromBlockArray(blocksFromHTML.contentBlocks, blocksFromHTML.entityMap);
-            setEditorState(EditorState.createWithContent(customContentStateConverter(contentState)));
-        }
+            featured_images: featured_images.map(image => (APP_URL + 'storage/' + image.url)),
+            meta_title,
+            meta_description,
+            og_graph_image,
+            twitter_graph_image
+        }));
     }, [blog])
 
     const handleChangeMultiSelect = (name, value) => {
         setForm({ ...form, [name]: value })
     }
 
-    const [imagePreview, setImagePreview] = useState([]);
+    const [imagePreview, setImagePreview] = useState({
+        featured_file: [],
+        og_graph_file: APP_URL + 'storage/' + og_graph_image,
+        twitter_graph_file: APP_URL + 'storage/' + twitter_graph_image
+    });
+
+    const handleSingleFileChange = (event) => {
+        const file = event.target.files[0];
+        setForm(prevState => ({
+            ...prevState,
+            [event.target.name]: file
+        }))
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(prevState => ({ ...prevState, [event.target.name]: reader.result }));
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const ogGraphFileRef = useRef(null);
+    const twitterGraphFileRef = useRef(null);
+
     const [removedImages, setRemovedImages] = useState([]);
-    const [imageUrls, setImageUrls] = useState(form.featured_images || []);
 
     const handleFileChange = (event) => {
         const files = Array.from(event.target.files);
@@ -229,7 +238,7 @@ export default function BlogForm({ blog, setOpenedPage }) {
             reader.onloadend = () => {
                 newPreviews.push(reader.result);
                 if (newPreviews.length === files.length) {
-                    setImagePreview(prev => [...prev, ...newPreviews]);
+                    setImagePreview(prev => ({...prev, featured_file: [...prev.featured_file, ...newPreviews]}));
                 }
             };
             reader.readAsDataURL(file);
@@ -242,7 +251,7 @@ export default function BlogForm({ blog, setOpenedPage }) {
     };
 
     const handleRemoveNewImage = (index) => {
-        setImagePreview(prev => prev.filter((_, i) => i !== index));
+        setImagePreview(prev => ({...prev, featured_file: prev.featured_file.filter((_, i) => i !== index)}));
         setForm(prevState => ({
             ...prevState,
             featured_files: prevState.featured_images.filter((_, i) => i !== index)
@@ -250,29 +259,8 @@ export default function BlogForm({ blog, setOpenedPage }) {
     }
 
     const handleRemoveExistingImage = (index) => {
-        setForm(prev => ({...prev, featured_images: prev.featured_images.filter((_, i) => i !== index)}));
+        setForm(prev => ({ ...prev, featured_images: prev.featured_images.filter((_, i) => i !== index) }));
         setRemovedImages(prev => [...prev, featured_images[index].id]);
-    }
-
-    const uploadImageCallback = async (file) => {
-        return new Promise(async (resolve, reject) => {
-            if (!file.type.startsWith('image/')) {
-                reject(new Error('File is not an image'));
-            }
-            const formData = new FormData();
-            formData.append('image', file);
-            try {
-                const response = await axios.post('/api/blog/upload-image', formData);
-
-                resolve({
-                    data: {
-                        link: response.data.imageUrl
-                    }
-                })
-            } catch (error) {
-                reject(new Error('Upload failed: ' + (error.response?.data?.message || error.message)))
-            }
-        })
     }
 
     if (isLoadingCategories || isLoadingTags || !bCategories || !bTags) {
@@ -297,25 +285,102 @@ export default function BlogForm({ blog, setOpenedPage }) {
                 >
                     Content<Text color={brandStars}>*</Text>
                 </FormLabel>
-                <Editor
-                    editorState={editorState}
-                    toolbarClassName="toolbarClassName"
-                    wrapperClassName="wrapperClassName"
-                    editorClassName="editorClassName"
-                    toolbarStyle={{ backgroundColor: 'white', color: 'black' }}
-                    editorStyle={{ color: textColor, minHeight: 300 }}
-                    onEditorStateChange={onEditorStateChange}
-                    handlePastedText={handlePastedText}
-                    toolbar={{
+                <CKEditor
+                    editor={ClassicEditor}
+                    config={{
+                        plugins: [
+                            Autoformat,
+                            BlockQuote,
+                            Bold,
+                            CloudServices,
+                            Code,
+                            CodeBlock,
+                            Essentials,
+                            Heading,
+                            HorizontalLine,
+                            Image,
+                            ImageCaption,
+                            ImageInsert,
+                            ImageResize,
+                            ImageStyle,
+                            ImageToolbar,
+                            ImageUpload,
+                            MediaEmbed,
+                            Base64UploadAdapter,
+                            Italic,
+                            Link,
+                            List,
+                            Markdown,
+                            Mention,
+                            Paragraph,
+                            SourceEditing,
+                            Strikethrough,
+                            Table,
+                            TableToolbar,
+                            TextTransformation,
+                            TodoList,
+                        ],
+                        toolbar: [
+                            'undo',
+                            'redo',
+                            '|',
+                            'heading',
+                            '|',
+                            'bold',
+                            'italic',
+                            'strikethrough',
+                            'code',
+                            '|',
+                            'bulletedList',
+                            'numberedList',
+                            'todoList',
+                            '|',
+                            'link',
+                            'uploadImage',
+                            'mediaEmbed',
+                            'insertTable',
+                            'blockQuote',
+                            'codeBlock',
+                            'horizontalLine',
+                        ],
                         image: {
-                            uploadCallback: uploadImageCallback,
-                            previewImage: true,
-                            alt: { present: true, mandatory: false },
-                            uploadEnabled: false,
-                            urlEnabled: true
-                        }
+                            resizeOptions: [
+                                {
+                                    name: 'resizeImage:original',
+                                    label: 'Default image width',
+                                    value: null,
+                                },
+                                {
+                                    name: 'resizeImage:50',
+                                    label: '50% page width',
+                                    value: '50',
+                                },
+                                {
+                                    name: 'resizeImage:75',
+                                    label: '75% page width',
+                                    value: '75',
+                                },
+                            ],
+                            toolbar: [
+                                'imageTextAlternative',
+                                'toggleImageCaption',
+                                '|',
+                                'imageStyle:inline',
+                                'imageStyle:wrapText',
+                                'imageStyle:breakText',
+                                '|',
+                                'resizeImage',
+                            ],
+                            insert: {
+                                integrations: ['url'],
+                            },
+                        },
                     }}
-
+                    data={form.content}
+                    onChange={(event, editor) => {
+                        const data = editor.getData();
+                        setForm(prev => ({ ...prev, content: data }))
+                    }}
                 />
             </FormControl>
             <FormControl>
@@ -352,7 +417,7 @@ export default function BlogForm({ blog, setOpenedPage }) {
                     <Box mt={4} display="flex" flexWrap="wrap">
                         {form.featured_images && form.featured_images.length > 0 && form.featured_images.map((image, index) => (
                             <Box key={index} position="relative" mr={2} mb={2}>
-                                <Image src={image} alt={`Existing Image ${index}`} boxSize="100px" objectFit="cover" />
+                                <ChakraImage src={image} alt={`Existing Image ${index}`} boxSize="100px" objectFit="cover" />
                                 <Icon
                                     as={MdClose}
                                     position="absolute"
@@ -366,9 +431,9 @@ export default function BlogForm({ blog, setOpenedPage }) {
                                 />
                             </Box>
                         ))}
-                        {imagePreview && imagePreview.length > 0 && imagePreview.map((image, index) => (
+                        {imagePreview.featured_file && imagePreview.featured_file.length > 0 && imagePreview.featured_file.map((image, index) => (
                             <Box key={index} position="relative" mr={2} mb={2}>
-                                <Image src={image} alt={`New Image Preview ${index}`} boxSize="100px" objectFit="cover" />
+                                <ChakraImage src={image} alt={`New Image Preview ${index}`} boxSize="100px" objectFit="cover" />
                                 <Icon
                                     as={MdClose}
                                     position="absolute"
@@ -394,8 +459,89 @@ export default function BlogForm({ blog, setOpenedPage }) {
                         onChange={handleFileChange}
                     />
                 </Box>
-
             </FormControl>
+            <CustomInput title="Meta title" name="meta_title" value={form.meta_title} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+            <CustomInput title="Meta description" name="meta_description" value={form.meta_description} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+            <FormLabel
+                display='flex'
+                ms='4px'
+                fontSize='sm'
+                fontWeight='500'
+                color={textColor}
+                mb='8px'
+            >
+                Og Graph Image <Text color={brandStars}>*</Text>
+            </FormLabel>
+            <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+                p={4}
+                border="2px dashed"
+                borderColor="grey"
+                borderRadius="md"
+                cursor="pointer"
+                _hover={{ borderColor: 'gray.400' }}
+                mb='24px'
+            >
+                <Box display="flex" alignItems="center" onClick={() => ogGraphFileRef.current.click()}>
+                    <Icon as={MdUploadFile} mr={2} />
+                    <Text>{form.og_graph_file ? 'Choose other file' : 'Choose a file...'}</Text>
+                </Box>
+                {(form.og_graph_file || form.og_graph_image) && (
+                    <Box mt={4}>
+                        <ChakraImage src={imagePreview.og_graph_file} alt="Image Preview" boxSize="200px" objectFit="cover" />
+                    </Box>
+                )}
+                <Input
+                    ref={ogGraphFileRef}
+                    type="file"
+                    display="none"
+                    accept='image/*'
+                    name='og_graph_file'
+                    onChange={handleSingleFileChange}
+                />
+            </Box>
+            <FormLabel
+                display='flex'
+                ms='4px'
+                fontSize='sm'
+                fontWeight='500'
+                color={textColor}
+                mb='8px'
+            >
+                Twitter Graph Image<Text color={brandStars}>*</Text>
+            </FormLabel>
+            <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+                p={4}
+                mb={"24px"}
+                border="2px dashed"
+                borderColor="grey"
+                borderRadius="md"
+                cursor="pointer"
+                _hover={{ borderColor: 'gray.400' }}
+            >
+                <Box display="flex" alignItems="center" onClick={() => twitterGraphFileRef.current.click()}>
+                    <Icon as={MdUploadFile} mr={2} />
+                    <Text>{form.twitter_graph_file ? 'Choose other file' : 'Choose a file...'}</Text>
+                </Box>
+                {(form.twitter_graph_file || form.twitter_graph_image) && (
+                    <Box mt={4}>
+                        <ChakraImage src={imagePreview.twitter_graph_file} alt="Image Preview" boxSize="200px" objectFit="cover" />
+                    </Box>
+                )}
+                <Input
+                    ref={twitterGraphFileRef}
+                    type="file"
+                    display="none"
+                    accept='image/*'
+                    name='twitter_graph_file'
+                    onChange={handleSingleFileChange}
+                />
+            </Box>
             <Button variant={"brand"} mt={3} mr={3} onClick={handleBlog}>
                 Save
             </Button>

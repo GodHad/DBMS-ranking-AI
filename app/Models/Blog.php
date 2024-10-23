@@ -18,7 +18,11 @@ class Blog extends Model
         'title',
         'description',
         'content',
-        'user_id'
+        'user_id',
+        'meta_title',
+        'meta_description',
+        'og_graph_image',
+        'twitter_graph_image'
     ];
 
     public function user()
