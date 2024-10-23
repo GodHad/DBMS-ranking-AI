@@ -29,6 +29,7 @@ class FetchTrends extends Command
      */
     public function handle()
     {
+        ini_set('max_execution_time', 300);
         $exePath = '/var/www/main'; 
     
         if ($this->option('all')) {
@@ -36,8 +37,8 @@ class FetchTrends extends Command
             $keywords = Vendor::pluck('db_name', 'id')->toArray();
             
             foreach ($keywords as $id => $keyword) {
-                $command = escapeshellcmd($exePath) . " " . escapeshellarg($keyword);
-                Log::info('Running command for keyword: ' . $keyword);
+                $command = '/var/www/fetching_data.sh' . " " . escapeshellarg($keyword);
+                Log::info('Running command for keyword: ' . $commnad);
 
                 $output = [];
                 $returnVar = 0;
@@ -53,9 +54,9 @@ class FetchTrends extends Command
             
         } else {
             $keyword = $this->argument('keywords');
-            $command = escapeshellcmd($exePath) . " " . escapeshellarg($keyword);
+            $command = '/var/www/fetching_data.sh' . " " . escapeshellarg($keyword);
             
-            Log::info('Running command for single keyword: ' . $keyword);
+            Log::info('Running command for single keyword: ' . $command);
             $output = [];
             $returnVar = 0;
             exec($command . ' 2>&1', $output, $returnVar);
@@ -72,8 +73,8 @@ class FetchTrends extends Command
 
     private function processTrendData()
     {
-        $country_score_file = 'trends_data_by_country_weekly.csv';
-        $score_file = 'trends_data.csv';
+        $country_score_file = '/var/www/trends_data_by_country_weekly.csv';
+        $score_file = '/var/www/trends_data.csv';
 
         // Process country trends
         if (file_exists($country_score_file)) {

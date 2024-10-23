@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Trend;
+use App\Models\Vendor;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -32,13 +34,19 @@ class TrendsController extends Controller
                 ->values()
                 ->toArray();
             
-            // Get the x-axis values, grouped by months (i.e., 'YYYY-MM' format)
-            $xaxisOption = Trend::select(DB::raw('DATE_FORMAT(date, "%Y-%m") as month'))
-                ->where('vendor_id', 1)
-                ->distinct()
-                ->orderBy('month') // Order the months chronologically
-                ->pluck('month') // Use pluck to get an array of months
-                ->toArray();
+            $vendor = Vendor::first();
+
+            if ($vendor) {
+                $xaxisOption = Trend::select(DB::raw('DATE_FORMAT(date, "%Y-%m") as month'))
+                    ->where('vendor_id', $vendor->id) // Use the first vendor's ID
+                    ->distinct()
+                    ->orderBy('month') // Order the months chronologically
+                    ->pluck('month') // Use pluck to get an array of months
+                    ->toArray();
+            } else {
+                $xaxisOption = [];
+                Log::info('No vendor found.');
+            }
             
             return response()->json(['success' => true, 'chartData' => $chartData, 'xaxis' => $xaxisOption]);
         } catch (\Exception $th) {

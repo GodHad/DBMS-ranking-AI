@@ -35,7 +35,8 @@ class ProcessAfterDbmsCreation implements ShouldQueue
      */
     public function handle()
     {
-        Log::info('start fetch:trends command executed successfully. Output: ');
+        ini_set('max_execution_time', 300); // 5 minutes
+        Log::info('start to fetching...');
         try {
             Artisan::call('fetch:trends', ['keywords' => $this->dbms]);
 
@@ -43,7 +44,7 @@ class ProcessAfterDbmsCreation implements ShouldQueue
             $output = Artisan::output();
             Log::info('fetch:trends command executed successfully. Output: ' . Str::limit($output, 200));
         } catch (\Exception $e) {
-            Log::error('Error running fetch:trends command: ' . $e->getMessage());
+            Log::info('Error running fetch:trends command: ' . $e->getMessage());
         }
     }
 }
