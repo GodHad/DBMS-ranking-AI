@@ -39,7 +39,6 @@ class BlogController extends Controller
 
         $validator = Validator::make($data, [
             'title' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string'],
             'content' => ['required', 'string'],
             'tags' => ['required', 'string'],
             'categories' => ['required', 'string'],
@@ -58,7 +57,6 @@ class BlogController extends Controller
 
         $blog = Blog::create([
             'title' => $data['title'],
-            'description' => $data['description'],
             'content' => $data['content'],
             'user_id' => Auth::guard('web')->user()->id,
             'meta_title' => $data['meta_title'],
@@ -105,7 +103,6 @@ class BlogController extends Controller
         $validator = Validator::make($data, [
             'title' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string'],
-            'description' => ['required', 'string'],
             'tags' => ['required', 'string'],
             'categories' => ['required', 'string'],
             'featured_images' => ['nullable', 'array'],
@@ -131,7 +128,6 @@ class BlogController extends Controller
 
         $blog->title = $data['title'];
         $blog->content = $data['content'];
-        $blog->description = $data['description'];
         $blog->meta_title = $data['meta_title'];
         $blog->meta_description = $data['meta_description'];
 

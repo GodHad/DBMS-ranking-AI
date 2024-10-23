@@ -58,6 +58,7 @@ class SponsorController extends Controller
                 'featured' => $data['featured'],
                 'logo_url' => $logoPath,
                 'banner' => $bannerPath,
+                'featured' => $data['featured']
             ]);
 
             return response()->json(['success' => true]);

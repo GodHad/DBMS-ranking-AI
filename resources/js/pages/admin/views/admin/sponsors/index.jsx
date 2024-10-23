@@ -273,7 +273,7 @@ export default function Sponsor() {
                                 ml={{ base: "20px" }}
                                 variant='brand'
                                 fontWeight='500'
-                                onClick={() => { setOpenedPage(1); setSponsor(sponsor) }}
+                                onClick={() => { setOpenedPage(1); setSponsor(initialSponsor) }}
                             >
                                 <Icon as={MdAdd} h='18px' w='18px' />New Sponsor
                             </Button>

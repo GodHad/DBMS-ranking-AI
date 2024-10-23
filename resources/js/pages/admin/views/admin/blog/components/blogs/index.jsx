@@ -58,8 +58,8 @@ const initialBlog = {
 }
 
 const stripHTML = (html) => {
-    const doc = new DOMParser().parseFromString(html, 'text/html');
-    return doc.body.textContent || "";
+    let modifiedText = html.replace(/!\[.*?\]\(.*?\)/g, '').trim();
+    return modifiedText
 };
 
 export default () => {
@@ -168,8 +168,8 @@ export default () => {
                 </Text>
             ),
         }),
-        columnHelper.accessor('description', {
-            id: 'description',
+        columnHelper.accessor('content', {
+            id: 'content',
             header: () => (
                 <Text
                     justifyContent="center"

@@ -9,6 +9,7 @@ import {
     Icon,
     Image as ChakraImage,
     Spinner,
+    Textarea,
     useToast,
     useColorModeValue
 } from '@chakra-ui/react'
@@ -59,6 +60,7 @@ export default function BlogForm({ blog, setOpenedPage }) {
     const toast = useToast();
     const textColor = useColorModeValue("grey", "white");
     const brandStars = useColorModeValue("brand.500", "brand.400");
+    const bgColor = useColorModeValue('white', 'navy.800')
 
     const { data: bCategories, isLoadingCategories } = useQuery('bcategories', getCategories);
     const { data: bTags, isLoadingTags } = useQuery('tags', getTags);
@@ -198,6 +200,11 @@ export default function BlogForm({ blog, setOpenedPage }) {
             og_graph_image,
             twitter_graph_image
         }));
+        setImagePreview(prev => ({
+            ...prev,
+            og_graph_file: APP_URL + 'storage/' + og_graph_image,
+            twitter_graph_file: APP_URL + 'storage/' + twitter_graph_image
+        }))
     }, [blog])
 
     const handleChangeMultiSelect = (name, value) => {
@@ -238,7 +245,7 @@ export default function BlogForm({ blog, setOpenedPage }) {
             reader.onloadend = () => {
                 newPreviews.push(reader.result);
                 if (newPreviews.length === files.length) {
-                    setImagePreview(prev => ({...prev, featured_file: [...prev.featured_file, ...newPreviews]}));
+                    setImagePreview(prev => ({ ...prev, featured_file: [...prev.featured_file, ...newPreviews] }));
                 }
             };
             reader.readAsDataURL(file);
@@ -251,7 +258,7 @@ export default function BlogForm({ blog, setOpenedPage }) {
     };
 
     const handleRemoveNewImage = (index) => {
-        setImagePreview(prev => ({...prev, featured_file: prev.featured_file.filter((_, i) => i !== index)}));
+        setImagePreview(prev => ({ ...prev, featured_file: prev.featured_file.filter((_, i) => i !== index) }));
         setForm(prevState => ({
             ...prevState,
             featured_files: prevState.featured_images.filter((_, i) => i !== index)
@@ -272,7 +279,6 @@ export default function BlogForm({ blog, setOpenedPage }) {
             <Text mb={"32px"} fontSize={22}>{!blog.id ? "Create" : "Update"} Blog</Text>
             <FormControl>
                 <CustomInput title="Title" name="title" value={form.title} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                <CustomInput title="Description" name="description" value={form.description} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
             </FormControl>
             <FormControl mb={'24px'}>
                 <FormLabel
@@ -461,7 +467,33 @@ export default function BlogForm({ blog, setOpenedPage }) {
                 </Box>
             </FormControl>
             <CustomInput title="Meta title" name="meta_title" value={form.meta_title} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-            <CustomInput title="Meta description" name="meta_description" value={form.meta_description} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+            <FormLabel
+                display='flex'
+                ms='4px'
+                fontSize='sm'
+                fontWeight='500'
+                color={textColor}
+                mb='8px'
+            >
+                Meta description<Text color={brandStars}>*</Text>
+            </FormLabel>
+            <Textarea
+                isRequired={true}
+                variant='auth'
+                fontSize='sm'
+                ms={{ base: "0px", md: "0px" }}
+                placeholder=''
+                mb='24px'
+                fontWeight='500'
+                size='lg'
+                bgColor={bgColor}
+                border={'1px'}
+                borderColor={"grey"}
+                borderRadius={'16px'}
+                name="meta_description"
+                value={form.meta_description}
+                onChange={handleChangeForm}
+            />
             <FormLabel
                 display='flex'
                 ms='4px'

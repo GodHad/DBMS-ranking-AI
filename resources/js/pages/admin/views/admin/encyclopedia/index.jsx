@@ -51,8 +51,8 @@ const initialEncyclopedia = {
 }
 
 const stripHTML = (html) => {
-    const doc = new DOMParser().parseFromString(html, 'text/html');
-    return doc.body.textContent || "";
+    let modifiedText = html.replace(/!\[.*?\]\(.*?\)/g, '').trim();
+    return modifiedText
 };
 
 export default function Encyclopedia() {

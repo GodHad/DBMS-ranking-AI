@@ -4,6 +4,8 @@ import {
     FormControl,
     Text,
     Box,
+    FormLabel,
+    Textarea,
     useToast
 } from '@chakra-ui/react'
 import { useDisclosure, useColorModeValue } from '@chakra-ui/react'
@@ -57,6 +59,7 @@ export default function VendorForm({ vendor, categories, setOpenedPage }) {
     } = vendor;
 
     const textColor = useColorModeValue("navy.700", "white");
+    const bgColor = useColorModeValue('white', 'navy.800')
     const textColorSecondary = "gray.400";
     const textColorDetails = useColorModeValue("navy.700", "secondaryGray.600");
     const textColorBrand = useColorModeValue("brand.500", "white");
@@ -217,7 +220,33 @@ export default function VendorForm({ vendor, categories, setOpenedPage }) {
             <FormControl>
                 <CustomInput title="Company Name" name="company_name" value={form.company_name} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 <CustomInput title="Database Name" name="db_name" value={form.db_name} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                <CustomInput title="Description" name="description" value={form.description} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                <FormLabel
+                    display='flex'
+                    ms='4px'
+                    fontSize='sm'
+                    fontWeight='500'
+                    color={textColor}
+                    mb='8px'
+                >
+                    Description<Text color={brandStars}>*</Text>
+                </FormLabel>
+                <Textarea
+                    isRequired={true}
+                    variant='auth'
+                    fontSize='sm'
+                    ms={{ base: "0px", md: "0px" }}
+                    placeholder=''
+                    mb='24px'
+                    fontWeight='500'
+                    size='lg'
+                    bgColor={bgColor}
+                    border={'1px'}
+                    borderColor={"grey"}
+                    borderRadius={'16px'}
+                    name="description"
+                    value={form.description}
+                    onChange={handleChangeForm}
+                />
                 <CustomMultiSelect title="Primary Categories" name="primary_category" value={form.primary_category} handleChangeMultiSelect={handleChangeMultiSelect} options={categories.map(category => ({ id: category.id, value: category.title, label: category.title }))} />
                 <CustomMultiSelect title="Secondary Categories" name="secondary_category" value={form.secondary_category} handleChangeMultiSelect={handleChangeMultiSelect} options={categories.map(category => ({ id: category.id, value: category.title, label: category.title }))} />
                 {/* <CustomInput title="Contact Info" name="contact_info" value={form.contact_info} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} /> */}

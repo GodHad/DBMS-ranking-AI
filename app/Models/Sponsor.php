@@ -15,6 +15,7 @@ class Sponsor extends Model
         'description',
         'logo_url',
         'link',
-        'banner'
+        'banner',
+        'featured'
     ];
 }

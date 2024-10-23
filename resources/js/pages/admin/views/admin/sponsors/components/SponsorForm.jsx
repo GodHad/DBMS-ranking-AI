@@ -134,8 +134,8 @@ export default function SponsorForm({ sponsor, setOpenedPage }) {
     }, [sponsor])
 
     const [imagePreview, setImagePreview] = useState({
-        logo_file: APP_URL + 'storage/images/' + logo_url,
-        banner_file: APP_URL + 'storage/images/' + banner
+        logo_file: APP_URL + 'storage/' + logo_url,
+        banner_file: APP_URL + 'storage/' + banner
     });
 
     const handleFileChange = (event) => {
