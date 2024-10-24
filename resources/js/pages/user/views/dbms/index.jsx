@@ -10,9 +10,12 @@ import {
     Thead,
     Tr,
     Box,
+    Button,
+    FormControl,
     useColorModeValue,
 } from '@chakra-ui/react';
 import React, { useState, useEffect } from 'react'
+import { Select } from 'chakra-react-select';
 
 import {
     createColumnHelper,
@@ -39,7 +42,7 @@ export default function Vendor() {
 
     const [data, setData] = useState([]);
 
-    const { data: vendors } = useQuery('vendors', getVendors);
+    const { data: vendors, isLoadingVendor } = useQuery('vendors', getVendors);
     const { data: categories, isLoadingCategory } = useQuery('categories', getCategories);
 
     useEffect(() => {
@@ -304,6 +307,23 @@ export default function Vendor() {
     );
 
     const [showing, setShowing] = useState(0);
+    const [showingCategory, setShowingCategory] = useState(0);
+
+    useEffect(() => {
+        if (isLoadingVendor) return;
+        console.log(showingCategory)
+        if (showingCategory === 0) setData(vendors);
+        else {
+            const showingVendors = vendors.filter(vendor => vendor.primary_category.includes('' + showingCategory))
+            setData(showingVendors)
+        }
+    }, [showingCategory, setData, isLoadingVendor, vendors])
+
+    const [options, setOptions] = useState([{ id: 0, value: 'all', label: 'All' }]);
+
+    useEffect(() => {
+        if (!isLoadingCategory && categories) setOptions([{ id: 0, value: 'all', label: 'All' }].concat(categories.map(category => ({ id: category.id, label: category.title, value: category.title }))))
+    }, [categories, isLoadingCategory])
 
     return (
         <Card
@@ -323,7 +343,18 @@ export default function Vendor() {
                 >
                     DBMS Ranking
                 </Text>
-                <Box display={"flex"} gap={2}>
+                <Box display={"flex"} gap={2} alignItems={"center"}>
+                    <FormControl p={4} w={"50%"} minW={"200px"} maxW={"300px"}>
+                        <Select
+                            id="color-select"
+                            name="colors"
+                            defaultValue={{ id: 0, value: 'all', label: 'All' }}
+                            options={options}
+                            closeMenuOnSelect={false}
+                            size="lg"
+                            onChange={(e) => setShowingCategory(e.id)}
+                        />
+                    </FormControl>
                     <IconButton
                         align='center'
                         justifyContent='center'
@@ -417,7 +448,7 @@ export default function Vendor() {
                                         fontWeight="700"
                                         lineHeight="100%"
                                     >
-                                        No Categories
+                                        No Databases
                                     </Text>
                                 </Td>
                             </Tr>

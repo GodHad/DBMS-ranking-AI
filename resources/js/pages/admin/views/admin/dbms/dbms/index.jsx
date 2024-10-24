@@ -92,7 +92,7 @@ export default function Vendor() {
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
 
-    const [showingCategory, setShowingCategory] = useState('');
+    const [showingCategory, setShowingCategory] = useState(0);
     const [data, setData] = useState([]);
     const [openedPage, setOpenedPage] = useState(0)
     const [vendor, setVendor] = useState(initialVendor)
@@ -133,7 +133,7 @@ export default function Vendor() {
 
     useEffect(() => {
         if (isLoadingVendor) return;
-        if (showingCategory === '') setData(vendors);
+        if (showingCategory === 0) setData(vendors);
         else {
             const showingVendors = vendors.filter(vendor => vendor.primary_category.includes('' + showingCategory))
             setData(showingVendors)
@@ -427,10 +427,10 @@ export default function Vendor() {
         debugTable: true,
     });
 
-    const [options, setOptions] = useState([{ value: 'all', label: 'All' }]);
+    const [options, setOptions] = useState([{ id: 0, value: 'all', label: 'All' }]);
 
     useEffect(() => {
-        if (!isLoadingCategory && categories) setOptions([{ value: 'all', label: 'All' }].concat(categories.map(category => ({ id: category.id, label: category.title, value: category.title }))))
+        if (!isLoadingCategory && categories) setOptions([{ id: 0, value: 'all', label: 'All' }].concat(categories.map(category => ({ id: category.id, label: category.title, value: category.title }))))
     }, [categories, isLoadingCategory])
 
     return (
@@ -472,6 +472,7 @@ export default function Vendor() {
                                 id="color-select"
                                 name="colors"
                                 options={options}
+                                defaultValue={{ id: 0, value: 'all', label: 'All' }}
                                 closeMenuOnSelect={false}
                                 size="lg"
                                 onChange={(e) => setShowingCategory(e.id)}

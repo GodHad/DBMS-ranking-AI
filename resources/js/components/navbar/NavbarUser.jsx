@@ -21,17 +21,20 @@ import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons'
 import Logo from './components/Logo'
 import NavbarLinks from './NavbarLinksUser'
 import routes from '../../pages/user/routes';
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 const NavLink = ({ route }) => {
+  const location = useLocation();
+  const bg = useColorModeValue('gray.200', 'gray.700');
   return (
     <Box
-      px={2}
-      py={1}
+      px={5}
+      py={3}
       rounded={'md'}
+      bg={location.pathname === route.path ? bg : 'transparent'}
       _hover={{
         textDecoration: 'none',
-        bg: useColorModeValue('gray.200', 'gray.700'),
+        bg: bg
       }}
     >
       <Link to={route.path}>{route.name}</Link>

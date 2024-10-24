@@ -19,8 +19,25 @@ const routes = [
       name: 'DBMS Ranking',
       path: '/ranking',
       component: <DBMSRanking />,
-      secondary: true,
     },
+    {
+        name: 'Encyclopeida',
+        path: '/encyclopedia',
+        component: <>Encyclopeida</>
+    },
+    {
+        name: 'Blog',
+        path: '/blog',
+        component: <>Blog</>
+    },
+    {
+        name: 'Sponsor',
+        path: '/sponsor',
+        component: <>Sponsor</>
+    },
+    {
+        name: ''
+    }
     // {
     //   name: 'Data Tables',
     //   layout: '/admin',
