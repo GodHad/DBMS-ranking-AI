@@ -10,10 +10,15 @@ use Illuminate\Support\Facades\Storage;
 
 class FeaturedProductController extends Controller
 {
-    public function featured_products()
+    public function featured_products(Request $request)
     {
         try {
-            $featured_products = FeaturedProduct::all();
+            $featured = $request->query('published');
+            if ($featured) {
+                $featured_products = FeaturedProduct::where('published', 1)->get();
+            } else {
+                $featured_products = FeaturedProduct::all();
+            }
             return response()->json(['success' => true, 'featured_products' => $featured_products]);
         } catch (\Exception $th) {
             return response()->json(['success' => false, 'error' => $th->getMessage()], 500);

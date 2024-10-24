@@ -23,7 +23,7 @@ import illustration from "../../../../../assets/img/auth/Demo.jpg";
 import { FcGoogle } from "react-icons/fc";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiEyeCloseLine } from "react-icons/ri";
-import axios from "../../../variables/axiosConfig";
+import axios from "../../../../../variables/axiosConfig";
 import { Store } from 'react-notifications-component';
 
 function SignUp() {

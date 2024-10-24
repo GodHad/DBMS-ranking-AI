@@ -17,7 +17,7 @@ import {
   useToast
 } from '@chakra-ui/react'
 import { useDisclosure, useColorModeValue } from '@chakra-ui/react'
-import axios from '../../../../../../variables/axiosConfig';
+import axios from '../../../../../../../../variables/axiosConfig';
 import { Store } from 'react-notifications-component';
 
 export default function TagModal({ tag, onopen, handleOnClose, handleOnUpdate }) {

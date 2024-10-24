@@ -31,7 +31,7 @@ import {
 import Card from '../../../../../../../components/card/Card';
 import Menu from '../../../../../../../components/menu/MainMenu';
 import TagModal from './components/TagModal';
-import axios from "../../../../../variables/axiosConfig";
+import axios from "../../../../../../../variables/axiosConfig";
 
 const columnHelper = createColumnHelper();
 

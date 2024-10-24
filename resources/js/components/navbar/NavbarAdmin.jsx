@@ -37,8 +37,6 @@ export default function AdminNavbar(props) {
 		}
 	};
 
-	console.log(props, brandText)
-
 	return (
 		<Box
 			position={navbarPosition}

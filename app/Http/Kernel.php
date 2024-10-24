@@ -33,6 +33,9 @@ class Kernel extends HttpKernel
         // Route middleware
         'auth' => \App\Http\Middleware\Authenticate::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'admin' => \App\Http\Middleware\AdminMiddleware::class,
+        'author' => \App\Http\Middleware\AuthorMiddleware::class,
+        'vendor' => \App\Http\Middleware\VendorMiddleware::class
         // etc.
     ];
 }

@@ -30,7 +30,7 @@ import {
 import Card from '../../../../../../components/card/Card';
 import Menu from '../../../../../../components/menu/MainMenu';
 import CategoryModal from './components/CategoryModal';
-import axios from "../../../../variables/axiosConfig";
+import axios from "../../../../../../variables/axiosConfig";
 import { Store } from 'react-notifications-component';
 import { MdAdd } from 'react-icons/md'
 

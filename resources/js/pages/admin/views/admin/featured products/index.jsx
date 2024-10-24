@@ -299,7 +299,7 @@ export default function FeaturedProduct() {
                                 ml={{ base: "20px" }}
                                 variant='brand'
                                 fontWeight='500'
-                                onClick={() => { setOpenedPage(1); setFeaturedProduct(featuredProduct) }}
+                                onClick={() => { setOpenedPage(1); setFeaturedProduct(initialFeaturedProduct) }}
                             >
                                 <Icon as={MdAdd} h='18px' w='18px' />New Featured Product
                             </Button>

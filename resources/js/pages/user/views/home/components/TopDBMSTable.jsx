@@ -1,10 +1,6 @@
-/* eslint-disable */
-
 import {
-  Box,
   Flex,
-  Icon,
-  Progress,
+  Box,
   Table,
   Tbody,
   Td,
@@ -14,30 +10,62 @@ import {
   Tr,
   useColorModeValue,
 } from '@chakra-ui/react';
+import React, { useState, useEffect } from 'react'
+
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
-  getSortedRowModel,
   useReactTable,
+  getPaginationRowModel
 } from '@tanstack/react-table';
-import Card from '../../../../../../components/card/Card';
-import Menu from '../../../../../../components/menu/MainMenu';
-import * as React from 'react';
-import { MdCancel, MdCheckCircle, MdOutlineError } from 'react-icons/md';
+import { Link } from 'react-router-dom';
+// Custom components
+import Card from '../../../../../components/card/Card';
+import { useQuery } from 'react-query';
+import { getVendors } from '../requests/use-request.js';
 
 const columnHelper = createColumnHelper();
 
-// const columns = columnsDataCheck;
-export default function ComplexTable(props) {
-  const { tableData } = props;
-  const [sorting, setSorting] = React.useState([]);
+export default function Vendor() {
   const textColor = useColorModeValue('secondaryGray.900', 'white');
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
-  let defaultData = tableData;
+  const [data, setData] = useState([]);
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  })
+
+  const { data: vendors, isLoadingVendor } = useQuery('vendors', getVendors);
+
+  useEffect(() => {
+    setData(vendors);
+  }, [vendors])
+
   const columns = [
-    columnHelper.accessor('name', {
-      id: 'name',
+
+    columnHelper.accessor('overall_ranking', {
+      id: 'current_ranking',
+      header: () => (
+        <Text
+          justifyContent="center"
+          align="center"
+          fontSize={{ sm: '10px', lg: '12px' }}
+          color="gray.400"
+        >
+          Rank
+        </Text>
+      ),
+      cell: (info) => (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <Text color={textColor} fontSize="sm" fontWeight="700">
+            {info.getValue() === '10000000' ? 'N/A' : info.getValue()}
+          </Text>
+        </div>
+      ),
+    }),
+    columnHelper.accessor('db_name', {
+      id: 'db_name',
       header: () => (
         <Text
           justifyContent="space-between"
@@ -45,7 +73,7 @@ export default function ComplexTable(props) {
           fontSize={{ sm: '10px', lg: '12px' }}
           color="gray.400"
         >
-          NAME
+          Name
         </Text>
       ),
       cell: (info) => (
@@ -56,8 +84,8 @@ export default function ComplexTable(props) {
         </Flex>
       ),
     }),
-    columnHelper.accessor('status', {
-      id: 'status',
+    columnHelper.accessor('overall_avg_score', {
+      id: 'overall_avg_score',
       header: () => (
         <Text
           justifyContent="space-between"
@@ -65,113 +93,48 @@ export default function ComplexTable(props) {
           fontSize={{ sm: '10px', lg: '12px' }}
           color="gray.400"
         >
-          STATUS
-        </Text>
-      ),
-      cell: (info) => (
-        <Flex align="center">
-          <Icon
-            w="24px"
-            h="24px"
-            me="5px"
-            color={
-              info.getValue() === 'Approved'
-                ? 'green.500'
-                : info.getValue() === 'Disable'
-                ? 'red.500'
-                : info.getValue() === 'Error'
-                ? 'orange.500'
-                : null
-            }
-            as={
-              info.getValue() === 'Approved'
-                ? MdCheckCircle
-                : info.getValue() === 'Disable'
-                ? MdCancel
-                : info.getValue() === 'Error'
-                ? MdOutlineError
-                : null
-            }
-          />
-          <Text color={textColor} fontSize="sm" fontWeight="700">
-            {info.getValue()}
-          </Text>
-        </Flex>
-      ),
-    }),
-    columnHelper.accessor('date', {
-      id: 'date',
-      header: () => (
-        <Text
-          justifyContent="space-between"
-          align="center"
-          fontSize={{ sm: '10px', lg: '12px' }}
-          color="gray.400"
-        >
-          DATE
+          Avg. Score
         </Text>
       ),
       cell: (info) => (
         <Text color={textColor} fontSize="sm" fontWeight="700">
-          {info.getValue()}
+          {info.getValue() === '10000000' ? 'N/A' : Number(info.getValue()).toFixed(2)}
         </Text>
-      ),
-    }),
-    columnHelper.accessor('progress', {
-      id: 'progress',
-      header: () => (
-        <Text
-          justifyContent="space-between"
-          align="center"
-          fontSize={{ sm: '10px', lg: '12px' }}
-          color="gray.400"
-        >
-          PROGRESS
-        </Text>
-      ),
-      cell: (info) => (
-        <Flex align="center">
-          <Progress
-            variant="table"
-            colorScheme="brandScheme"
-            h="8px"
-            w="108px"
-            value={info.getValue()}
-          />
-        </Flex>
-      ),
+      )
     }),
   ];
-  const [data, setData] = React.useState(() => [...defaultData]);
+
   const table = useReactTable({
     data,
     columns,
     state: {
-      sorting,
+      pagination
     },
-    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onPaginationChange: setPagination,
     debugTable: true,
   });
+
   return (
     <Card
       flexDirection="column"
       w="100%"
       px="0px"
-      overflowX={{ sm: 'scroll', lg: 'hidden' }}
+      overflow={'hidden'}
     >
       <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
         <Text
           color={textColor}
           fontSize="22px"
+          mb="4px"
           fontWeight="700"
           lineHeight="100%"
         >
-          Complex Table
+          Top Rated Databases
         </Text>
-        <Menu />
       </Flex>
+
       <Box>
         <Table variant="simple" color="gray.500" mb="24px" mt="12px">
           <Thead>
@@ -209,9 +172,9 @@ export default function ComplexTable(props) {
             ))}
           </Thead>
           <Tbody>
-            {table
+            {table.getRowModel().rows.length !== 0 ? table
               .getRowModel()
-              .rows.slice(0, 5)
+              .rows
               .map((row) => {
                 return (
                   <Tr key={row.id}>
@@ -232,10 +195,41 @@ export default function ComplexTable(props) {
                     })}
                   </Tr>
                 );
-              })}
+              }) : (
+              <Tr>
+                <Td
+                  fontSize={{ sm: '14px' }}
+                  minW={{ sm: '150px', md: '200px', lg: 'auto' }}
+                  borderColor="transparent"
+                  colSpan={8}
+                >
+                  <Text
+                    color={textColor}
+                    mb="4px"
+                    align={"center"}
+                    fontWeight="700"
+                    lineHeight="100%"
+                  >
+                    No Categories
+                  </Text>
+                </Td>
+              </Tr>
+            )}
           </Tbody>
         </Table>
       </Box>
+      <Link to="#">
+        <Text
+          px="25px"
+          color={'navy.300'}
+          fontSize="12px"
+          mb="4px"
+          fontWeight="400"
+          lineHeight="100%"
+        >
+          More
+        </Text>
+      </Link>
     </Card>
   );
 }

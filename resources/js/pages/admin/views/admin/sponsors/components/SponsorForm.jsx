@@ -16,7 +16,7 @@ import {
 import { MdUploadFile } from 'react-icons/md';
 import { useQueryClient, useMutation } from 'react-query';
 import { createSponsor, updateSponsor } from '../requests/use-request';
-import { APP_URL } from '../../../../variables/statics';
+import { APP_URL } from '../../../../../../variables/statics';
 import { CustomInput } from '../../../../../../components/form/CustomInput';
 
 export default function SponsorForm({ sponsor, setOpenedPage }) {

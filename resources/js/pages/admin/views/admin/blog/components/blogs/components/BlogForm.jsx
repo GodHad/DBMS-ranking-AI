@@ -53,7 +53,7 @@ import {
     ImageStyle,
 } from 'ckeditor5'
 import 'ckeditor5/ckeditor5.css';
-import { APP_URL } from '../../../../../../variables/statics';
+import { APP_URL } from '../../../../../../../../variables/statics';
 
 export default function BlogForm({ blog, setOpenedPage }) {
     const queryClient = useQueryClient();
@@ -163,6 +163,8 @@ export default function BlogForm({ blog, setOpenedPage }) {
         formData.append('tags', form.tags);
         formData.append('meta_title', form.meta_title);
         formData.append('meta_description', form.meta_description);
+        if (form.twitter_graph_image) formData.append('twitter_graph_image', form.twitter_graph_image);
+        if (form.og_graph_image) formData.append('og_graph_image', form.og_graph_image);
         if (form.og_graph_file) formData.append('og_graph_file', form.og_graph_file);
         if (form.twitter_graph_file) formData.append('twitter_graph_file', form.twitter_graph_file);
         form.featured_files.forEach(file => {

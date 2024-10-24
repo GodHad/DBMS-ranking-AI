@@ -24,9 +24,15 @@ return Application::configure(basePath: dirname(__DIR__))
             ValidateCsrfToken::class,
             // 'throttle:api'
         ]);
-        // $middleware->group('admin', [
-        //     AdminMiddleware::class
-        // ]);
+        $middleware->group('admin', [
+            \App\Http\Middleware\AdminMiddleware::class
+        ]);
+        $middleware->group('author', [
+            \App\Http\Middleware\AuthorMiddleware::class
+        ]);
+        $middleware->group('vendor', [
+            \App\Http\Middleware\VendorMiddleware::class
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (AuthenticationException $e, Request $request) {

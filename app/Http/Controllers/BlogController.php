@@ -14,9 +14,11 @@ use Illuminate\Support\Facades\Validator;
 
 class BlogController extends Controller
 {
-    public function getBlogs()
+    public function getBlogs(Request $request)
     {
-        $blogs = Blog::all();
+        $countPerPage = $request->query('countPerPage');
+        if ($countPerPage) $blogs = Blog::with(['user', 'categories', 'tags', 'featured_images'])->orderBy('created_at', 'desc')->limit(3)->get();
+        else $blogs = Blog::all();
         return response()->json(['success' => true, 'blogs' => $blogs]);
     }
 
@@ -111,8 +113,8 @@ class BlogController extends Controller
             'featured_files.*' => ['file', 'mimes:jpeg,png,jpg,gif,webp,webp'],
             'meta_title' => ['required', 'string'],
             'meta_description' => ['required', 'string'],
-            'og_graph_file' => ['required', 'file', 'mimes:jpeg,png,jpg,gif,webp'],
-            'twitter_graph_file' => ['required', 'file', 'mimes:jpeg,png,jpg,gif,webp']
+            'og_graph_file' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif,webp'],
+            'twitter_graph_file' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif,webp']
         ]);
 
         if ($validator->fails()) return response()->json(['errors' => $validator->errors()], 422);
@@ -120,6 +122,13 @@ class BlogController extends Controller
             return response()->json(['errors' => 'Featured Images are required'], 422);
         }
 
+        if (!isset($data['og_graph_file']) && !isset($data['og_graph_image'])) {
+            return response()->json(['errors' => 'Og Graph Image are required'], 422);
+        }
+
+        if (!isset($data['twitter_graph_file']) && !isset($data['twitter_graph_image'])) {
+            return response()->json(['errors' => 'Twitter Graph Image are required'], 422);
+        }
 
         $blog = Blog::find($id);
         

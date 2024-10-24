@@ -15,10 +15,12 @@ use Carbon\Carbon;
 
 class VendorController extends Controller
 {
-    public function vendors()
+    public function vendors(Request $request)
     {
         try {
-            $vendors = Vendor::all();
+            $countPerPage = $request->query('countPerPage');
+            if ($countPerPage) $vendors = Vendor::orderBy('overall_ranking')->limit($countPerPage)->get();
+            else $vendors = Vendor::all();
             foreach ($vendors as $vendor) {
                 // Split the primary_category and secondary_category fields into arrays of category IDs
                 $primaryCategoryIds = explode(',', $vendor->primary_category);

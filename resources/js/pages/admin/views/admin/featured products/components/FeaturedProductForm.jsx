@@ -16,7 +16,7 @@ import {
 import { MdUploadFile } from 'react-icons/md';
 import { useQueryClient, useMutation } from 'react-query';
 import { createFeaturedProduct, updateFeaturedProduct } from '../requests/use-request';
-import { APP_URL } from '../../../../variables/statics';
+import { APP_URL } from '../../../../../../variables/statics';
 import { CustomInput } from '../../../../../../components/form/CustomInput';
 import { Editor } from 'react-draft-wysiwyg';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";

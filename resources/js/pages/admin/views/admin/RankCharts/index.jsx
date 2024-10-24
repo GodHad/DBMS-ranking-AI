@@ -16,7 +16,7 @@ import React, { useEffect, useState } from "react";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { MdBarChart, MdOutlineCalendarToday } from "react-icons/md";
 
-import axios from "../../../variables/axiosConfig";
+import axios from "../../../../../variables/axiosConfig";
 
 export default function RankChart(props) {
     const { ...rest } = props;
