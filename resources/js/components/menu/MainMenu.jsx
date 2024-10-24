@@ -54,7 +54,7 @@ export default function Banner(props) {
 
   return (
     <Menu isOpen={isOpen1} onClose={onClose1}>
-      {/* <MenuButton
+      <MenuButton
         align='center'
         justifyContent='center'
         bg={bgButton}
@@ -158,7 +158,7 @@ export default function Banner(props) {
             </Text>
           </Flex>
         </MenuItem>
-      </MenuList> */}
+      </MenuList>
     </Menu>
   );
 }

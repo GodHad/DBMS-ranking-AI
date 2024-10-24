@@ -19,6 +19,7 @@ import {
   renderTrack,
   renderView,
 } from "../scrollbar/Scrollbar";
+import Card from '../card/Card';
 import { Scrollbars } from "react-custom-scrollbars-2";
 import PropTypes from "prop-types";
 
@@ -55,7 +56,7 @@ function FeaturedProductsSidebar(props) {
   // SIDEBAR
   return (
     <Box display={{ sm: "none", xl: "block" }} w="100%" position={"fixed"} top={`${top}px`}minH='100%' zIndex={'-1'}>
-      <Box
+      <Card
         // bg={sidebarBg}
         transition={variantChange}
         w='300px'
@@ -64,15 +65,17 @@ function FeaturedProductsSidebar(props) {
         minH='100%'
         overflowX='hidden'
         float={"right"}
-        boxShadow={shadow}>
+        boxShadow={shadow}
+      >
         <Scrollbars
           autoHide
-          renderTrackVertical={renderTrack}
-          renderThumbVertical={renderThumb}
-          renderView={renderView}>
+          // renderTrackVertical={renderTrack}
+          // renderThumbVertical={renderThumb}
+          // renderView={renderView}
+          >
           <Content routes={routes} />
         </Scrollbars>
-      </Box>
+      </Card>
     </Box>
   );
 }

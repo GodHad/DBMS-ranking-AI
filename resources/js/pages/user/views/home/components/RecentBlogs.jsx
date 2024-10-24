@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   Flex,
   Box,
@@ -14,7 +14,6 @@ import moment from 'moment';
 
 // Custom components
 import Card from '../../../../../components/card/Card';
-import Menu from '../../../../../components/menu/MainMenu';
 import { getRecentlyBlogs } from '../requests/use-request';
 
 const BlogTags = (props) => {
@@ -67,7 +66,7 @@ export default () => {
         >
           Recently Blogs
         </Text>
-        <Menu />
+        {/* <Menu /> */}
       </Flex>
       <Box>
         {

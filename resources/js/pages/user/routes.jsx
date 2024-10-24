@@ -1,12 +1,7 @@
 import React from 'react';
 
-import { Icon } from '@chakra-ui/react';
-import {
-    MdHome,
-} from 'react-icons/md';
-
-// Admin Imports
-import MainDashboard from './views/home';
+import Home from './views/home';
+import DBMSRanking from './views/dbms';
 // import NFTMarketplace from './views/admin/marketplace';
 // import Profile from './views/admin/profile';
 // import DataTables from './views/admin/dataTables';
@@ -16,26 +11,16 @@ import SignUpCentered from '../admin/views/auth/signup';
 
 const routes = [
     {
-        name: 'Dashboard',
+        name: 'Home',
         path: '/home',
-        icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
-        component: <MainDashboard />,
+        component: <Home />,
     },
-    // {
-    //   name: 'NFT Marketplace',
-    //   layout: '/admin',
-    //   path: '/nft-marketplace',
-    //   icon: (
-    //     <Icon
-    //       as={MdOutlineShoppingCart}
-    //       width="20px"
-    //       height="20px"
-    //       color="inherit"
-    //     />
-    //   ),
-    //   component: <NFTMarketplace />,
-    //   secondary: true,
-    // },
+    {
+      name: 'DBMS Ranking',
+      path: '/ranking',
+      component: <DBMSRanking />,
+      secondary: true,
+    },
     // {
     //   name: 'Data Tables',
     //   layout: '/admin',

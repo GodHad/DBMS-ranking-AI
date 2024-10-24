@@ -1,30 +1,29 @@
-// Chakra imports
 import {
     Box,
-    Button,
     Flex,
-    FormControl,
     Icon,
     Text,
     useColorModeValue,
 } from "@chakra-ui/react";
-import { Select } from 'chakra-react-select';
 // Custom components
 import Card from "../../../../../components/card/Card";
 import LineChart from "../../../../../components/charts/LineChart";
 import React, { useEffect, useState } from "react";
-import { IoCheckmarkCircle } from "react-icons/io5";
-import { MdBarChart, MdOutlineCalendarToday } from "react-icons/md";
+import { MdOutlineCalendarToday } from "react-icons/md";
 
 import axios from "../../../../../variables/axiosConfig";
+import { useMutation, useQuery } from "react-query";
+
+const getTrendsDataAndXaxisValue = async () => {
+    const res = await axios.get('/api/get-trends-data-for-chart');
+    return res.data;
+}
 
 export default function RankChart(props) {
     const { ...rest } = props;
 
     const [loading, setLoading] = useState(true);
     const textColorSecondary = useColorModeValue("secondaryGray.600", "white");
-
-    const [categories, setCategories] = useState([])
 
     const [lineChartDataTotalSpent, setLineChartDataTotalSpent] = useState([{ name: "Sample", data: [0, 10, 20, 30, 40, 50], }]);
     const [lineChartOptionsTotalSpent, setLineChartOptionsTotalSpent] = useState({
@@ -78,55 +77,21 @@ export default function RankChart(props) {
         }
     });
 
-    const getCategories = async () => {
-        const res = await axios.get('/api/get-categories')
-        if (res.data.success) {
-            setCategories(res.data.categories);
-        }
-        else {
-            Store.addNotification({
-                title: "Failed to get categories",
-                message: res.data.error,
-                type: "danger",
-                insert: "top",
-                container: "top-right",
-                animationIn: ["animate__animated", "animate__fadeIn"],
-                animationOut: ["animate__animated", "animate__fadeOut"],
-                dismiss: {
-                    duration: 5000,
-                    onScreen: true
-                }
-            })
-        }
-    }
-
-    const getTrendsDataAndXaxisValue = async () => {
-        setLoading(true);
-        const res = await axios.get('/api/get-trends-data-for-chart');
-        if (res.data.success) {
-            setLineChartOptionsTotalSpent(prevState => ({
-                ...prevState,
-                // xaxis: {
-                //     ...prevState.xaxis,
-                //     // type: 'datetime',
-                //     categories: res.data.xaxis || ["SEP", "OCT", "NOV", "DEC", "JAN", "FEB"]
-                // },
-                labels: res.data.xaxis || ["SEP", "OCT", "NOV", "DEC", "JAN", "FEB"]
-            }))
-            setLineChartDataTotalSpent(res.data.chartData || [{ name: "Sample", data: [0, 10, 20, 30, 40, 50], }]);
-            setLoading(false);
-        }
-    }
+    const {data, isLoading} = useQuery('getTrends', getTrendsDataAndXaxisValue);
 
     useEffect(() => {
-        getCategories();
-        getTrendsDataAndXaxisValue();
-    }, [])
-
-    const [showingCategory, setShowingCategory] = useState('');
+        if (data.success) {
+            setLineChartOptionsTotalSpent(prevState => ({
+                ...prevState,
+                labels: data.xaxis || ["SEP", "OCT", "NOV", "DEC", "JAN", "FEB"]
+            }))
+            setLineChartDataTotalSpent(data.chartData || [{ name: "Sample", data: [0, 10, 20, 30, 40, 50], }]);
+            setLoading(false);
+        }
+    }, [data])
 
     return (
-        <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
+        <Box>
             <Card
                 justifyContent='center'
                 align='center'
@@ -147,22 +112,6 @@ export default function RankChart(props) {
                         />
                         Past a year
                     </Text>
-                    {/* <FormControl w='200px'>
-                        <Select
-                            id="sort-select"
-                            defaultValue={[{ label: 'all', value: 'all' }]}
-                            name="sorts"
-                            options={[{ id: '', label: 'all', value: 'all' }].concat(categories.map(category => ({ id: category.id, label: category.title, value: category.title })))}
-                            closeMenuOnSelect={false}
-                            ms='auto'
-                            w='200px'
-                            h='37px'
-                            lineHeight='100%'
-                            borderRadius='10px'
-                            size="sm"
-                            onChange={(e) => setShowingCategory(e.id)}
-                        />
-                    </FormControl> */}
                 </div>
                 <Flex w='100%' flexDirection={{ base: "column", lg: "row" }}>
                     <Box h={"650px"} w={"100%"} mt='auto'>

@@ -23,7 +23,7 @@ import {
 // import Profile from './views/admin/profile';
 // import DataTables from './views/admin/dataTables';
 import DBMS from './views/admin/dbms';
-import RankChart from './views/admin/RankCharts';
+import RankChart from '../user/views/dbms/RankCharts';
 import Encyclopedia from './views/admin/encyclopedia';
 import Blog from './views/admin/blog';
 import Sponsor from './views/admin/sponsors';
@@ -55,13 +55,13 @@ const routes = [
     icon: <Icon as={MdStorage} width={"20px"} height={"20px"} color="inherit" />,
     component: <DBMS />
   },
-  {
-    name: 'Chart',
-    layout: '/admin',
-    path: '/default',
-    icon: <Icon as={MdAutoGraph} width={"20px"} height={"20px"} color="inherit" />,
-    component: <RankChart />
-  },
+  // {
+  //   name: 'Chart',
+  //   layout: '/admin',
+  //   path: '/default',
+  //   icon: <Icon as={MdAutoGraph} width={"20px"} height={"20px"} color="inherit" />,
+  //   component: <RankChart />
+  // },
   {
     name: 'Encyclopedias',
     layout: '/admin',
