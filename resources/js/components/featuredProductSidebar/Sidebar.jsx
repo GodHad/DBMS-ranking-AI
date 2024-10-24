@@ -81,16 +81,12 @@ function FeaturedProductsSidebar(props) {
 }
 
 // FUNCTIONS
-export function FeaturedProductsSidebarResponsive(props) {
+export function FeaturedProductsSidebarResponsive() {
   let sidebarBackgroundColor = useColorModeValue("white", "navy.800");
   let menuColor = useColorModeValue("gray.400", "white");
   // // SIDEBAR
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
-
-  const { routes } = props;
-  // let isWindows = navigator.platform.startsWith("Win");
-  //  BRAND
 
   return (
     <Flex display={{ sm: "flex", xl: "none" }} alignItems='center'>
@@ -124,7 +120,7 @@ export function FeaturedProductsSidebarResponsive(props) {
               renderTrackVertical={renderTrack}
               renderThumbVertical={renderThumb}
               renderView={renderView}>
-              <Content routes={routes} />
+              <Content />
             </Scrollbars>
           </DrawerBody>
         </DrawerContent>

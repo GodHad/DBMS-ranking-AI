@@ -51,7 +51,7 @@ const routes = [
   {
     name: 'DBMS',
     layout: '/admin',
-    path: '/dbms',
+    path: '/default',
     icon: <Icon as={MdStorage} width={"20px"} height={"20px"} color="inherit" />,
     component: <DBMS />
   },

@@ -25,10 +25,19 @@ function SidebarContent() {
         </Flex>
         <Box>
           {
-            featuredProducts && featuredProducts.map((product, index) => (
+            (featuredProducts && featuredProducts.length > 0) ? featuredProducts.map((product, index) => (
               <FeaturedProduct key={index} product={product} />
-            ))
-          }
+            )) : (
+              <Text
+                color={textColor}
+                mb="4px"
+                align={"center"}
+                fontWeight="700"
+                lineHeight="100%"
+              >
+                No recently blogs
+              </Text>
+            )}
         </Box>
       </Stack>
     </Flex>

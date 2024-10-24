@@ -210,7 +210,7 @@ export default function Vendor() {
                     fontWeight="700"
                     lineHeight="100%"
                   >
-                    No Categories
+                    No Databases
                   </Text>
                 </Td>
               </Tr>

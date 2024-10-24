@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Navigate, Route, Routes, Outlet } from 'react-router-dom';
+import { Navigate, Route, Routes, Outlet, useNavigate } from 'react-router-dom';
 import routes from '../../routes';
 import { ReactNotifications } from 'react-notifications-component'
 
@@ -13,9 +13,13 @@ import { UserContext } from '../../../../contexts/UserContext';
 // Custom Chakra theme
 export default function Auth() {
   // states and functions
+  const navigate = useNavigate();
   const [toggleSidebar, setToggleSidebar] = useState(false);
   // functions for changing the states from components
   const { user } = useContext(UserContext);
+
+  if (user) navigate('/admin');
+
   const getRoute = () => {
     return window.location.pathname !== '/auth/full-screen-maps';
   };
@@ -59,11 +63,8 @@ export default function Auth() {
           {getRoute() ? (
             <Box mx="auto" minH="100vh">
               <Routes>
+                <Route path="/auth" element={user ? <Navigate to="/admin" replace /> : <Navigate to="/auth/sign-in" replace />} />
                 {getRoutes(routes)}
-                <Route
-                  path="/"
-                  element={<Navigate to="/auth/sign-in/default" replace />}
-                />
               </Routes>
             </Box>
           ) : null}

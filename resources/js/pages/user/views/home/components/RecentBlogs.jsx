@@ -70,7 +70,7 @@ export default () => {
       </Flex>
       <Box>
         {
-          blogs && blogs.map((blog, index) => (
+          (blogs && blogs.length > 0) ? blogs.map((blog, index) => (
             <Box
               key={index}
               marginTop={{ base: '1', sm: '5' }}
@@ -123,8 +123,17 @@ export default () => {
                 {/* <div dangerouslySetInnerHTML={{__html: blog.content}} /> */}
               </Box>
             </Box>
-          ))
-        }
+          )) : (
+            <Text
+              color={textColor}
+              mb="4px"
+              align={"center"}
+              fontWeight="700"
+              lineHeight="100%"
+            >
+              No recently blogs
+            </Text>
+          )}
       </Box>
     </Card>
   )
