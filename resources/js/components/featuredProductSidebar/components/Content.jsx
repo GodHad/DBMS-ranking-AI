@@ -35,7 +35,7 @@ function SidebarContent() {
                 fontWeight="700"
                 lineHeight="100%"
               >
-                No recently blogs
+                No featured products
               </Text>
             )}
         </Box>
