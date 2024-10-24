@@ -80,7 +80,7 @@ export default function RankChart(props) {
     const {data, isLoading} = useQuery('getTrends', getTrendsDataAndXaxisValue);
 
     useEffect(() => {
-        if (data.success) {
+        if (data && data.success) {
             setLineChartOptionsTotalSpent(prevState => ({
                 ...prevState,
                 labels: data.xaxis || ["SEP", "OCT", "NOV", "DEC", "JAN", "FEB"]
