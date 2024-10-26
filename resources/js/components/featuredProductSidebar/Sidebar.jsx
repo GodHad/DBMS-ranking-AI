@@ -24,7 +24,7 @@ import { Scrollbars } from "react-custom-scrollbars-2";
 import PropTypes from "prop-types";
 
 // Assets
-import { IoMenuOutline } from "react-icons/io5";
+import { MdFavoriteBorder } from "react-icons/md";
 
 function FeaturedProductsSidebar(props) {
   const { routes } = props;
@@ -55,26 +55,26 @@ function FeaturedProductsSidebar(props) {
 
   // SIDEBAR
   return (
-    <Box display={{ sm: "none", xl: "block" }} w="100%" position={"fixed"} top={`${top}px`}minH='100%' zIndex={'-1'}>
+    <Box display={{ sm: "none", xl: "block" }} w="100%" position={"absolute"} top={`${top}px`}minH='100%' zIndex={'-1'}>
       <Card
         // bg={sidebarBg}
         transition={variantChange}
         w='300px'
-        h='100vh'
+        // h='100vh'
         m={sidebarMargins}
-        minH='100%'
+        // minH='100%'
         overflowX='hidden'
         float={"right"}
         boxShadow={shadow}
       >
-        <Scrollbars
+        {/* <Scrollbars
           autoHide
-          // renderTrackVertical={renderTrack}
-          // renderThumbVertical={renderThumb}
+          renderTrackVertical={renderTrack}
+          renderThumbVertical={renderThumb}
           // renderView={renderView}
-          >
-          <Content routes={routes} />
-        </Scrollbars>
+          > */}
+          <Content />
+        {/* </Scrollbars> */}
       </Card>
     </Box>
   );
@@ -92,7 +92,7 @@ export function FeaturedProductsSidebarResponsive() {
     <Flex display={{ sm: "flex", xl: "none" }} alignItems='center'>
       <Flex ref={btnRef} w='max-content' h='max-content' onClick={onOpen}>
         <Icon
-          as={IoMenuOutline}
+          as={MdFavoriteBorder}
           color={menuColor}
           my='auto'
           w='20px'

@@ -101,7 +101,10 @@ export default function Vendor() {
         pageSize: 10,
     })
 
-    const { data: vendors, isLoadingVendor } = useQuery('vendors', getVendors);
+    const { data: vendors, isLoadingVendor } = useQuery(
+        ['vendors'],
+        () => getVendors(' '),
+    );
     const { data: categories, isLoadingCategory } = useQuery('categories', getCategories);
 
     const deleteUser = useMutation(deleteVendor, {
@@ -135,8 +138,12 @@ export default function Vendor() {
         if (isLoadingVendor) return;
         if (showingCategory === 0) setData(vendors);
         else {
-            const showingVendors = vendors.filter(vendor => vendor.primary_category.includes('' + showingCategory))
-            setData(showingVendors)
+            const showingVendors = vendors.filter(vendor => vendor.primary_category.map(category => category.id).includes(showingCategory));
+
+            const prevMonthOverallRanking = showingVendors.map(vendor => vendor.prev_month_overall_ranking).sort();
+            const prevYearOverAllRanking = showingVendors.map(vendor => vendor.prev_year_overall_ranking).sort();
+
+            setData(showingVendors.map(vendor => ({ ...vendor, prev_month_overall_ranking: prevMonthOverallRanking.indexOf(vendor.prev_month_overall_ranking) + 1, prev_year_overall_ranking: prevYearOverAllRanking.indexOf(vendor.prev_year_overall_ranking) + 1 })))
         }
     }, [showingCategory, setData, isLoadingVendor, vendors])
 
@@ -159,7 +166,7 @@ export default function Vendor() {
                     cell: (info) => (
                         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                             <Text color={textColor} fontSize="sm" fontWeight="700">
-                                {info.getValue() === '10000000' ? 'N/A' : info.getValue()}
+                                {info.getValue() === '10000000' ? 'N/A' : info.row.index + 1}
                             </Text>
                         </div>
                     ),
@@ -179,10 +186,10 @@ export default function Vendor() {
                     cell: (info) => {
                         const currentRank = info.row.original.overall_ranking;
                         return (
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 6, position: "relative" }}>
-                                {currentRank < info.getValue() && <Icon position={"absolute"} left={"-25px"} as={MdArrowUpward} h='18px' w='18px' color={'green.300'} boxSize={5} />}
-                                {currentRank > info.getValue() && <Icon position={"absolute"} as={MdArrowDownward} left={"-25px"} h='18px' w='18px' color={"red.600"} boxSize={5} />}
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, position: "relative" }}>
                                 <Text color={textColor} fontSize="sm" fontWeight="700">
+                                    {currentRank < info.getValue() && <Icon position={"absolute"} left={"-12px"} as={MdArrowUpward} h='18px' w='18px' color={'green.300'} boxSize={5} />}
+                                    {currentRank > info.getValue() && <Icon position={"absolute"} as={MdArrowDownward} left={"-12px"} h='18px' w='18px' color={"red.600"} boxSize={5} />}
                                     {info.getValue()}
                                 </Text>
                             </div>
@@ -204,10 +211,10 @@ export default function Vendor() {
                     cell: (info) => {
                         const currentRank = info.row.original.overall_ranking;
                         return (
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 6, position: 'relative' }}>
-                                {currentRank < info.getValue() && <Icon position={"absolute"} left={"-25px"} as={MdArrowUpward} h='18px' w='18px' color={'green.300'} boxSize={5} />}
-                                {currentRank > info.getValue() && <Icon position={"absolute"} left={"-25px"} as={MdArrowDownward} h='18px' w='18px' color={"red.600"} boxSize={5} />}
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, position: 'relative' }}>
                                 <Text color={textColor} fontSize="sm" fontWeight="700">
+                                    {currentRank < info.getValue() && <Icon position={"absolute"} left={"-12px"} as={MdArrowUpward} h='18px' w='18px' color={'green.300'} boxSize={5} />}
+                                    {currentRank > info.getValue() && <Icon position={"absolute"} left={"-12px"} as={MdArrowDownward} h='18px' w='18px' color={"red.600"} boxSize={5} />}
                                     {info.getValue()}
                                 </Text>
                             </div>
@@ -259,24 +266,23 @@ export default function Vendor() {
                     id: 'primary_category',
                     header: null,
                     cell: (info) => {
-                        const primary_categories = info.getValue();
+                        const primary_categories = info.getValue().map(category => category.shortname);
                         let text;
-                        if (!primary_categories || !info.row.original.secondary_category)
+                        if (!primary_categories)
                             return <></>
                         if (isLoadingCategory || !categories) text = ''
-                        else text = primary_categories.filter(category => category !== '').map(category => categories.find(_category => _category.id == category).shortname).join(', ');
-                        const secondary_categories = info.row.original.secondary_category.filter(category => category !== '');
+                        else text = primary_categories.join(', ');
                         return (
                             <Flex align="center">
                                 <Text color={textColor} fontSize="sm" fontWeight="700">
                                     {text}
-                                    {secondary_categories.length > 0 && ", Multi-Model"}
+                                    {primary_categories.length > 1 && ", Multi-Model"}
                                 </Text>
                             </Flex>
                         )
                     },
                 }),
-            ]
+            ],
         }),
         columnHelper.group({
             header: 'Avg. Score',
@@ -314,19 +320,19 @@ export default function Vendor() {
                     cell: (info) => {
                         const overall_avg_score = info.row.original.overall_avg_score
                         return (
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
                                 {overall_avg_score < info.getValue() &&
                                     <>
-                                        <Text color={'red.600'} fontSize="sm" fontWeight="700" position={"relative"} marginLeft={"25px"}>
-                                            <Icon as={MdRemove} h='18px' w='18px' color={'red.600'} boxSize={5} position={"absolute"} left={"-25px"} />
+                                        <Text color={'red.600'} fontSize="sm" fontWeight="700" position={"relative"}>
+                                            <Icon as={MdRemove} h='18px' w='18px' color={'red.600'} boxSize={5} position={"absolute"} left={"-20px"} />
                                             {Number(info.getValue() - overall_avg_score).toFixed(2)}
                                         </Text>
                                     </>
                                 }
                                 {overall_avg_score > info.getValue() &&
                                     <>
-                                        <Text color={'green.300'} fontSize="sm" fontWeight="700" position={"relative"} marginLeft={"25px"}>
-                                            <Icon as={MdAdd} h='18px' w='18px' color={'green.300'} boxSize={5} position={"absolute"} left={"-25px"} />
+                                        <Text color={'green.300'} fontSize="sm" fontWeight="700" position={"relative"}>
+                                            <Icon as={MdAdd} h='18px' w='18px' color={'green.300'} boxSize={5} position={"absolute"} left={"-20px"} />
                                             {Number(overall_avg_score - info.getValue()).toFixed(2)}
                                         </Text>
                                     </>
@@ -350,19 +356,19 @@ export default function Vendor() {
                     cell: (info) => {
                         const overall_avg_score = info.row.original.overall_avg_score
                         return (
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
                                 {overall_avg_score < info.getValue() &&
                                     <>
-                                        <Text color={'red.600'} fontSize="sm" fontWeight="700" position={"relative"} marginLeft={"25px"}>
-                                            <Icon as={MdRemove} h='18px' w='18px' color={'red.600'} boxSize={5} position={"absolute"} left={"-25px"} />
+                                        <Text color={'red.600'} fontSize="sm" fontWeight="700" position={"relative"}>
+                                            <Icon as={MdRemove} h='18px' w='18px' color={'red.600'} boxSize={5} position={"absolute"} left={"-20px"} />
                                             {Number(info.getValue() - overall_avg_score).toFixed(2)}
                                         </Text>
                                     </>
                                 }
                                 {overall_avg_score > info.getValue() &&
                                     <>
-                                        <Text color={'green.300'} fontSize="sm" fontWeight="700" position={"relative"} marginLeft={"25px"}>
-                                            <Icon as={MdAdd} h='18px' w='18px' color={'green.300'} boxSize={5} position={"absolute"} left={"-25px"} />
+                                        <Text color={'green.300'} fontSize="sm" fontWeight="700" position={"relative"}>
+                                            <Icon as={MdAdd} h='18px' w='18px' color={'green.300'} boxSize={5} position={"absolute"} left={"-20px"} />
                                             {Number(overall_avg_score - info.getValue()).toFixed(2)}
                                         </Text>
                                     </>
@@ -430,7 +436,7 @@ export default function Vendor() {
     const [options, setOptions] = useState([{ id: 0, value: 'all', label: 'All' }]);
 
     useEffect(() => {
-        if (!isLoadingCategory && categories) setOptions([{ id: 0, value: 'all', label: 'All' }].concat(categories.map(category => ({ id: category.id, label: category.title, value: category.title }))))
+        if (!isLoadingCategory && categories) setOptions([{ id: 0, value: 'all', label: 'All DBMS' }].concat(categories.map(category => ({ id: category.id, label: category.title, value: category.title }))))
     }, [categories, isLoadingCategory])
 
     return (

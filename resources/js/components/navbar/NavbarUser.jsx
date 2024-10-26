@@ -28,7 +28,7 @@ const NavLink = ({ route }) => {
   const bg = useColorModeValue('gray.200', 'gray.700');
   return (
     <Box
-      px={5}
+      px={3}
       py={3}
       rounded={'md'}
       bg={location.pathname === route.path ? bg : 'transparent'}
@@ -56,9 +56,9 @@ export default function Navbar(props) {
             display={{ md: 'none' }}
             onClick={isOpen ? onClose : onOpen}
           />
-          <HStack spacing={8} alignItems={'center'} fontWeight={700}>
+          <HStack alignItems={'center'} fontWeight={700}>
             <Box><Logo /></Box>
-            <HStack spacing={4} display={{ base: 'none', md: 'flex' }}>
+            <HStack display={{ base: 'none', md: 'flex' }}>
               {routes.map((route) => (
                 <NavLink key={route.path} route={route} />
               ))}
@@ -79,8 +79,8 @@ export default function Navbar(props) {
         {isOpen ? (
           <Box pb={4} display={{ md: 'none' }}>
             <Stack as={'nav'} spacing={4}>
-              {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
+              {routes.map((route) => (
+                <NavLink key={route.path} route={route} />
               ))}
             </Stack>
           </Box>

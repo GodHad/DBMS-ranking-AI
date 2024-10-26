@@ -28,6 +28,7 @@ export const CustomMultiSelect = ({ title, name, value, handleChangeMultiSelect,
             </FormLabel>
             <MultiSelect
                 isMulti
+                isSearchable
                 value={selectedOptions}
                 placeholder='Select categories'
                 variant='auth'

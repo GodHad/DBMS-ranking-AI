@@ -28,7 +28,6 @@ import {
         p="10px"
         borderRadius="30px"
       >
-        <FeaturedProductsSidebarResponsive routes={routes} />
        
         <Button
           variant="no-hover"
@@ -48,6 +47,8 @@ import {
             as={colorMode === 'light' ? IoMdMoon : IoMdSunny}
           />
         </Button>
+
+        <FeaturedProductsSidebarResponsive />
       </Flex>
     );
   }

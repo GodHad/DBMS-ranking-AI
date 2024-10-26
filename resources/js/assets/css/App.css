@@ -1,6 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+
 body {
-  font-family: "DM Sans", sans-serif;
+  font-family: Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji !important;
 }
 
 option {
@@ -45,21 +47,27 @@ option {
 .ck-content h1 {
   font-size: 2.3em;
 }
+
 .ck-content h2 {
   font-size: 1.84em;
 }
+
 .ck-content h3 {
   font-size: 1.48em;
 }
+
 .ck-content h4 {
   font-size: 1.22em;
 }
+
 .ck-content h5 {
   font-size: 1.06em;
 }
+
 .ck-content h6 {
   font-size: 1em;
 }
+
 .ck-content h1,
 .ck-content h2,
 .ck-content h3,
@@ -70,6 +78,7 @@ option {
   padding-top: 0.8em;
   margin-bottom: 0.4em;
 }
+
 .ck-content blockquote,
 .ck-content ol,
 .ck-content p,

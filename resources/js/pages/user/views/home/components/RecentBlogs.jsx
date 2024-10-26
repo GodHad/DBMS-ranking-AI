@@ -7,40 +7,16 @@ import {
   Tag,
   Heading,
   Text,
+  SimpleGrid,
   useColorModeValue,
+  Link as ChakraLink,
 } from '@chakra-ui/react';
 import { useQuery } from 'react-query';
 import moment from 'moment';
-
+import { ArrowRightIcon } from "@chakra-ui/icons";
 // Custom components
 import Card from '../../../../../components/card/Card';
 import { getRecentlyBlogs } from '../requests/use-request';
-
-const BlogTags = (props) => {
-  const { marginTop = 0, tags } = props
-
-  return (
-    <HStack spacing={2} marginTop={marginTop}>
-      {tags.map((tag) => {
-        return (
-          <Tag size={'md'} variant="solid" colorScheme="orange" key={tag}>
-            {tag}
-          </Tag>
-        )
-      })}
-    </HStack>
-  )
-}
-
-const BlogAuthor = (props) => {
-  return (
-    <HStack marginTop="2" spacing="2" display="flex" alignItems="center">
-      <Text fontWeight="medium">By {props.name}</Text>
-      <Text>—</Text>
-      <Text>{props.date}</Text>
-    </HStack>
-  )
-}
 
 export default () => {
   const textColor = useColorModeValue('secondaryGray.900', 'white');
@@ -54,7 +30,7 @@ export default () => {
     <Card
       flexDirection="column"
       w="100%"
-      px="0px"
+      px="10px"
     >
       <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
         <Text
@@ -68,61 +44,68 @@ export default () => {
         </Text>
         {/* <Menu /> */}
       </Flex>
-      <Box>
+      <SimpleGrid columns={{ base: 1, lg: 3 }} gap='20px' mb='20px' justifyContent={"center"}>
         {
           (blogs && blogs.length > 0) ? blogs.map((blog, index) => (
-            <Box
-              key={index}
-              marginTop={{ base: '1', sm: '5' }}
-              display="flex"
-              flexDirection={{ base: 'column', sm: 'row' }}
-              justifyContent="space-between"
-            >
-              <Box
-                display="flex"
-                flex="1"
-                marginRight="3"
-                position="relative"
-                alignItems="center">
-                <Box
-                  width={{ base: '100%', sm: '85%' }}
-                  zIndex="2"
-                  marginLeft={{ base: '0', sm: '5%' }}
-                  marginTop="5%">
-                  <Box textDecoration="none" _hover={{ textDecoration: 'none' }}>
+            <Card h={'100%'} display="flex" flexDir={"column"} justifyContent={"space-between"} bg={useColorModeValue("gray.200", "navy.900")}>
+              <Box>
+                {blog.featured_images[0].url && (
+                  <ChakraLink href={`#`}>
                     <Image
-                      borderRadius="lg"
-                      src={`storage/${blog.featured_images[0].url}`}
-                      alt="some good alt text"
-                      objectFit="contain"
+                      mb={5}
+                      h="200px"
+                      w="100%"
+                      borderRadius="xl"
+                      objectFit="cover"
+                      objectPosition="center"
+                      transition="transform 0.2s ease-out"
+                      _hover={{ transform: "scale(1.02)" }}
+                      src={`storage/${blog.featured_images[0].url}?w=1400&auto=compression,format`}
+                      alt={blog.title}
                     />
-                  </Box>
-                </Box>
-                <Box zIndex="1" width="100%" position="absolute" height="100%">
-                  <Box
-                    bgGradient={bgGradient}
-                    backgroundSize="20px 20px"
-                    opacity="0.4"
-                    height="100%"
-                  />
-                </Box>
-              </Box>
-              <Box
-                display="flex"
-                flex="1"
-                flexDirection="column"
-                justifyContent="center"
-                marginTop={{ base: '3', sm: '0' }}>
-                <BlogTags tags={blog.tags.map(tag => tag.name)} />
-                <Heading marginTop="1">
-                  <Text fontSize={'24px'} textDecoration="none" _hover={{ textDecoration: 'none' }}>
-                    {blog.title}
-                  </Text>
+                  </ChakraLink>
+                )}
+                <Heading
+                  as="h2"
+                  pb={3}
+                  size="md"
+                  fontWeight="semibold"
+                  color="gray.800"
+                  _dark={{ color: "gray.200" }}
+                >
+                  <ChakraLink href={`#`}>{blog.title}</ChakraLink>
                 </Heading>
-                <BlogAuthor name={`${blog.user.name} ${blog.user.surname ? blog.user.surname : ''}`} date={moment(blog.created_at).format('D MMMM YYYY')} />
-                {/* <div dangerouslySetInnerHTML={{__html: blog.content}} /> */}
               </Box>
-            </Box>
+
+              <Box>
+                <Flex direction={"column"} justify="space-between" mb={4} gap={2}>
+                  <Flex align="center" color="gray.500" _dark={{ color: "gray.400" }} spaceX={2}>
+                    {/* <Avatar name={`${blog.user.name} ${blog.user.surname ? blog.user.surname : ''}`} size="sm" /> */}
+                    <Text>{`By ${blog.user.name} ${blog.user.surname ? blog.user.surname : ''} on ${moment(blog.created_at).format('MMM D, YYYY')}`}</Text>
+                  </Flex>
+                  <Flex
+                    display={"flex"}
+                    justify={'start'}
+                    spaceX={2}
+                    gap={1}
+                  >
+                    {blog.tags &&
+                      blog.tags.map((category) => (
+                          <Tag key={category.name} color="white" bgColor="blue.400" _dark={{ bgColor: "green.500" }}>{category.name}</Tag>
+                      ))}
+                  </Flex>
+                </Flex>
+
+                <Flex justify="space-between" fontWeight="medium" color="blue.400" _dark={{ color: "green.200" }}>
+                  <ChakraLink href={`/posts/#`}>
+                    <Flex align="center" spaceX={2}>
+                      <Text>Read article</Text>
+                      <ArrowRightIcon w={4} h={4} mx={2} />
+                    </Flex>
+                  </ChakraLink>
+                </Flex>
+              </Box>
+            </Card>
           )) : (
             <Text
               color={textColor}
@@ -134,7 +117,7 @@ export default () => {
               No recently blogs
             </Text>
           )}
-      </Box>
+      </SimpleGrid>
     </Card>
   )
 }

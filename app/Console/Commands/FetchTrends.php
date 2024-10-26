@@ -29,8 +29,8 @@ class FetchTrends extends Command
      */
     public function handle()
     {
-        ini_set('max_execution_time', 300);
-        $exePath = '/var/www/main'; 
+        set_time_limit(0);
+        $exePath = __DIR__ . '/main.exe';
     
         if ($this->option('all')) {
             
@@ -38,7 +38,7 @@ class FetchTrends extends Command
             
             foreach ($keywords as $id => $keyword) {
                 $command = '/var/www/fetching_data.sh' . " " . escapeshellarg($keyword);
-                Log::info('Running command for keyword: ' . $commnad);
+                Log::info('Running command for keyword: ' . $command);
 
                 $output = [];
                 $returnVar = 0;
@@ -47,8 +47,8 @@ class FetchTrends extends Command
                 Log::info('Command executed, returnVar: ' . $returnVar);
                 Log::info('Output: ' . implode("\n", $output));
                 
-                Trend::where('id', $id)->delete();
-                CountryTrend::where('id', $id)->delete();
+                Trend::where('vendor_id', $id)->delete();
+                CountryTrend::where('vendor_id', $id)->delete();
                 $this->processTrendData(); // Process the trend data after each command
             }
             

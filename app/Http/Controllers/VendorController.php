@@ -20,15 +20,15 @@ class VendorController extends Controller
         try {
             $countPerPage = $request->query('countPerPage');
             if ($countPerPage) $vendors = Vendor::orderBy('overall_ranking')->limit($countPerPage)->get();
-            else $vendors = Vendor::all();
-            foreach ($vendors as $vendor) {
-                // Split the primary_category and secondary_category fields into arrays of category IDs
-                $primaryCategoryIds = explode(',', $vendor->primary_category);
-                $secondaryCategoryIds = explode(',', $vendor->secondary_category);
+            else $vendors = Vendor::with(['primaryCategory', 'secondaryCategory'])->get();
+            // foreach ($vendors as $vendor) {
+            //     // Split the primary_category and secondary_category fields into arrays of category IDs
+            //     $primaryCategoryIds = explode(',', $vendor->primary_category);
+            //     $secondaryCategoryIds = explode(',', $vendor->secondary_category);
 
-                $vendor->primary_category = $primaryCategoryIds;
-                $vendor->secondary_category = $secondaryCategoryIds;
-            }
+            //     $vendor->primary_category = $primaryCategoryIds;
+            //     $vendor->secondary_category = $secondaryCategoryIds;
+            // }
 
             $now = Carbon::now();
 
@@ -44,24 +44,33 @@ class VendorController extends Controller
             $previousYearStart = $previousYear->startOfMonth()->format('Y-m-d');
             $previousYearEnd = $previousYear->endOfMonth()->format('Y-m-d');
 
-            function getAverageTrends($startDate, $endDate) {
+            $country = $request->query('country');
+
+            function getAverageTrends($startDate, $endDate, $country) {
+                if (!$country || trim($country) === '')
                 return Trend::whereBetween('date', [$startDate, $endDate])
+                    ->selectRaw('vendor_id, AVG(score) as average_score')
+                    ->groupBy('vendor_id')
+                    ->orderBy('average_score', 'desc')
+                    ->get();
+                return CountryTrend::whereBetween('date', [$startDate, $endDate])
+                    ->where('country_code', $country)
                     ->selectRaw('vendor_id, AVG(score) as average_score')
                     ->groupBy('vendor_id')
                     ->orderBy('average_score', 'desc')
                     ->get();
             }
 
-            $currentMonthTrends = getAverageTrends($currentMonthStart, $currentMonthEnd);
-            $previousMonthTrends = getAverageTrends($previousMonthStart, $previousMonthEnd);
-            $previousYearTrends = getAverageTrends($previousYearStart, $previousYearEnd);
+            $currentMonthTrends = getAverageTrends($currentMonthStart, $currentMonthEnd, $country);
+            $previousMonthTrends = getAverageTrends($previousMonthStart, $previousMonthEnd, $country);
+            $previousYearTrends = getAverageTrends($previousYearStart, $previousYearEnd, $country);
 
             $rank = 1;
             foreach ($currentMonthTrends as $trend) {
                 foreach ($vendors as $vendor) {
                     if ($vendor->id === $trend->vendor_id) {
                         $vendor->overall_ranking = $rank ++;
-                        $vendor->overall_avg_score = $trend->average_score;
+                        $vendor->overall_avg_score = (float)$trend->average_score;
                         break;
                     }
                 }
@@ -72,7 +81,7 @@ class VendorController extends Controller
                 foreach ($vendors as $vendor) {
                     if ($vendor->id === $trend->vendor_id) {
                         $vendor->prev_month_overall_ranking = $rank ++;
-                        $vendor->prev_month_overall_avg_score = $trend->average_score;
+                        $vendor->prev_month_overall_avg_score = (float)$trend->average_score;
                         break;
                     }
                 }
@@ -83,13 +92,13 @@ class VendorController extends Controller
                 foreach ($vendors as $vendor) {
                     if ($vendor->id === $trend->vendor_id) {
                         $vendor->prev_year_overall_ranking = $rank ++;
-                        $vendor->prev_year_overall_avg_score = $trend->average_score;
+                        $vendor->prev_year_overall_avg_score = (float)$trend->average_score;
                         break;
                     }
                 }
             }
 
-            return response()->json(['success' => true, 'vendors' => $vendors->sortBy('overall_ranking')->values()]);
+            return response()->json(['success' => true, 'vendors' => $vendors->sortBy('overall_ranking')->values(), 'country' => $country || trim($country) === '', 'data' => $currentMonthTrends]);
         } catch (\Exception $th) {
             return response()->json(['success' => false, 'error' => $th->getMessage()], 500);
         }

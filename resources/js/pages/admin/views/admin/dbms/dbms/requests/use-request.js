@@ -5,8 +5,8 @@ const getCategories = async () => {
     return data.categories;
 }
 
-const getVendors = async () => {
-    const { data } = await axios.get('/api/get-vendors');
+const getVendors = async (country = ' ') => {
+    const { data } = await axios.get(`/api/get-vendors?country=${country}`);
     return data.vendors;
 }
 

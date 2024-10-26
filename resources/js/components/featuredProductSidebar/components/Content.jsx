@@ -24,20 +24,19 @@ function SidebarContent() {
           </Text>
         </Flex>
         <Box>
-          {
-            (featuredProducts && featuredProducts.length > 0) ? featuredProducts.map((product, index) => (
-              <FeaturedProduct key={index} product={product} />
-            )) : (
-              <Text
-                color={textColor}
-                mb="4px"
-                align={"center"}
-                fontWeight="700"
-                lineHeight="100%"
-              >
-                No featured products
-              </Text>
-            )}
+          {(featuredProducts && featuredProducts.length > 0) ? featuredProducts.map((product, index) => (
+            <FeaturedProduct key={index} product={product} />
+          )) : (
+            <Text
+              color={textColor}
+              mb="4px"
+              align={"center"}
+              fontWeight="700"
+              lineHeight="100%"
+            >
+              No featured products
+            </Text>
+          )}
         </Box>
       </Stack>
     </Flex>
@@ -59,25 +58,30 @@ function FeaturedProduct({ product }) {
       mb={5}
       overflow={'hidden'}>
       <a href={product.link} target="_blank">
-        <Box bg={'gray.100'} mt={-6} mx={-6} mb={6} pos={'relative'}>
+        <Box bg={'navy.700'} mt={-6} mx={-6} mb={6} pos={'relative'}>
           <Image
             src={
               `storage/${product.banner}`
             }
             w={"100%"}
-            h={"200px"}
+            h={"100px"}
             alt="banner"
+            borderRadius="xl"
+            objectFit="cover"
+            objectPosition="center"
+            transition="transform 0.2s ease-out"
+            _hover={{ transform: "scale(1.02)" }}
           />
         </Box>
         <Stack>
-          <Heading
+          {/* <Heading
             // eslint-disable-next-line react-hooks/rules-of-hooks
             color={useColorModeValue('gray.700', 'white')}
             fontSize={'2xl'}
             textAlign={'center'}
             fontFamily={'body'}>
             {product.title}
-          </Heading>
+          </Heading> */}
           <Text textAlign={"center"} color={'gray.500'} dangerouslySetInnerHTML={{ __html: product.content }}>
           </Text>
         </Stack>

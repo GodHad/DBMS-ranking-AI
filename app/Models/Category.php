@@ -13,4 +13,9 @@ class Category extends Model
         'title',
         'shortname'
     ];
+
+    public function vendors()
+    {
+        return $this->belongsToMany(Vendor::class);
+    }
 }

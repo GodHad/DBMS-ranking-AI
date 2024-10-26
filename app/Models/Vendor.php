@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\User;
+use App\Models\Category;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -50,12 +51,13 @@ class Vendor extends Model
         'approved'
     ];
 
-    protected $hidden = [
-        'category_id'
-    ];
-
-    public function category()
+    public function primaryCategory()
     {
-        return $this->belongsTo(Category::class, 'category_id');
+        return $this->belongsToMany(Category::class, 'primary_category_vendor', 'vendor_id', 'category_id');
+    }
+
+    public function secondaryCategory()
+    {
+        return $this->belongsToMany(Category::class, 'secondary_category_vendor', 'vendor_id', 'category_id');
     }
 }

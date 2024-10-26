@@ -104,7 +104,7 @@ export default function Dashboard(props) {
           float="right"
           minHeight="100vh"
           height="100%"
-          overflow="auto"
+          overflow="hidden"
           position="relative"
           maxHeight="100%"
           w={"100%"}
@@ -147,7 +147,7 @@ export default function Dashboard(props) {
                 />
               </Routes>
             </Box>
-            <FeaturedProductsSidebar routes={routes} display="none" {...rest} />
+            <FeaturedProductsSidebar display="none" {...rest} />
           </FeaturedProductSidebarContext.Provider>
         </Box>
         <Footer />
