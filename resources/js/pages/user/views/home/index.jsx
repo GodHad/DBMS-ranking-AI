@@ -28,7 +28,7 @@ export default function UserReports() {
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   return (
     <Box>
-      <SimpleGrid columns={{ base: 1, lg: 2, xl: 2 }} gap='20px' mb='20px' justifyContent={"center"} alignItems={"center"}>
+      <SimpleGrid columns={{ base: 1, lg: 2, xl: 2 }} gap='20px' mb='20px' justifyContent={"center"}>
         <Card
           flexDirection="column"
           bgColor={"transparent"}
@@ -43,6 +43,7 @@ export default function UserReports() {
               fontSize="40px"
               fontWeight="800"
               lineHeight="48px"
+              mb={'10px'}
               bgClip="text"
               bgGradient={"linear(to-r, #2ac349, #018cc1)"}
             >
@@ -53,7 +54,7 @@ export default function UserReports() {
               mt={5}
               fontSize="18px"
               fontWeight="500"
-              lineHeight="150%"
+              lineHeight="200%"
             >
               DB Ranking AI is an initiative to collect and present information on database management systems (DBMS). In addition to established relational DBMS, systems and concepts of the growing NoSQL area are emphasized.
             </Text>
@@ -62,11 +63,11 @@ export default function UserReports() {
               mt={2}
               fontSize="18px"
               fontWeight="500"
-              lineHeight="150%"
+              lineHeight="200%"
             >
               The DB Ranking is a list of DBMS ranked by their current popularity. The list is updated weekly.
             </Text>
-            <FormControl
+            {/* <FormControl
               display={'flex'}
               alignItems={'center'}
               mt={10}
@@ -91,7 +92,7 @@ export default function UserReports() {
                   _placeholder={{ color: 'gray.500' }} // Ensure placeholder color is set
                 />
               </InputGroup>
-            </FormControl>
+            </FormControl> */}
           </Flex>
         </Card>
         <TopDBMSTable />

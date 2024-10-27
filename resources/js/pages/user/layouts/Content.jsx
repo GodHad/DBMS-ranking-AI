@@ -8,17 +8,16 @@ import routes from '../routes';
 import FeaturedProductsSidebar from '../../../components/featuredProductSidebar/Sidebar';
 import { FeaturedProductSidebarContext } from '../../../contexts/FeaturedProductsContext';
 import BlogPage from '../views/blogs/BlogPage';
+import { getFeaturedProducts } from '../../../components/featuredProductSidebar/requests/use-request';
+import { useQuery } from 'react-query';
 
 // Custom Chakra theme
 export default function Dashboard(props) {
   const { ...rest } = props;
   // states and functions
+  const { data: featuredProducts, isLoading } = useQuery('featured_products', getFeaturedProducts, { staleTime: 300000 });
   const [fixed] = useState(false);
   const [toggleSidebar, setToggleSidebar] = useState(false);
-  // functions for changing the states from components
-  const getRoute = () => {
-    return window.location.pathname !== '/admin/full-screen-maps';
-  };
   const getActiveRoute = (routes) => {
     let activeRoute = 'DB Ranking AI';
     for (let i = 0; i < routes.length; i++) {
@@ -95,9 +94,7 @@ export default function Dashboard(props) {
       );
     });
   };
-  document.documentElement.dir = 'ltr';
   const { onOpen } = useDisclosure();
-  document.documentElement.dir = 'ltr';
   return (
     <Box>
       <Box>
@@ -115,21 +112,22 @@ export default function Dashboard(props) {
           transitionProperty="top, bottom, width"
           transitionTimingFunction="linear, linear, ease"
         >
-          <Navbar
-            onOpen={onOpen}
-            logoText={'Horizon UI Dashboard PRO'}
-            brandText={getActiveRoute(routes)}
-            secondary={getActiveNavbar(routes)}
-            message={getActiveNavbarText(routes)}
-            fixed={fixed}
-            {...rest}
-          />
           <FeaturedProductSidebarContext.Provider
             value={{
               toggleSidebar,
               setToggleSidebar,
+              featuredProducts
             }}
           >
+            <Navbar
+              onOpen={onOpen}
+              logoText={'Horizon UI Dashboard PRO'}
+              brandText={getActiveRoute(routes)}
+              secondary={getActiveNavbar(routes)}
+              message={getActiveNavbarText(routes)}
+              fixed={fixed}
+              {...rest}
+            />
             <Box
               mx="auto"
               p={{ base: '20px', md: '30px' }}
@@ -138,6 +136,8 @@ export default function Dashboard(props) {
               w={{ base: '100%', lg: 'calc( 100% - 290px )' }}
               maxWidth={{ base: '100%', lg: 'calc( 100% - 290px )' }}
               float="left"
+              position={'relative'}
+              zIndex={1}
             >
               <Routes>
                 {getRoutes(routes)}

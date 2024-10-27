@@ -22,6 +22,8 @@ import Logo from './components/Logo'
 import NavbarLinks from './NavbarLinksUser'
 import routes from '../../pages/user/routes';
 import { Link, useLocation } from 'react-router-dom'
+import { useContext } from 'react'
+import { FeaturedProductSidebarContext } from '../../contexts/FeaturedProductsContext'
 
 const NavLink = ({ route }) => {
   const location = useLocation();
@@ -44,6 +46,9 @@ const NavLink = ({ route }) => {
 
 export default function Navbar(props) {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { featuredProducts } = useContext(FeaturedProductSidebarContext);
+  const textColor = useColorModeValue('secondaryGray.900', 'white');
+
   let navbarBg = useColorModeValue('rgba(244, 247, 254, 0.2)', 'rgba(11,20,55,0.5)');
   return (
     <>
@@ -86,7 +91,28 @@ export default function Navbar(props) {
           </Box>
         ) : null}
       </Box>
-
+      <Box bg={navbarBg} px={4} mt={"20px"} borderTop={'1px'} borderTopStyle={'solid'} borderTopColor={'gray.300'}>
+        <Flex w="100%" h={16} alignItems={'center'} justifyContent={'center'}>
+          <HStack alignItems={'center'} fontWeight={700}>
+            <Text color={textColor} fontSize='lg' fontWeight='extrabold' mr={{ base: 2, md: 4 }}>
+              Featured Products:
+            </Text>
+            <HStack>
+              {featuredProducts.map((product, index) => (
+                <a key={product.title + index} href={product.link} target='_blank'>
+                  <Text
+                    mr={{ base: 2, md: 4 }}
+                    color={'blue.400'}
+                    textDecor={'underline'}
+                  >
+                    {product.title}
+                  </Text>
+                </a>
+              ))}
+            </HStack>
+          </HStack>
+        </Flex>
+      </Box>
     </>
   )
 }

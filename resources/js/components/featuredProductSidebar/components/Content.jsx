@@ -1,5 +1,5 @@
 import { Box, Flex, Stack, HStack, Heading, Image, Text, useColorModeValue } from "@chakra-ui/react";
-import React from "react";
+import React, { useContext } from "react";
 import { useQuery } from "react-query";
 import { getFeaturedProducts } from "../requests/use-request";
 import { Link } from "react-router-dom";
@@ -8,15 +8,18 @@ import {
   SkeletonCircle,
   SkeletonText,
 } from "@chakra-ui/skeleton"
+import { FeaturedProductSidebarContext } from "../../../contexts/FeaturedProductsContext";
 
 // FUNCTIONS
 
 function SidebarContent() {
-  const { data: featuredProducts, isLoading } = useQuery('featured_products', getFeaturedProducts, {staleTime: 300000});
+  const { featuredProducts } = useContext(FeaturedProductSidebarContext);
+  // const { data: featuredProducts, isLoading } = useQuery('featured_products', getFeaturedProducts, { staleTime: 300000 });
   const textColor = useColorModeValue('secondaryGray.900', 'white');
 
   return (
-    <Flex direction='column' height='100%' px="8px" borderRadius='30px'>
+    <Flex direction='column' height='100%' px="8px" borderRadius='30px' zIndex={1000000}
+    position={'relative'}>
       <Stack direction='column' mb='auto' mt='8px'>
         <Flex px="10px" mb="8px" justifyContent="space-between" align="center">
           <Text
@@ -30,8 +33,8 @@ function SidebarContent() {
         </Flex>
         <Box>
           {
-            featuredProducts ? 
-              featuredProducts.length > 0 ? 
+            featuredProducts ?
+              featuredProducts.length > 0 ?
                 featuredProducts.map((product, index) => (
                   <FeaturedProduct key={index} product={product} />
                 )) : (
@@ -62,17 +65,17 @@ export default SidebarContent;
 
 function FeaturedProduct({ product }) {
   return (
-    <Box
-      maxW={'445px'}
-      w={'full'}
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      bg={useColorModeValue("white", "navy.800")}
-      boxShadow={'2xl'}
-      rounded={'md'}
-      p={6}
-      mb={5}
-      overflow={'hidden'}>
-      <a href={product.link} target="_blank">
+    <a href={product.link} target="_blank">
+      <Box
+        maxW={'445px'}
+        w={'full'}
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        bg={useColorModeValue("white", "navy.800")}
+        boxShadow={'2xl'}
+        rounded={'md'}
+        p={6}
+        mb={5}
+        overflow={'hidden'}>
         <Box bg={'navy.700'} mt={-6} mx={-6} mb={6} pos={'relative'}>
           <Image
             src={
@@ -100,7 +103,7 @@ function FeaturedProduct({ product }) {
           <Text textAlign={"center"} color={'gray.500'} dangerouslySetInnerHTML={{ __html: product.content }}>
           </Text>
         </Stack>
-      </a>
-    </Box>
+      </Box>
+    </a>
   )
 }

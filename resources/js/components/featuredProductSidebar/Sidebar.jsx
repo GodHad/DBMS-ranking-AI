@@ -38,12 +38,12 @@ function FeaturedProductsSidebar(props) {
   let sidebarBg = useColorModeValue("white", "navy.800");
   let sidebarMargins = "0px";
 
-  const [top, setTop] = useState(115);
+  const [top, setTop] = useState(170);
 
   useEffect(() => {
     const handleScroll = () => {
       const offset = window.scrollY;
-      setTop(offset > 115 ? 0 : 115 - offset);
+      setTop(offset > 170 ? 0 : 170 - offset);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -55,7 +55,7 @@ function FeaturedProductsSidebar(props) {
 
   // SIDEBAR
   return (
-    <Box display={{ lg: "block", base: 'none' }} w="100%" position={"absolute"} top={`${top}px`} minH='100%' zIndex={'-1'}>
+    <Box display={{ lg: "block", base: 'none' }} w="100%" position={"absolute"} top={`${top}px`} minH='100%'>
       <Card
         // bg={sidebarBg}
         transition={variantChange}
