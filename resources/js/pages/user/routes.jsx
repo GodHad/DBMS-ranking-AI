@@ -23,7 +23,7 @@ const routes = [
       component: <DBMSRanking />,
     },
     {
-        name: 'Encyclopeida',
+        name: 'Encyclopedia',
         path: '/encyclopedia',
         component: <Encyclopedia />
     },
