@@ -35,7 +35,7 @@ export default () => {
     const [showingTags, setShowingTags] = useState([]);
 
     const { data: blogs, isLoadingBlogs } = useQuery(['blogs', showingCategories, showingTags, page, countPerPage], () => getBlogs({categories: showingCategories, tags: showingTags.map(tag => tag.id), page, countPerPage}), { staleTime: 300000 });
-    const { data: categories, isLoadingCategory } = useQuery('categories', getCategories, { staleTime: 300000 });
+    const { data: categories, isLoadingCategory } = useQuery('bcategories', getCategories, { staleTime: 300000 });
     const { data: tags, isLoadingTag } = useQuery('tags', getTags, { staleTime: 300000 });
 
     const [options, setOptions] = useState(null);

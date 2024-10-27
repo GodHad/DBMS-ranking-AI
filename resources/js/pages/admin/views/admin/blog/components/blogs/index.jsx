@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
     Flex,
     Box,
@@ -72,13 +72,25 @@ export default () => {
 
     const [openedPage, setOpenedPage] = useState(0);
 
+    const [page, setPage] = useState(1);
+    const [countPerPage, setCountPerPage] = useState(10);
+    
+    const { data: blogs = {}, isLoadingBlogs } = useQuery(['blogs', page, countPerPage], () => getBlogs({page, countPerPage}));
+    
+    useEffect(() => {
+        console.log(blogs);
+    }, [blogs])
+    
+    const memorizedData = useMemo(() => {
+        if (Array.isArray(blogs.data)) {
+            return blogs.data; // Return data directly if it's an array
+        }
+        console.warn("Invalid blogs data format:", blogs); // Log a warning if data is not in expected format
+        return [];
+    }, [blogs]);
+    
+    
     const [blog, setBlog] = useState(initialBlog);
-    const { data: blogs, isLoadingBlogs } = useQuery('blogs', getBlogs);
-    const [pagination, setPagination] = useState({
-        pageIndex: 0,
-        pageSize: 10,
-    })
-
     const [blogId, setBlogId] = useState(null)
 
     const { data: _blog, isLoading: isLoadingBlog } = useQuery(
@@ -228,18 +240,15 @@ export default () => {
     ];
 
     const table = useReactTable({
-        data: blogs || [],
+        data: memorizedData,
         columns,
         state: {
             sorting,
-            pagination
         },
         onSortingChange: setSorting,
         getSortedRowModel: getSortedRowModel(),
         getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
-        onPaginationChange: setPagination,
-        debugTable: true,
+        debugTable: false,
     });
 
     return (
@@ -357,93 +366,93 @@ export default () => {
                                 )}
                             </Tbody>
                         </Table>
-                        {table.getRowModel().rows.length !== 0 &&
-                            <Flex justifyContent="space-between" m={4} alignItems="center" >
-                                <Flex>
-                                    <Tooltip label="First Page" >
-                                        <IconButton
-                                            onClick={() => table.firstPage()}
-                                            isDisabled={!table.getCanPreviousPage()}
-                                            icon={<MdArrowLeft h={3} w={3} />}
-                                            mr={4}
-                                        />
-                                    </Tooltip>
-                                    <Tooltip label="Previous Page" >
-                                        <IconButton
-                                            onClick={() => table.previousPage()}
-                                            isDisabled={!table.getCanPreviousPage()}
-                                            icon={<MdChevronLeft h={6} w={6} />}
-                                        />
-                                    </Tooltip>
-                                </Flex>
-
-                                <Flex alignItems="center" >
-                                    <Text flexShrink="0" mr={8} >
-                                        Page{" "}
-                                        <Text fontWeight="bold" as="span" >
-                                            {table.getState().pagination.pageIndex + 1}
-                                        </Text>{" "}
-                                        of{" "}
-                                        <Text fontWeight="bold" as="span" >
-                                            {table.getPageCount().toLocaleString()}
-                                        </Text>
-                                    </Text>
-                                    <Text flexShrink="0" > Go to page: </Text>{" "}
-                                    <NumberInput
-                                        ml={2}
-                                        mr={8}
-                                        w={28}
-                                        min={1}
-                                        max={table.getPageCount()}
-                                        onChange={value => {
-                                            const page = Number(value) - 1;
-                                            table.setPageIndex(page)
-                                        }}
-                                        defaultValue={table.getState().pagination.pageIndex + 1}
-                                    >
-                                        <NumberInputField />
-                                        <NumberInputStepper >
-                                            <NumberIncrementStepper />
-                                            <NumberDecrementStepper />
-                                        </NumberInputStepper>
-                                    </NumberInput>
-                                    <Select
-                                        w={32}
-                                        color={textColor}
-                                        value={table.getState().pagination.pageSize}
-                                        onChange={e => {
-                                            table.setPageSize(Number(e.target.value))
-                                        }}
-                                    >
-                                        {
-                                            [10, 20, 30, 40, 50].map((pageSize) => (
-                                                <option key={pageSize} value={pageSize} >
-                                                    Show {pageSize}
-                                                </option>
-                                            ))
-                                        }
-                                    </Select>
-                                </Flex>
-
-                                <Flex >
-                                    <Tooltip label="Next Page" >
-                                        <IconButton
-                                            onClick={() => table.nextPage()}
-                                            isDisabled={!table.getCanNextPage()}
-                                            icon={<MdChevronRight h={10} w={10} />}
-                                        />
-                                    </Tooltip>
-                                    <Tooltip label="Last Page" >
-                                        <IconButton
-                                            onClick={() => table.lastPage()}
-                                            isDisabled={!table.getCanNextPage()}
-                                            icon={<MdArrowRight h={10} w={10} />}
-                                            ml={4}
-                                        />
-                                    </Tooltip>
-                                </Flex>
+                        {(blogs && blogs.last_page > 1) &&
+                        <Flex justifyContent="space-between" m={4} alignItems="center" >
+                            <Flex mr={2}>
+                                <Tooltip label="First Page" >
+                                    <IconButton
+                                        onClick={() => setPage(1)}
+                                        isDisabled={page === 1}
+                                        icon={<MdArrowLeft h={3} w={3} />}
+                                        mr={4}
+                                    />
+                                </Tooltip>
+                                <Tooltip label="Previous Page" >
+                                    <IconButton
+                                        onClick={() => setPage(prev => prev - 1)}
+                                        isDisabled={page === 1}
+                                        icon={<MdChevronLeft h={6} w={6} />}
+                                    />
+                                </Tooltip>
                             </Flex>
-                        }
+
+                            <Flex alignItems="center" >
+                                <Text flexShrink="0" mr={4} >
+                                    Page{" "}
+                                    <Text fontWeight="bold" as="span" >
+                                        {page}
+                                    </Text>{" "}
+                                    of{" "}
+                                    <Text fontWeight="bold" as="span" >
+                                        {Math.ceil(blogs.total / countPerPage)}
+                                    </Text>
+                                </Text>
+                                <Text flexShrink="0" > Go to </Text>{" "}
+                                <NumberInput
+                                    ml={2}
+                                    mr={4}
+                                    w={20}
+                                    min={1}
+                                    max={Math.ceil(blogs.total / countPerPage)}
+                                    onChange={value => {
+                                        if (value <= Math.ceil(blogs.total / countPerPage)) setPage(Number(value))
+                                    }}
+                                    defaultValue={page}
+                                    value={page}
+                                >
+                                    <NumberInputField />
+                                    <NumberInputStepper >
+                                        <NumberIncrementStepper />
+                                        <NumberDecrementStepper />
+                                    </NumberInputStepper>
+                                </NumberInput>
+                                <Select
+                                    w={32}
+                                    color={textColor}
+                                    value={Math.ceil(blogs.total / countPerPage)}
+                                    onChange={e => {
+                                        setCountPerPage(e.target.value)
+                                    }}
+                                >
+                                    {
+                                        [10, 20, 30, 40, 50].map((pageSize) => (
+                                            <option key={pageSize} value={pageSize} >
+                                                Show {pageSize}
+                                            </option>
+                                        ))
+                                    }
+                                </Select>
+                            </Flex>
+
+                            <Flex >
+                                <Tooltip label="Next Page" >
+                                    <IconButton
+                                        onClick={() => setPage(prev => prev + 1)}
+                                        isDisabled={page === Math.ceil(blogs.total / countPerPage)}
+                                        icon={<MdChevronRight h={10} w={10} />}
+                                    />
+                                </Tooltip>
+                                <Tooltip label="Last Page" >
+                                    <IconButton
+                                        onClick={() => setPage(Math.ceil(blogs.total / countPerPage))}
+                                        isDisabled={page === Math.ceil(blogs.total / countPerPage)}
+                                        icon={<MdArrowRight h={10} w={10} />}
+                                        ml={4}
+                                    />
+                                </Tooltip>
+                            </Flex>
+                        </Flex>
+                    }
                     </Box>
                 </>
             )}

@@ -37,9 +37,9 @@ class BlogController extends Controller
             });
         }
     
-         $blogs = $query->paginate($countPerPage, ['*'], 'page', $page);
+        $blogs = $query->paginate($countPerPage, ['*'], 'page', $page);
 
-         return response()->json(['success' => true, 'blogs' => $blogs]);
+        return response()->json(['success' => true, 'blogs' => $blogs]);
     }
 
     public function getBlog(Request $request)

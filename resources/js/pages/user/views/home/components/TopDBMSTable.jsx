@@ -42,10 +42,10 @@ export default function Vendor() {
     pageSize: 10,
   })
 
-  const { data: vendors } = useQuery('vendors', getVendors, { staleTime: 300000 });
+  const { data: vendors = [] } = useQuery('vendors', getVendors, { staleTime: 300000 });
 
   useEffect(() => {
-    setData(vendors);
+    setData(vendors || []);
   }, [vendors])
 
   const columns = [
@@ -122,6 +122,8 @@ export default function Vendor() {
     debugTable: true,
   });
 
+  const rowModel = table.getRowModel();
+
   return (
     <Box
       flexDirection="column"
@@ -192,8 +194,8 @@ export default function Vendor() {
                   </Td>
                 </Tr>
                 :
-                (table.getRowModel() && table.getRowModel().rows.length !== 0) ? table
-                  .getRowModel()
+                (rowModel && rowModel.rows.length !== 0) ? 
+                  rowModel
                   .rows
                   .map((row) => {
                     return (

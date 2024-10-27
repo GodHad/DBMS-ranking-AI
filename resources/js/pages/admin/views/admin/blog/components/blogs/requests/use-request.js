@@ -1,6 +1,6 @@
 import axios from "../../../../../../../../variables/axiosConfig";
 
-const getBlogs = async ({categories, tags, page = 1, countPerPage = 10}) => {
+const getBlogs = async ({ categories = [], tags = [], page = 1, countPerPage = 10 }) => {
     const { data } = await axios.get(`/api/get-blogs?categories=${categories.join(',')}&tags=${tags.join(',')}&page=${page}&countPerPage=${countPerPage}`);
     return data.blogs;
 }

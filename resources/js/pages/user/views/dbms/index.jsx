@@ -59,7 +59,7 @@ export default function Vendor() {
         setCountry(value);
     }
 
-    const { data: vendors, isLoadingVendor } = useQuery(
+    const { data: vendors = [], isLoadingVendor } = useQuery(
         ['vendors', country],
         () => getVendors(country.value),
         {
@@ -70,7 +70,7 @@ export default function Vendor() {
     const { data: categories, isLoadingCategory } = useQuery('categories', getCategories, { staleTime: 300000 });
 
     useEffect(() => {
-        setData(vendors);
+        setData(vendors || []);
     }, [vendors])
 
     const columns = [
@@ -308,6 +308,8 @@ export default function Vendor() {
         debugTable: true,
     });
 
+    const rowModel = table.getRowModel()
+
     const bgList = useColorModeValue("white", "whiteAlpha.100");
     const bgShadow = useColorModeValue(
         "14px 17px 40px 4px rgba(112, 144, 176, 0.08)",
@@ -467,8 +469,8 @@ export default function Vendor() {
                                                 </Stack>
                                             </Td>
                                         </Tr> :
-                                        (table.getRowModel() && table.getRowModel().rows.length !== 0) ? table
-                                            .getRowModel()
+                                        (rowModel && rowModel.rows.length !== 0) ? 
+                                            rowModel
                                             .rows
                                             .map((row) => {
                                                 return (
