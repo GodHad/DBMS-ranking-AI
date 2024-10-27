@@ -1,13 +1,18 @@
-import { Box, Flex, Stack, Heading, Image, Text, useColorModeValue } from "@chakra-ui/react";
+import { Box, Flex, Stack, HStack, Heading, Image, Text, useColorModeValue } from "@chakra-ui/react";
 import React from "react";
 import { useQuery } from "react-query";
 import { getFeaturedProducts } from "../requests/use-request";
 import { Link } from "react-router-dom";
+import {
+  Skeleton,
+  SkeletonCircle,
+  SkeletonText,
+} from "@chakra-ui/skeleton"
 
 // FUNCTIONS
 
 function SidebarContent() {
-  const { data: featuredProducts, isLoading } = useQuery('featured_products', getFeaturedProducts);
+  const { data: featuredProducts, isLoading } = useQuery('featured_products', getFeaturedProducts, {staleTime: 300000});
   const textColor = useColorModeValue('secondaryGray.900', 'white');
 
   return (
@@ -24,19 +29,29 @@ function SidebarContent() {
           </Text>
         </Flex>
         <Box>
-          {(featuredProducts && featuredProducts.length > 0) ? featuredProducts.map((product, index) => (
-            <FeaturedProduct key={index} product={product} />
-          )) : (
-            <Text
-              color={textColor}
-              mb="4px"
-              align={"center"}
-              fontWeight="700"
-              lineHeight="100%"
-            >
-              No featured products
-            </Text>
-          )}
+          {
+            featuredProducts ? 
+              featuredProducts.length > 0 ? 
+                featuredProducts.map((product, index) => (
+                  <FeaturedProduct key={index} product={product} />
+                )) : (
+                  <Text
+                    color={textColor}
+                    mb="4px"
+                    align={"center"}
+                    fontWeight="700"
+                    lineHeight="100%"
+                  >
+                    No featured products
+                  </Text>
+                ) : (
+                <Stack gap="6" maxW="xs">
+                  <Skeleton height="300px" borderRadius={"21px"} />
+                  <Skeleton height="300px" borderRadius={"21px"} />
+                  <Skeleton height="300px" borderRadius={"21px"} />
+                </Stack>
+              )
+          }
         </Box>
       </Stack>
     </Flex>
@@ -61,7 +76,7 @@ function FeaturedProduct({ product }) {
         <Box bg={'navy.700'} mt={-6} mx={-6} mb={6} pos={'relative'}>
           <Image
             src={
-              `storage/${product.banner}`
+              `../storage/${product.banner}`
             }
             w={"100%"}
             h={"100px"}

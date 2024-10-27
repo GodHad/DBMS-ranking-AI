@@ -28,7 +28,7 @@ export function Main() {
     return response.data.user;
   };
 
-  const { data: resUser, isLoading } = useQuery('getUser', getUser);
+  const { data: resUser, isLoading } = useQuery('getUser', getUser, {staleTime: 300000});
 
   useEffect(() => {
     setUser(resUser);

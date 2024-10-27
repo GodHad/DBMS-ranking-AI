@@ -59,8 +59,8 @@ export default function Navbar(props) {
           <HStack alignItems={'center'} fontWeight={700}>
             <Box><Logo /></Box>
             <HStack display={{ base: 'none', md: 'flex' }}>
-              {routes.map((route) => (
-                <NavLink key={route.path} route={route} />
+              {routes.map((route, index) => (
+                <NavLink key={route.path + index} route={route} />
               ))}
             </HStack>
           </HStack>
@@ -79,8 +79,8 @@ export default function Navbar(props) {
         {isOpen ? (
           <Box pb={4} display={{ md: 'none' }}>
             <Stack as={'nav'} spacing={4}>
-              {routes.map((route) => (
-                <NavLink key={route.path} route={route} />
+              {routes.map((route, index) => (
+                <NavLink key={route.path + index} route={route} />
               ))}
             </Stack>
           </Box>

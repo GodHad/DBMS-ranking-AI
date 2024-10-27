@@ -10,6 +10,9 @@ import {
     Thead,
     Tr,
     Box,
+    Breadcrumb,
+    BreadcrumbItem,
+    Stack,
     Button,
     FormControl,
     useColorModeValue,
@@ -25,27 +28,32 @@ import {
     getCoreRowModel,
     useReactTable,
 } from '@tanstack/react-table';
-
-// Custom components
 import Card from '../../../../components/card/Card';
-import Menu from '../../../../components/menu/MainMenu'
 import { MdAdd, MdArrowUpward, MdArrowDownward, MdRemove, MdAutoGraph, MdTableView } from 'react-icons/md'
 import moment from 'moment';
 import { useQuery } from 'react-query';
+import { Link } from 'react-router-dom';
+
 import { getVendors, getCategories } from '../../../admin/views/admin/dbms/dbms/requests/use-request';
 import RankChart from './RankCharts';
 import Sidebar, { SidebarResponsive } from './Sidebar/Sidebar';
+import {
+    Skeleton,
+    SkeletonCircle,
+    SkeletonText,
+} from "@chakra-ui/skeleton"
 
 const columnHelper = createColumnHelper();
 
 export default function Vendor() {
 
     const textColor = useColorModeValue('secondaryGray.900', 'white');
+    let secondaryText = useColorModeValue('gray.700', 'white');
     const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
 
     const [data, setData] = useState([]);
 
-    const [country, setCountry] = useState({value: ' '});
+    const [country, setCountry] = useState({ value: ' ', label: 'WorldWide' });
 
     const handleChangeCountry = value => {
         setCountry(value);
@@ -56,9 +64,10 @@ export default function Vendor() {
         () => getVendors(country.value),
         {
             enabled: !!country,
+            staleTime: 300000
         }
     );
-    const { data: categories, isLoadingCategory } = useQuery('categories', getCategories);
+    const { data: categories, isLoadingCategory } = useQuery('categories', getCategories, { staleTime: 300000 });
 
     useEffect(() => {
         setData(vendors);
@@ -331,7 +340,7 @@ export default function Vendor() {
         }
     }, [showingCategory, setData, isLoadingVendor, vendors])
 
-    const [options, setOptions] = useState([{ id: 0, value: 'all', label: 'All DBMS' }]);
+    const [options, setOptions] = useState(null);
 
     useEffect(() => {
         if (!isLoadingCategory && categories) setOptions([{ id: 0, value: 'all', label: 'All DBMS' }].concat(categories.map(category => ({ id: category.id, label: category.title, value: category.title }))))
@@ -344,12 +353,25 @@ export default function Vendor() {
             flexDirection="column"
             w="100%"
             px="0px"
-            minH="500px"
-            overflowX={{ sm: 'scroll', lg: 'hidden' }}
+            minH="calc(100vh - 150px)"
+            overflowX={{ sm: 'auto', lg: 'hidden' }}
         >
             <Sidebar categories={options} showingCategory={showingCategory} setShowingCategory={setShowingCategory} />
             <Flex justifyContent={"flex-end"}>
                 <Box width={{ xl: 'calc(100% - 290px)', base: '100%' }} float={"right"}>
+                    <Breadcrumb px="25px">
+                        <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
+                            <Link to='/'>
+                                Home
+                            </Link>
+                        </BreadcrumbItem>
+
+                        <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
+                            <Link to='/ranking'>
+                                DB Ranking
+                            </Link>
+                        </BreadcrumbItem>
+                    </Breadcrumb>
                     <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
                         <Text
                             color={textColor}
@@ -358,7 +380,7 @@ export default function Vendor() {
                             fontWeight="700"
                             lineHeight="100%"
                         >
-                            DBMS Ranking for {options[showingCategory].label}
+                            DBMS Ranking {options && ('for ' + options[showingCategory].label)}
                         </Text>
                         <Box display={"flex"} gap={2} alignItems={"center"}>
                             <Select
@@ -428,49 +450,66 @@ export default function Vendor() {
                                 ))}
                             </Thead>
                             <Tbody>
-                                {table.getRowModel().rows.length !== 0 ? table
-                                    .getRowModel()
-                                    .rows
-                                    .map((row) => {
-                                        return (
-                                            <Tr key={row.id}>
-                                                {row.getVisibleCells().map((cell) => {
-                                                    return (
-                                                        <Td
-                                                            key={cell.id}
-                                                            fontSize={{ sm: '14px' }}
-                                                            minW={{ sm: '70px', md: '70px', lg: 'auto' }}
-                                                            borderColor="transparent"
-                                                        >
-                                                            {flexRender(
-                                                                cell.column.columnDef.cell,
-                                                                cell.getContext(),
-                                                            )}
-                                                        </Td>
-                                                    );
-                                                })}
+                                {
+                                    !vendors ?
+                                        <Tr>
+                                            <Td colSpan={100}>
+                                                <Stack gap="6">
+                                                    <Skeleton height={"50px"} borderRadius={"12px"} />
+                                                    <Skeleton height={"50px"} borderRadius={"12px"} />
+                                                    <Skeleton height={"50px"} borderRadius={"12px"} />
+                                                    <Skeleton height={"50px"} borderRadius={"12px"} />
+                                                    <Skeleton height={"50px"} borderRadius={"12px"} />
+                                                    <Skeleton height={"50px"} borderRadius={"12px"} />
+                                                    <Skeleton height={"50px"} borderRadius={"12px"} />
+                                                    <Skeleton height={"50px"} borderRadius={"12px"} />
+                                                    <Skeleton height={"50px"} borderRadius={"12px"} />
+                                                </Stack>
+                                            </Td>
+                                        </Tr> :
+                                        (table.getRowModel() && table.getRowModel().rows.length !== 0) ? table
+                                            .getRowModel()
+                                            .rows
+                                            .map((row) => {
+                                                return (
+                                                    <Tr key={row.id}>
+                                                        {row.getVisibleCells().map((cell) => {
+                                                            return (
+                                                                <Td
+                                                                    key={cell.id}
+                                                                    fontSize={{ sm: '14px' }}
+                                                                    minW={{ sm: '70px', md: '70px', lg: 'auto' }}
+                                                                    borderColor="transparent"
+                                                                >
+                                                                    {flexRender(
+                                                                        cell.column.columnDef.cell,
+                                                                        cell.getContext(),
+                                                                    )}
+                                                                </Td>
+                                                            );
+                                                        })}
+                                                    </Tr>
+                                                );
+                                            }) : (
+                                            <Tr>
+                                                <Td
+                                                    fontSize={{ sm: '14px' }}
+                                                    minW={{ sm: '150px', md: '200px', lg: 'auto' }}
+                                                    borderColor="transparent"
+                                                    colSpan={8}
+                                                >
+                                                    <Text
+                                                        color={textColor}
+                                                        mb="4px"
+                                                        align={"center"}
+                                                        fontWeight="700"
+                                                        lineHeight="100%"
+                                                    >
+                                                        No Databases
+                                                    </Text>
+                                                </Td>
                                             </Tr>
-                                        );
-                                    }) : (
-                                    <Tr>
-                                        <Td
-                                            fontSize={{ sm: '14px' }}
-                                            minW={{ sm: '150px', md: '200px', lg: 'auto' }}
-                                            borderColor="transparent"
-                                            colSpan={8}
-                                        >
-                                            <Text
-                                                color={textColor}
-                                                mb="4px"
-                                                align={"center"}
-                                                fontWeight="700"
-                                                lineHeight="100%"
-                                            >
-                                                No Databases
-                                            </Text>
-                                        </Td>
-                                    </Tr>
-                                )}
+                                        )}
                             </Tbody>
                         </Table> : <RankChart showingCategory={options[showingCategory].id} country={country} />
                     }

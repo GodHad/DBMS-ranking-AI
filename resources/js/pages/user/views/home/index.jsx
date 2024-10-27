@@ -13,16 +13,13 @@ import {
   useColorModeValue,
   Input,
   InputGroup,
+  Stack,
   InputLeftElement
 } from "@chakra-ui/react";
 import { MdSearch } from "react-icons/md";
 import React from "react";
 import TopDBMSTable from "./components/TopDBMSTable";
 import RecentBlogs from "./components/RecentBlogs";
-import {
-  columnsDataCheck,
-} from "./variables/columnsData";
-import tableDataCheck from "./variables/tableDataCheck.json";
 
 export default function UserReports() {
   // Chakra Color Mode
@@ -97,7 +94,7 @@ export default function UserReports() {
             </FormControl>
           </Flex>
         </Card>
-        <TopDBMSTable columnsData={columnsDataCheck} tableData={tableDataCheck} />
+        <TopDBMSTable />
       </SimpleGrid>
       <RecentBlogs />
     </Box >

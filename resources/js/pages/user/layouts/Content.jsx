@@ -7,6 +7,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import routes from '../routes';
 import FeaturedProductsSidebar from '../../../components/featuredProductSidebar/Sidebar';
 import { FeaturedProductSidebarContext } from '../../../contexts/FeaturedProductsContext';
+import BlogPage from '../views/blogs/BlogPage';
 
 // Custom Chakra theme
 export default function Dashboard(props) {
@@ -134,13 +135,13 @@ export default function Dashboard(props) {
               p={{ base: '20px', md: '30px' }}
               pe="20px"
               minH="100vh"
-              w={{ base: '100%', xl: 'calc( 100% - 290px )' }}
-              maxWidth={{ base: '100%', xl: 'calc( 100% - 290px )' }}
+              w={{ base: '100%', lg: 'calc( 100% - 290px )' }}
+              maxWidth={{ base: '100%', lg: 'calc( 100% - 290px )' }}
               float="left"
             >
               <Routes>
                 {getRoutes(routes)}
-                {/* <Route path="/home" element={<MainDashboard />} /> */}
+                <Route path="/blog/:id/:slug" element={<BlogPage />} />
                 <Route
                   path="/"
                   element={<Navigate to="/home" replace />}

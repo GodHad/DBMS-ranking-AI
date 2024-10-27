@@ -55,7 +55,7 @@ function FeaturedProductsSidebar(props) {
 
   // SIDEBAR
   return (
-    <Box display={{ sm: "none", xl: "block" }} w="100%" position={"absolute"} top={`${top}px`}minH='100%' zIndex={'-1'}>
+    <Box display={{ lg: "block", base: 'none' }} w="100%" position={"absolute"} top={`${top}px`} minH='100%' zIndex={'-1'}>
       <Card
         // bg={sidebarBg}
         transition={variantChange}

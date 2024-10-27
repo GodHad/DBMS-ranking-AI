@@ -8,6 +8,7 @@ import {
   Th,
   Thead,
   Tr,
+  Stack,
   useColorModeValue,
 } from '@chakra-ui/react';
 import React, { useState, useEffect } from 'react'
@@ -24,6 +25,11 @@ import { Link } from 'react-router-dom';
 import Card from '../../../../../components/card/Card';
 import { useQuery } from 'react-query';
 import { getVendors } from '../requests/use-request.js';
+import {
+  Skeleton,
+  SkeletonCircle,
+  SkeletonText,
+} from "@chakra-ui/skeleton"
 
 const columnHelper = createColumnHelper();
 
@@ -36,7 +42,7 @@ export default function Vendor() {
     pageSize: 10,
   })
 
-  const { data: vendors, isLoadingVendor } = useQuery('vendors', getVendors);
+  const { data: vendors } = useQuery('vendors', getVendors, { staleTime: 300000 });
 
   useEffect(() => {
     setData(vendors);
@@ -117,7 +123,7 @@ export default function Vendor() {
   });
 
   return (
-    <Card
+    <Box
       flexDirection="column"
       w="100%"
       px="0px"
@@ -172,53 +178,68 @@ export default function Vendor() {
             ))}
           </Thead>
           <Tbody>
-            {table.getRowModel().rows.length !== 0 ? table
-              .getRowModel()
-              .rows
-              .map((row) => {
-                return (
-                  <Tr key={row.id}>
-                    {row.getVisibleCells().map((cell) => {
-                      return (
-                        <Td
-                          key={cell.id}
-                          fontSize={{ sm: '14px' }}
-                          minW={{ sm: '150px', md: '200px', lg: 'auto' }}
-                          borderColor="transparent"
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </Td>
-                      );
-                    })}
+            {
+              !vendors ?
+                <Tr>
+                  <Td colSpan={3}>
+                    <Stack gap="6">
+                      <SkeletonText borderRadius={"12px"} />
+                      <SkeletonText borderRadius={"12px"} />
+                      <SkeletonText borderRadius={"12px"} />
+                      <SkeletonText borderRadius={"12px"} />
+                      <SkeletonText borderRadius={"12px"} />
+                    </Stack>
+                  </Td>
+                </Tr>
+                :
+                (table.getRowModel() && table.getRowModel().rows.length !== 0) ? table
+                  .getRowModel()
+                  .rows
+                  .map((row) => {
+                    return (
+                      <Tr key={row.id}>
+                        {row.getVisibleCells().map((cell) => {
+                          return (
+                            <Td
+                              key={cell.id}
+                              fontSize={{ sm: '14px' }}
+                              minW={{ sm: '150px', md: '200px', lg: 'auto' }}
+                              borderColor="transparent"
+                            >
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext(),
+                              )}
+                            </Td>
+                          );
+                        })}
+                      </Tr>
+                    );
+                  }) : (
+                  <Tr>
+                    <Td
+                      fontSize={{ sm: '14px' }}
+                      minW={{ sm: '150px', md: '200px', lg: 'auto' }}
+                      borderColor="transparent"
+                      colSpan={8}
+                    >
+                      <Text
+                        color={textColor}
+                        mb="4px"
+                        align={"center"}
+                        fontWeight="700"
+                        lineHeight="100%"
+                      >
+                        No Databases
+                      </Text>
+                    </Td>
                   </Tr>
-                );
-              }) : (
-              <Tr>
-                <Td
-                  fontSize={{ sm: '14px' }}
-                  minW={{ sm: '150px', md: '200px', lg: 'auto' }}
-                  borderColor="transparent"
-                  colSpan={8}
-                >
-                  <Text
-                    color={textColor}
-                    mb="4px"
-                    align={"center"}
-                    fontWeight="700"
-                    lineHeight="100%"
-                  >
-                    No Databases
-                  </Text>
-                </Td>
-              </Tr>
-            )}
+                )
+            }
           </Tbody>
         </Table>
       </Box>
-      <Link to="#">
+      <Link to="/ranking">
         <Text
           px="25px"
           color={'navy.300'}
@@ -230,6 +251,6 @@ export default function Vendor() {
           More
         </Text>
       </Link>
-    </Card>
+    </Box>
   );
 }

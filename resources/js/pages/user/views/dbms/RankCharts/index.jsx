@@ -3,6 +3,7 @@ import {
     Flex,
     Icon,
     Text,
+    Stack,
     useColorModeValue,
 } from "@chakra-ui/react";
 // Custom components
@@ -12,7 +13,12 @@ import React, { useEffect, useState } from "react";
 import { MdOutlineCalendarToday } from "react-icons/md";
 
 import axios from "../../../../../variables/axiosConfig";
-import { useMutation, useQuery } from "react-query";
+import { useQuery } from "react-query";
+import {
+    Skeleton,
+    SkeletonCircle,
+    SkeletonText,
+} from "@chakra-ui/skeleton";
 
 const getTrendsDataAndXaxisValue = async (country) => {
     const res = await axios.get(`/api/get-trends-data-for-chart?country=${country}`);
@@ -90,7 +96,8 @@ export default function RankChart(props) {
         ['getTrends', country],
         () => getTrendsDataAndXaxisValue(country.value),
         {
-            enabled: !!country
+            enabled: !!country,
+            staleTime: 300000
         }
     );
 
@@ -132,14 +139,19 @@ export default function RankChart(props) {
                 </div>
                 <Flex w='100%' flexDirection={{ base: "column", lg: "row" }}>
                     <Box h={"650px"} w={"100%"} mt='auto'>
-                        {!loading && lineChartDataTotalSpent.length > 0 ? (
+                        {!loading ? lineChartDataTotalSpent.length > 0 ? (
                             <LineChart
                                 chartData={lineChartDataTotalSpent}
                                 chartOptions={lineChartOptionsTotalSpent}
                             />
                         ) : (
                             <Text>No Data Available</Text>
-                        )}
+                        ) : (
+                            <Stack mt="18px" gap="1">
+                                <Skeleton height={"300px"} borderRadius={"12px"} />
+                            </Stack>
+                        )
+                    }
                     </Box>
                 </Flex>
             </Card>

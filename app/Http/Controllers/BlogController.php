@@ -16,10 +16,30 @@ class BlogController extends Controller
 {
     public function getBlogs(Request $request)
     {
-        $countPerPage = $request->query('countPerPage');
-        if ($countPerPage) $blogs = Blog::with(['user', 'categories', 'tags', 'featured_images'])->orderBy('created_at', 'desc')->limit(3)->get();
-        else $blogs = Blog::all();
-        return response()->json(['success' => true, 'blogs' => $blogs]);
+        $countPerPage = $request->query('countPerPage', 10);
+        $page = $request->query('page', 1);
+
+        $categories = $request->query('categories') ? explode(',', $request->query('categories')) : null;
+        $tags = $request->query('tags') ? explode(',', $request->query('tags')) : null;
+        
+        $query = Blog::with(['user', 'categories', 'tags', 'featured_images'])
+        ->orderBy('created_at', 'desc');
+
+        if ($categories) {
+            $query->whereHas('categories', function($q) use ($categories) {
+                $q->whereIn('b_categories.id', $categories);
+            });
+        }
+    
+        if ($tags) {
+            $query->whereHas('tags', function($q) use ($tags) {
+                $q->whereIn('tags.id', $tags);
+            });
+        }
+    
+         $blogs = $query->paginate($countPerPage, ['*'], 'page', $page);
+
+         return response()->json(['success' => true, 'blogs' => $blogs]);
     }
 
     public function getBlog(Request $request)

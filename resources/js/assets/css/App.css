@@ -92,3 +92,27 @@ option {
 .ck-editor__editable {
   color: black;
 }
+
+body.chakra-ui-dark .ck-editor__editable_inline[contenteditable='false'] {
+  border: none !important;
+}
+
+.ck-editor__editable_inline[contenteditable='true'] {
+  border-bottom-left-radius: 16px !important;
+  border-bottom-right-radius: 16px !important;
+}
+
+body.chakra-ui-light .ck-editor__editable_inline {
+  background-color: #f9f9f9;
+  color: #000;
+}
+
+body.chakra-ui-dark .ck-editor__editable_inline {
+  background-color: #111c44 !important;
+  border: 1px solid rgba(135, 140, 189, 0.3) !important;
+  color: #ffffff;
+}
+
+.ck-balloon-panel {
+  display: none !important;
+}

@@ -2,6 +2,8 @@ import React from 'react';
 
 import Home from './views/home';
 import DBMSRanking from './views/dbms';
+import Encyclopedia from './views/encyclopedia';
+import Blogs from './views/blogs';
 // import NFTMarketplace from './views/admin/marketplace';
 // import Profile from './views/admin/profile';
 // import DataTables from './views/admin/dataTables';
@@ -23,12 +25,12 @@ const routes = [
     {
         name: 'Encyclopeida',
         path: '/encyclopedia',
-        component: <>Encyclopeida</>
+        component: <Encyclopedia />
     },
     {
         name: 'Blog',
         path: '/blog',
-        component: <>Blog</>
+        component: <Blogs />
     },
     {
         name: 'Sponsor',
