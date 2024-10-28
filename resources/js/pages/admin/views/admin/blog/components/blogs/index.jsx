@@ -74,22 +74,17 @@ export default () => {
 
     const [page, setPage] = useState(1);
     const [countPerPage, setCountPerPage] = useState(10);
-    
-    const { data: blogs = {}, isLoadingBlogs } = useQuery(['blogs', page, countPerPage], () => getBlogs({page, countPerPage}));
-    
-    useEffect(() => {
-        console.log(blogs);
-    }, [blogs])
-    
+
+    const { data: blogs = {}, isLoadingBlogs } = useQuery(['blogs', page, countPerPage], () => getBlogs({ page, countPerPage }), { staleTime: 30000 });
+
     const memorizedData = useMemo(() => {
         if (Array.isArray(blogs.data)) {
             return blogs.data; // Return data directly if it's an array
         }
-        console.warn("Invalid blogs data format:", blogs); // Log a warning if data is not in expected format
         return [];
-    }, [blogs]);
-    
-    
+    }, [blogs.data]);
+
+
     const [blog, setBlog] = useState(initialBlog);
     const [blogId, setBlogId] = useState(null)
 
@@ -97,16 +92,16 @@ export default () => {
         ['blog', blogId],
         () => getBlog(blogId),
         {
-            enabled: !!blogId, // Only run the query if blogId is not null
+            enabled: !!blogId
         }
     );
 
     useEffect(() => {
-        if (_blog) 
+        if (_blog)
             setBlog({
-                ..._blog, 
-                tags: _blog.tags.map(tag => tag.id), 
-                categories: _blog.categories.map(category => category.id), 
+                ..._blog,
+                tags: _blog.tags.map(tag => tag.id),
+                categories: _blog.categories.map(category => category.id),
                 // featured_images: _blog.featured_images.map(image => (APP_URL + 'storage/' + image.url)) || [],
             });
     }, [_blog])
@@ -129,7 +124,7 @@ export default () => {
             })
         },
         onError: (error) => {
-            const errors = error.response.data.errors ? error.response.data.errors : {error: error.response.data.error};
+            const errors = error.response.data.errors ? error.response.data.errors : { error: error.response.data.error };
             const key = errors[Object.keys(errors)[0]];
             toast({
                 title: "Failed to Delete Blog",
@@ -158,7 +153,7 @@ export default () => {
             ),
             cell: (info) => (
                 <Text color={textColor} fontSize="sm" fontWeight="700">
-                    {info.row.index + 1}
+                    {countPerPage * (page - 1) + info.row.index + 1}
                 </Text>
             ),
         }),
@@ -240,7 +235,7 @@ export default () => {
     ];
 
     const table = useReactTable({
-        data: memorizedData,
+        data: memorizedData || [],
         columns,
         state: {
             sorting,
@@ -250,6 +245,91 @@ export default () => {
         getCoreRowModel: getCoreRowModel(),
         debugTable: false,
     });
+
+    const paginationControls = useMemo(() => (
+        <Flex justifyContent="space-between" m={4} alignItems="center">
+            <Flex mr={2}>
+                <Tooltip label="First Page">
+                    <IconButton
+                        onClick={() => setPage(1)}
+                        isDisabled={blogs.current_page === 1}
+                        icon={<MdArrowLeft h={3} w={3} />}
+                        mr={4}
+                    />
+                </Tooltip>
+                <Tooltip label="Previous Page">
+                    <IconButton
+                        onClick={() => { if (page > 1) setPage(page - 1) }} // Ensure it doesn't go below 1
+                        isDisabled={blogs.current_page === 1}
+                        icon={<MdChevronLeft h={6} w={6} />}
+                    />
+                </Tooltip>
+            </Flex>
+
+            <Flex alignItems="center">
+                <Text flexShrink="0" mr={4}>
+                    Page{" "}
+                    <Text fontWeight="bold" as="span">
+                        {blogs.current_page}
+                    </Text>{" "}
+                    of{" "}
+                    <Text fontWeight="bold" as="span">
+                        {blogs.last_page}
+                    </Text>
+                </Text>
+                <Text flexShrink="0">Go to</Text>{" "}
+                <NumberInput
+                    ml={2}
+                    mr={4}
+                    w={20}
+                    min={1}
+                    max={blogs.last_page}
+                    value={blogs.current_page} // Use value instead of defaultValue for controlled input
+                    onChange={(_, value) => {
+                        if (value >= 1 && value <= blogs.last_page) {
+                            setPage(value);
+                        }
+                    }}
+                >
+                    <NumberInputField />
+                    <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                    </NumberInputStepper>
+                </NumberInput>
+                <Select
+                    w={32}
+                    color={textColor}
+                    value={countPerPage} // Make sure this reflects the current countPerPage
+                    onChange={e => setCountPerPage(Number(e.target.value))}
+                >
+                    {[10, 20, 30, 40, 50].map((pageSize) => (
+                        <option key={pageSize} value={pageSize}>
+                            Show {pageSize}
+                        </option>
+                    ))}
+                </Select>
+            </Flex>
+
+            <Flex>
+                <Tooltip label="Next Page">
+                    <IconButton
+                        onClick={() => { if (page < blogs.last_page) setPage(page + 1) }}
+                        isDisabled={blogs.current_page === blogs.last_page}
+                        icon={<MdChevronRight h={10} w={10} />}
+                    />
+                </Tooltip>
+                <Tooltip label="Last Page">
+                    <IconButton
+                        onClick={() => setPage(blogs.last_page)}
+                        isDisabled={blogs.current_page === blogs.last_page}
+                        icon={<MdArrowRight h={10} w={10} />}
+                        ml={4}
+                    />
+                </Tooltip>
+            </Flex>
+        </Flex>
+    ), [blogs])
 
     return (
         <Card
@@ -366,93 +446,7 @@ export default () => {
                                 )}
                             </Tbody>
                         </Table>
-                        {(blogs && blogs.last_page > 1) &&
-                        <Flex justifyContent="space-between" m={4} alignItems="center" >
-                            <Flex mr={2}>
-                                <Tooltip label="First Page" >
-                                    <IconButton
-                                        onClick={() => setPage(1)}
-                                        isDisabled={page === 1}
-                                        icon={<MdArrowLeft h={3} w={3} />}
-                                        mr={4}
-                                    />
-                                </Tooltip>
-                                <Tooltip label="Previous Page" >
-                                    <IconButton
-                                        onClick={() => setPage(prev => prev - 1)}
-                                        isDisabled={page === 1}
-                                        icon={<MdChevronLeft h={6} w={6} />}
-                                    />
-                                </Tooltip>
-                            </Flex>
-
-                            <Flex alignItems="center" >
-                                <Text flexShrink="0" mr={4} >
-                                    Page{" "}
-                                    <Text fontWeight="bold" as="span" >
-                                        {page}
-                                    </Text>{" "}
-                                    of{" "}
-                                    <Text fontWeight="bold" as="span" >
-                                        {Math.ceil(blogs.total / countPerPage)}
-                                    </Text>
-                                </Text>
-                                <Text flexShrink="0" > Go to </Text>{" "}
-                                <NumberInput
-                                    ml={2}
-                                    mr={4}
-                                    w={20}
-                                    min={1}
-                                    max={Math.ceil(blogs.total / countPerPage)}
-                                    onChange={value => {
-                                        if (value <= Math.ceil(blogs.total / countPerPage)) setPage(Number(value))
-                                    }}
-                                    defaultValue={page}
-                                    value={page}
-                                >
-                                    <NumberInputField />
-                                    <NumberInputStepper >
-                                        <NumberIncrementStepper />
-                                        <NumberDecrementStepper />
-                                    </NumberInputStepper>
-                                </NumberInput>
-                                <Select
-                                    w={32}
-                                    color={textColor}
-                                    value={Math.ceil(blogs.total / countPerPage)}
-                                    onChange={e => {
-                                        setCountPerPage(e.target.value)
-                                    }}
-                                >
-                                    {
-                                        [10, 20, 30, 40, 50].map((pageSize) => (
-                                            <option key={pageSize} value={pageSize} >
-                                                Show {pageSize}
-                                            </option>
-                                        ))
-                                    }
-                                </Select>
-                            </Flex>
-
-                            <Flex >
-                                <Tooltip label="Next Page" >
-                                    <IconButton
-                                        onClick={() => setPage(prev => prev + 1)}
-                                        isDisabled={page === Math.ceil(blogs.total / countPerPage)}
-                                        icon={<MdChevronRight h={10} w={10} />}
-                                    />
-                                </Tooltip>
-                                <Tooltip label="Last Page" >
-                                    <IconButton
-                                        onClick={() => setPage(Math.ceil(blogs.total / countPerPage))}
-                                        isDisabled={page === Math.ceil(blogs.total / countPerPage)}
-                                        icon={<MdArrowRight h={10} w={10} />}
-                                        ml={4}
-                                    />
-                                </Tooltip>
-                            </Flex>
-                        </Flex>
-                    }
+                        {(blogs.data && blogs.last_page > 1) && paginationControls}
                     </Box>
                 </>
             )}

@@ -24,6 +24,7 @@ import routes from '../../pages/user/routes';
 import { Link, useLocation } from 'react-router-dom'
 import { useContext } from 'react'
 import { FeaturedProductSidebarContext } from '../../contexts/FeaturedProductsContext'
+import { Skeleton } from '@chakra-ui/skeleton'
 
 const NavLink = ({ route }) => {
   const location = useLocation();
@@ -98,7 +99,7 @@ export default function Navbar(props) {
               Featured Products:
             </Text>
             <HStack>
-              {featuredProducts.map((product, index) => (
+              {featuredProducts ? featuredProducts.map((product, index) => (
                 <a key={product.title + index} href={product.link} target='_blank'>
                   <Text
                     mr={{ base: 2, md: 4 }}
@@ -108,7 +109,7 @@ export default function Navbar(props) {
                     {product.title}
                   </Text>
                 </a>
-              ))}
+              )) : <Skeleton height={'20px'} maxW={'md'} w={'120px'} />}
             </HStack>
           </HStack>
         </Flex>
