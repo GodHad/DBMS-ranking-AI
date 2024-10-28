@@ -12,6 +12,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\VendorRequestController;
 use App\Http\Controllers\AuthorRequestController;
 use App\Http\Controllers\FeaturedProductController;
+use App\Http\Controllers\BannerController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -112,6 +113,12 @@ Route::group([
     // featured product
     Route::get('/get-featured-products', [FeaturedProductController::class, 'featured_products']);
     Route::get('/get-featured-product', [FeaturedProductController::class, 'featured_product']);
+
+    // banner 
+    Route::get('/get-banners', [BannerController::class, 'getBanners']);
+    Route::post('/create-banner', [BannerController::class, 'createBanner']);
+    Route::post('/update-banner', [BannerController::class, 'updateBanner']);
+    Route::delete('/delete-banner', [BannerController::class, 'deleteBanner']);
 
     // testing route for fetching data
     Route::get('/test', [VendorController::class, 'test']);

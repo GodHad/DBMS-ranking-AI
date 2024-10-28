@@ -68,7 +68,7 @@ export default function SponsorForm({ sponsor, setOpenedPage }) {
                 title: "Failed to create sponsor",
                 description: key,
                 position: 'top-right',
-                status: "success",
+                status: "error",
                 insert: "top",
                 duration: 5000,
                 isClosable: true

@@ -14,22 +14,18 @@ import {
   MdCommentBank,
   MdAttachMoney,
   MdStorage,
-  MdFavorite
+  MdFavorite,
+  MdImage
 } from 'react-icons/md';
 
-// Admin Imports
-// import MainDashboard from './views/admin/default';
-// import NFTMarketplace from './views/admin/marketplace';
-// import Profile from './views/admin/profile';
-// import DataTables from './views/admin/dataTables';
+import Banner from './views/admin/banner';
 import DBMS from './views/admin/dbms';
-import RankChart from '../user/views/dbms/RankCharts';
 import Encyclopedia from './views/admin/encyclopedia';
 import Blog from './views/admin/blog';
 import Sponsor from './views/admin/sponsors';
 import User from './views/admin/users';
 import FeaturedProduct from './views/admin/featured products'
-// Auth Imports
+
 import SignInCentered from './views/auth/signIn';
 import SignUpCentered from './views/auth/signup';
 
@@ -41,6 +37,13 @@ const routes = [
   //   icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
   //   component: <MainDashboard />,
   // },
+  {
+    name: 'Banners',
+    layout: '/admin',
+    path: '/banner',
+    icon: <Icon as={MdImage} width={'20px'} height={'20px'} color='inherit' />,
+    component: <Banner />
+  },
   {
     name: 'Users',
     layout: '/admin',

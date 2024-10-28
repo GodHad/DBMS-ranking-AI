@@ -42,11 +42,7 @@ export default function Vendor() {
     pageSize: 10,
   })
 
-  const { data: vendors = [] } = useQuery('vendors', getVendors, { staleTime: 300000 });
-
-  useEffect(() => {
-    setData(vendors || []);
-  }, [vendors])
+  const { data: vendors } = useQuery('vendors', getVendors, { staleTime: 300000 });
 
   const columns = [
 
@@ -111,7 +107,7 @@ export default function Vendor() {
   ];
 
   const table = useReactTable({
-    data,
+    data: vendors || [],
     columns,
     state: {
       pagination

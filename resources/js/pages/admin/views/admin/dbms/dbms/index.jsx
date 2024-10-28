@@ -266,10 +266,10 @@ export default function Vendor() {
                     id: 'primary_category',
                     header: null,
                     cell: (info) => {
+                        if (!info.getValue())
+                            return <></>
                         const primary_categories = info.getValue().map(category => category.shortname);
                         let text;
-                        if (!primary_categories)
-                            return <></>
                         if (isLoadingCategory || !categories) text = ''
                         else text = primary_categories.join(', ');
                         return (
@@ -422,7 +422,7 @@ export default function Vendor() {
     ];
 
     const table = useReactTable({
-        data,
+        data: data || [],
         columns,
         state: {
             pagination

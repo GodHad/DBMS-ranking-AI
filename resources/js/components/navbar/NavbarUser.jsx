@@ -1,20 +1,13 @@
-'use client'
-
 import {
   Box,
   Flex,
-  Avatar,
   HStack,
   Text,
   IconButton,
-  Button,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuDivider,
   useDisclosure,
   useColorModeValue,
+  useBreakpointValue,
+  Image,
   Stack,
 } from '@chakra-ui/react'
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons'
@@ -22,9 +15,25 @@ import Logo from './components/Logo'
 import NavbarLinks from './NavbarLinksUser'
 import routes from '../../pages/user/routes';
 import { Link, useLocation } from 'react-router-dom'
-import { useContext } from 'react'
+import { useContext, useMemo, useState } from 'react'
 import { FeaturedProductSidebarContext } from '../../contexts/FeaturedProductsContext'
 import { Skeleton } from '@chakra-ui/skeleton'
+import { getBanners } from '../../pages/admin/views/admin/banner/requests/use-request';
+import { useQuery } from 'react-query';
+import Slider from 'react-slick';
+import { APP_URL } from '../../variables/statics';
+
+const settings = {
+  dots: true,
+  arrows: false,
+  fade: true,
+  infinite: true,
+  autoplay: true,
+  speed: 500,
+  autoplaySpeed: 3000,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+}
 
 const NavLink = ({ route }) => {
   const location = useLocation();
@@ -46,14 +55,62 @@ const NavLink = ({ route }) => {
 }
 
 export default function Navbar(props) {
+  const [slider, setSlider] = useState(null);
+  const top = useBreakpointValue({ base: '90%', md: '50%' })
+  const side = useBreakpointValue({ base: '30%', md: '10px' })
+
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { featuredProducts } = useContext(FeaturedProductSidebarContext);
   const textColor = useColorModeValue('secondaryGray.900', 'white');
+  const { data: banners, isLoadingBanner } = useQuery('banners', getBanners, { staleTime: 100000 });
+
+  const topBanners = useMemo(() => {
+    return banners ? banners.filter(banner => banner.type === 0) : [];
+  }, [banners]);
 
   let navbarBg = useColorModeValue('rgba(244, 247, 254, 0.2)', 'rgba(11,20,55,0.5)');
   return (
     <>
-      <Box bg={navbarBg} px={4} mt={"20px"}>
+      <Box bg={navbarBg} px={4} my={"10px"}>
+        <Flex w="100%" alignItems={'center'} justifyContent={'space-between'}>
+          <Logo />
+          <Box position={'relative'} height={'90px'} width={{ base: '90%', lg: '80%' }} overflow={'hidden'}>
+            <link
+              rel="stylesheet"
+              type="text/css"
+              href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css"
+            />
+            <link
+              rel="stylesheet"
+              type="text/css"
+              href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
+            />
+            {topBanners &&
+              <Slider {...settings} ref={(slider) => setSlider(slider)}>
+                {topBanners.map((image, index) => (
+                  <a href={image.link} target='_blank'>
+                    <Image
+                      key={image.id + image.url}
+                      mb={5}
+                      h="90px"
+                      maxW="100%"
+                      w="auto"
+                      borderRadius="xl"
+                      objectFit="cover"
+                      objectPosition="center"
+                      src={`${APP_URL}storage/${image.url}?w=1400&auto=compression,format`}
+                      alt={image.url}
+                    />
+                  </a>
+                ))}
+              </Slider>
+            }
+          </Box>
+          <Box></Box>
+        </Flex>
+
+      </Box>
+      <Box bg={navbarBg} px={4}>
         <Flex w="100%" h={16} alignItems={'center'} justifyContent={'space-between'}>
           <IconButton
             size={'md'}
@@ -63,7 +120,6 @@ export default function Navbar(props) {
             onClick={isOpen ? onClose : onOpen}
           />
           <HStack alignItems={'center'} fontWeight={700}>
-            <Box><Logo /></Box>
             <HStack display={{ base: 'none', md: 'flex' }}>
               {routes.map((route, index) => (
                 <NavLink key={route.path + index} route={route} />
@@ -92,7 +148,7 @@ export default function Navbar(props) {
           </Box>
         ) : null}
       </Box>
-      <Box bg={navbarBg} px={4} mt={"20px"} borderTop={'1px'} borderTopStyle={'solid'} borderTopColor={'gray.300'}>
+      <Box bg={navbarBg} px={4}>
         <Flex w="100%" h={16} alignItems={'center'} justifyContent={'center'}>
           <HStack alignItems={'center'} fontWeight={700}>
             <Text color={textColor} fontSize='lg' fontWeight='extrabold' mr={{ base: 2, md: 4 }}>

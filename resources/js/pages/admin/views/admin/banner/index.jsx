@@ -42,30 +42,22 @@ import {
     getPaginationRowModel,
 } from '@tanstack/react-table';
 
-// Custom components
 import Card from '../../../../../components/card/Card';
-import FeaturedProductForm from './components/FeaturedProductForm';
+import BannerForm from './components/BannerForm';
 import { MdAdd } from 'react-icons/md'
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { getFeaturedProducts, deleteFeaturedProduct } from './requests/use-request';
+import { getBanners, deleteBanner } from './requests/use-request';
 
 const columnHelper = createColumnHelper();
 
-const initialFeaturedProduct = {
+const initialBanner = {
     id: null,
-    title: '',
-    content: '',
     link: '',
-    banner: '',
-    published: 0
+    url: '',
+    type: 0
 }
 
-const stripHTML = (html) => {
-    const doc = new DOMParser().parseFromString(html, 'text/html');
-    return doc.body.textContent || "";
-};
-
-export default function FeaturedProduct() {
+export default function Banner() {
     const toast = useToast();
     const queryClient = useQueryClient();
 
@@ -75,18 +67,18 @@ export default function FeaturedProduct() {
 
     const [openedPage, setOpenedPage] = useState(0);
 
-    const [featuredProduct, setFeaturedProduct] = useState(initialFeaturedProduct);
-    const { data: featured_products, isLoadingSponsors } = useQuery('featured_products', getFeaturedProducts);
+    const [banner, setBanner] = useState(initialBanner);
+    const { data: banners, isLoadingBanners } = useQuery('banners', getBanners);
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: 10,
     })
 
-    const handleDeleteFeaturedProduct = useMutation(deleteFeaturedProduct, {
+    const handleDeleteBanner = useMutation(deleteBanner, {
         onSuccess: () => {
-            queryClient.invalidateQueries('featured_products');
+            queryClient.invalidateQueries('banners');
             toast({
-                title: "Delete featured product successfully",
+                title: "Delete banner successfully",
                 position: 'top-right',
                 status: "success",
                 insert: "top",
@@ -95,10 +87,10 @@ export default function FeaturedProduct() {
             })
         },
         onError: (error) => {
-            const errors = error.response.data.errors ? error.response.data.errors : {error: error.response.data.error};
+            const errors = error.response.data.errors ? error.response.data.errors : { error: error.response.data.error };
             const key = errors[Object.keys(errors)[0]];
             toast({
-                title: "Failed to delete featured product",
+                title: "Failed to delete banner",
                 description: key,
                 position: 'top-right',
                 status: "error",
@@ -128,8 +120,8 @@ export default function FeaturedProduct() {
                 </Text>
             ),
         }),
-        columnHelper.accessor('title', {
-            id: 'title',
+        columnHelper.accessor('type', {
+            id: 'type',
             header: () => (
                 <Text
                     justifyContent="center"
@@ -137,37 +129,15 @@ export default function FeaturedProduct() {
                     fontSize={{ sm: '10px', lg: '12px' }}
                     color="gray.400"
                 >
-                    Title
+                    Type
                 </Text>
             ),
             cell: (info) => (
-                <Text color={textColor} fontSize="sm" fontWeight="700">
-                    {info.getValue()}
+                <Text color={textColor} fontSize="sm" fontWeight="700" _hover={{ color: 'blue.400' }}>
+                    {info.getValue() === 0 ? 'Top Banner' : 'Bottom Banner'}
                 </Text>
-            ),
+            )
         }),
-        // columnHelper.accessor('content', {
-        //     id: 'content',
-        //     header: () => (
-        //         <Text
-        //             justifyContent="center"
-        //             align="center"
-        //             fontSize={{ sm: '10px', lg: '12px' }}
-        //             color="gray.400"
-        //         >
-        //             Content
-        //         </Text>
-        //     ),
-        //     cell: (info) => {
-        //         return (
-        //             <Box maxW={"400px"}>
-        //                 <Text color={textColor} fontSize="sm" fontWeight="700" isTruncated>
-        //                     {stripHTML(info.getValue())}
-        //                 </Text>
-        //             </Box>
-        //         )
-        //     },
-        // }),
         columnHelper.accessor('link', {
             id: 'link',
             header: () => (
@@ -182,40 +152,11 @@ export default function FeaturedProduct() {
             ),
             cell: (info) => (
                 <a href={info.getValue()} target='_blank'>
-                    <Text color={textColor} fontSize="sm" fontWeight="700" _hover={{ color: 'blue.400' }}>
+                    <Text color={textColor} fontSize="sm" fontWeight="700">
                         {info.getValue()}
                     </Text>
                 </a>
-            )
-        }),
-        columnHelper.accessor('published', {
-            id: 'published',
-            header: () => (
-                <Text
-                    justifyContent="center"
-                    align="center"
-                    fontSize={{ sm: '10px', lg: '12px' }}
-                    color="gray.400"
-                >
-                    Published
-                </Text>
             ),
-            cell: (info) => {
-                return (
-                    <Flex align="center">
-                            <Icon
-                                w="24px"
-                                h="24px"
-                                me="5px"
-                                color={info.getValue() === 1 ? 'green.500' : 'gray.500'}
-                                as={info.getValue() === 1 ? MdCheckCircle : MdOutlineRemoveCircle}
-                            />
-                        {/* <Text color={textColor} fontSize="sm" fontWeight="700">
-                            {info.getValue() === 1 ? 'Featured' : 'Not Featured'}
-                        </Text> */}
-                    </Flex>
-                )
-            },
         }),
         columnHelper.accessor('action', {
             id: 'action',
@@ -236,7 +177,7 @@ export default function FeaturedProduct() {
                         me='16px'
                         ms='auto'
                         p='0px !important'
-                        onClick={() => { setFeaturedProduct(info.row.original); setOpenedPage(1) }}
+                        onClick={() => { setBanner(info.row.original); setOpenedPage(1) }}
                     >
                         <Icon as={MdEdit} color='secondaryGray.500' h='18px' w='18px' />
                     </Link>
@@ -245,7 +186,7 @@ export default function FeaturedProduct() {
                         me='16px'
                         ms='auto'
                         p='0px !important'
-                        onClick={() => handleDeleteFeaturedProduct.mutate(info.row.original.id)}
+                        onClick={() => handleDeleteBanner.mutate(info.row.original.id)}
                     >
                         <Icon as={MdDelete} color='secondaryGray.500' h='18px' w='18px' />
                     </Link>
@@ -255,7 +196,7 @@ export default function FeaturedProduct() {
     ];
 
     const table = useReactTable({
-        data: featured_products || [],
+        data: banners || [],
         columns,
         state: {
             sorting,
@@ -279,18 +220,6 @@ export default function FeaturedProduct() {
             >
                 {openedPage === 0 && (
                     <>
-                        {/* <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
-                            <Text
-                                color={textColor}
-                                fontSize="22px"
-                                mb="4px"
-                                fontWeight="700"
-                                lineHeight="100%"
-                            >
-                                Featured Product
-                            </Text>
-                            <Menu />
-                        </Flex> */}
                         <Flex w='100%'>
                             <Button
                                 mb='50px'
@@ -298,9 +227,9 @@ export default function FeaturedProduct() {
                                 ml={{ base: "20px" }}
                                 variant='brand'
                                 fontWeight='500'
-                                onClick={() => { setOpenedPage(1); setFeaturedProduct(initialFeaturedProduct) }}
+                                onClick={() => { setOpenedPage(1); setBanner(initialBanner) }}
                             >
-                                <Icon as={MdAdd} h='18px' w='18px' />New Featured Product
+                                <Icon as={MdAdd} h='18px' w='18px' />New Banner
                             </Button>
                         </Flex>
                         <Box>
@@ -378,7 +307,7 @@ export default function FeaturedProduct() {
                                                     fontWeight="700"
                                                     lineHeight="100%"
                                                 >
-                                                    No Featured Products
+                                                    No Banners
                                                 </Text>
                                             </Td>
                                         </Tr>
@@ -475,7 +404,7 @@ export default function FeaturedProduct() {
                         </Box>
                     </>
                 )}
-                {openedPage === 1 && <FeaturedProductForm featuredProduct={featuredProduct} setOpenedPage={() => { setOpenedPage(0); }} />}
+                {openedPage === 1 && <BannerForm banner={banner} setOpenedPage={() => { setOpenedPage(0); }} />}
             </Card>
         </Box >
     );

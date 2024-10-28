@@ -1,31 +1,28 @@
+import React, { useMemo } from "react";
 import {
-  Avatar,
   Box,
   Flex,
-  FormControl,
-  FormLabel,
-  Icon,
-  Select,
-  Menu,
   Text,
   SimpleGrid,
   Card,
+  Image,
   useColorModeValue,
-  Input,
-  InputGroup,
-  Stack,
-  InputLeftElement
 } from "@chakra-ui/react";
-import { MdSearch } from "react-icons/md";
-import React from "react";
 import TopDBMSTable from "./components/TopDBMSTable";
 import RecentBlogs from "./components/RecentBlogs";
+import { useQuery } from "react-query";
+import { getBanners } from "../../../admin/views/admin/banner/requests/use-request";
+import { APP_URL } from "../../../../variables/statics";
 
 export default function UserReports() {
-  // Chakra Color Mode
   const textColor = useColorModeValue('secondaryGray.900', 'white');
-  const brandColor = useColorModeValue("brand.500", "white");
-  const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
+
+  const { data: banners, isLoadingBanner } = useQuery('banners', getBanners, { staleTime: 100000 });
+
+  const bottomBanners = useMemo(() => {
+    return banners ? banners.filter(banner => banner.type === 1) : [];
+  }, [banners]);
+
   return (
     <Box>
       <SimpleGrid columns={{ base: 1, lg: 2, xl: 2 }} gap='20px' mb='20px' justifyContent={"center"}>
@@ -98,6 +95,22 @@ export default function UserReports() {
         <TopDBMSTable />
       </SimpleGrid>
       <RecentBlogs />
+      {bottomBanners.map((image, index) => (
+        <a href={image.link} target='_blank'>
+          <Image
+            key={image.id + image.url}
+            mb={5}
+            h="90px"
+            maxW="100%"
+            w="100%"
+            borderRadius="xl"
+            objectFit="cover"
+            objectPosition="center"
+            src={`${APP_URL}storage/${image.url}?w=1400&auto=compression,format`}
+            alt={image.url}
+          />
+        </a>
+      ))}
     </Box >
   );
 }

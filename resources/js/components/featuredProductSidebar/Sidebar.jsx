@@ -34,57 +34,28 @@ function FeaturedProductsSidebar(props) {
     "14px 17px 40px 4px rgba(112, 144, 176, 0.08)",
     "unset"
   );
-  // Chakra Color Mode
   let sidebarBg = useColorModeValue("white", "navy.800");
   let sidebarMargins = "0px";
 
-  const [top, setTop] = useState(170);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const offset = window.scrollY;
-      setTop(offset > 170 ? 0 : 170 - offset);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  // SIDEBAR
   return (
-    <Box display={{ lg: "block", base: 'none' }} w="100%" position={"absolute"} top={`${top}px`} minH='100%'>
+    <Box display={{ lg: "block", base: 'none' }} w="100%" position={"absolute"} top={`${250}px`} minH='100%'>
       <Card
-        // bg={sidebarBg}
         transition={variantChange}
         w='300px'
-        // h='100vh'
         m={sidebarMargins}
-        // minH='100%'
         overflowX='hidden'
         float={"right"}
         boxShadow={shadow}
       >
-        {/* <Scrollbars
-          autoHide
-          renderTrackVertical={renderTrack}
-          renderThumbVertical={renderThumb}
-          // renderView={renderView}
-          > */}
           <Content />
-        {/* </Scrollbars> */}
       </Card>
     </Box>
   );
 }
 
-// FUNCTIONS
 export function FeaturedProductsSidebarResponsive() {
   let sidebarBackgroundColor = useColorModeValue("white", "navy.800");
   let menuColor = useColorModeValue("gray.400", "white");
-  // // SIDEBAR
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
 
@@ -128,7 +99,6 @@ export function FeaturedProductsSidebarResponsive() {
     </Flex>
   );
 }
-// PROPS
 
 FeaturedProductsSidebar.propTypes = {
   logoText: PropTypes.string,

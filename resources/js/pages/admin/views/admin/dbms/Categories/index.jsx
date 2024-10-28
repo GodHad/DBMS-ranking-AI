@@ -187,7 +187,7 @@ export default function ColumnTable(props) {
     ];
     const [data, setData] = React.useState([]);
     const table = useReactTable({
-        data,
+        data: data || [],
         columns,
         state: {
             sorting,
