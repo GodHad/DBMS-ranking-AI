@@ -8,6 +8,8 @@ import routes from '../routes';
 import FeaturedProductsSidebar from '../../../components/featuredProductSidebar/Sidebar';
 import { FeaturedProductSidebarContext } from '../../../contexts/FeaturedProductsContext';
 import BlogPage from '../views/blogs/BlogPage';
+import Page404 from '../../../components/404';
+
 import { getFeaturedProducts } from '../../../components/featuredProductSidebar/requests/use-request';
 import { useQuery } from 'react-query';
 
@@ -146,6 +148,7 @@ export default function Dashboard(props) {
                   path="/"
                   element={<Navigate to="/home" replace />}
                 />
+                <Route path='/*' element={<Page404 />} />
               </Routes>
             </Box>
             <FeaturedProductsSidebar display="none" {...rest} />

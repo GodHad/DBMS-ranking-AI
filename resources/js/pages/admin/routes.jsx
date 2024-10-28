@@ -58,13 +58,6 @@ const routes = [
     icon: <Icon as={MdStorage} width={"20px"} height={"20px"} color="inherit" />,
     component: <DBMS />
   },
-  // {
-  //   name: 'Chart',
-  //   layout: '/admin',
-  //   path: '/default',
-  //   icon: <Icon as={MdAutoGraph} width={"20px"} height={"20px"} color="inherit" />,
-  //   component: <RankChart />
-  // },
   {
     name: 'Encyclopedias',
     layout: '/admin',
@@ -93,35 +86,6 @@ const routes = [
     icon: <Icon as={MdFavorite} width="20px" height="20px" color="inherit" />,
     component: <FeaturedProduct />
   },
-  // {
-  //   name: 'NFT Marketplace',
-  //   layout: '/admin',
-  //   path: '/nft-marketplace',
-  //   icon: (
-  //     <Icon
-  //       as={MdOutlineShoppingCart}
-  //       width="20px"
-  //       height="20px"
-  //       color="inherit"
-  //     />
-  //   ),
-  //   component: <NFTMarketplace />,
-  //   secondary: true,
-  // },
-  // {
-  //   name: 'Data Tables',
-  //   layout: '/admin',
-  //   icon: <Icon as={MdBarChart} width="20px" height="20px" color="inherit" />,
-  //   path: '/data-tables',
-  //   component: <DataTables />,
-  // },
-  // {
-  //   name: 'Profile',
-  //   layout: '/admin',
-  //   path: '/profile',
-  //   icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-  //   component: <Profile />,
-  // },
   {
     name: 'Sign In',
     layout: '/auth',

@@ -9,10 +9,12 @@ use Illuminate\Support\Facades\Storage;
 
 class SponsorController extends Controller
 {
-    public function sponsors()
+    public function sponsors(Request $request)
     {
         try {
-            $sponsors = Sponsor::all();
+            $featured = $request->query('featured');
+            if ($featured) $sponsors = Sponsor::where('featured', 1)->get();
+            else $sponsors = Sponsor::all();
             return response()->json(['success' => true, 'sponsors' => $sponsors]);
         } catch (\Exception $th) {
             return response()->json(['success' => false, 'error' => $th->getMessage()], 500);

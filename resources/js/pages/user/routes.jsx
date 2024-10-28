@@ -4,12 +4,7 @@ import Home from './views/home';
 import DBMSRanking from './views/dbms';
 import Encyclopedia from './views/encyclopedia';
 import Blogs from './views/blogs';
-// import NFTMarketplace from './views/admin/marketplace';
-// import Profile from './views/admin/profile';
-// import DataTables from './views/admin/dataTables';
-// Auth Imports
-import SignInCentered from '../admin/views/auth/signIn';
-import SignUpCentered from '../admin/views/auth/signup';
+import Sponsor from './views/sponsor';
 
 const routes = [
     {
@@ -33,13 +28,10 @@ const routes = [
         component: <Blogs />
     },
     {
-        name: 'Sponsor',
-        path: '/sponsor',
-        component: <>Sponsor</>
+        name: 'Sponsors',
+        path: '/sponsors',
+        component: <Sponsor />
     },
-    {
-        name: ''
-    }
     // {
     //   name: 'Data Tables',
     //   layout: '/admin',

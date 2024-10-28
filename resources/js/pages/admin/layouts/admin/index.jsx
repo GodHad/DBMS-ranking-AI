@@ -9,6 +9,7 @@ import { Navigate, Route, Routes, Outlet, useLocation, useNavigate } from 'react
 import routes from '../../routes';
 import Header from '../../../user/layouts/Header';
 import { UserContext } from '../../../../contexts/UserContext';
+import Page404 from '../../../../components/404';
 
 // Custom Chakra theme
 export default function Dashboard(props) {
@@ -162,6 +163,7 @@ export default function Dashboard(props) {
                     path="/"
                     element={<Navigate to="/admin/default" replace />}
                   />
+                  <Route path='/*' element={<Box display={'flex'} justifyContent={'center'} alignItems={'center'} h={'100vh'}><Page404 /></Box>} />
                 </Routes>
               </Box>
             ) : null}

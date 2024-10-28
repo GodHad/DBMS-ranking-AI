@@ -9,6 +9,7 @@ import {
 } from '@chakra-ui/react'
 import { FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa'
 import Logo from '../../../../components/navbar/components/Logo'
+import { Link } from 'react-router-dom'
 
 const SocialButton = ({
   children,
@@ -49,18 +50,18 @@ export default function Footer() {
         align={'center'}>
         <Logo />
         <Stack direction={'row'} spacing={6}>
-          <Box as="a" href={'#'}>
+          <Link to={'/'}>
             Home
-          </Box>
-          <Box as="a" href={'#'}>
+          </Link>
+          <Link to={'/aboutus'}>
             About us
-          </Box>
-          <Box as="a" href={'#'}>
+          </Link>
+          <Link to={'/blog'}>
             Blog
-          </Box>
-          <Box as="a" href={'#'}>
+          </Link>
+          <Link to={'/contactus'}>
             Contact us
-          </Box>
+          </Link>
         </Stack>
       </Container>
 

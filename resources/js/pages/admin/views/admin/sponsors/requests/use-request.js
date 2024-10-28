@@ -1,7 +1,7 @@
 import axios from "../../../../../../variables/axiosConfig";
 
-const getSponsors = async () => {
-    const { data } = await axios.get('/api/get-sponsors');
+const getSponsors = async (featured) => {
+    const { data } = await axios.get(`/api/get-sponsors?featured=${featured}`);
     return data.sponsors;
 }
 
