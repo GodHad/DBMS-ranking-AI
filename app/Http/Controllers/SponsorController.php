@@ -129,6 +129,8 @@ class SponsorController extends Controller
                 return response()->json(['success' => false, 'error' => 'Sponsor not found'], 404);
             }
 
+            Storage::disk('public')->delete($sponsor->banner);
+            Storage::disk('public')->delete($sponsor->logo_url);
             $sponsor->delete();
             return response()->json(['success' => true]);
         } catch (\Exception $th) {

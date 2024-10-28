@@ -81,7 +81,8 @@ class BannerController extends Controller
 
         if (!$banner)
             return response()->json(['success' => false, 'errors' => [ 'Banner is not found']], 422);
-
+        
+        Storage::disk('public')->delete($banner->url);
         $banner->delete();
         return response()->json(['id' => $banner->id]);
     }

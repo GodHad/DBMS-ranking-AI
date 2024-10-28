@@ -217,6 +217,12 @@ class BlogController extends Controller
 
         if (!$blog)
             return response()->json(['success' => false, 'errors' => [ 'Blog is not found']], 422);
+        
+        Storage::disk('public')->delete($blog->twitter_graph_image);
+        Storage::disk('public')->delete($blog->og_graph_image);
+        
+        $urls = FeaturedImage::where('blog_id', $id)->pluck('url')->toArray();
+        Storage::disk('public')->delete($urls);
 
         $blog->delete();
         return response()->json(['success' => true]);
