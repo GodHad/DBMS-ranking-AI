@@ -49,7 +49,7 @@ export default () => {
       <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
         <Text
           color={textColor}
-          fontSize="22px"
+          fontSize={{md: "22px", sm: '20px'}}
           mb="4px"
           fontWeight="700"
           lineHeight="100%"
@@ -88,7 +88,7 @@ export default () => {
                     <Heading
                       as="h2"
                       pb={3}
-                      size="md"
+                      fontSize={{md: '18px', base: '16px'}}
                       fontWeight="semibold"
                       color="gray.800"
                       _dark={{ color: "gray.200" }}
@@ -101,7 +101,7 @@ export default () => {
                     <Flex direction={"column"} justify="space-between" mb={4} gap={2}>
                       <Flex align="center" color="gray.500" _dark={{ color: "gray.400" }}>
                         {/* <Avatar name={`${blog.user.name} ${blog.user.surname ? blog.user.surname : ''}`} size="sm" /> */}
-                        <Text>{`By ${blog.user.name} ${blog.user.surname ? blog.user.surname : ''} on ${moment(blog.created_at).format('MMM D, YYYY')}`}</Text>
+                        <Text fontSize={{md: '16px', base: '14px'}}>{`By ${blog.user.name} ${blog.user.surname ? blog.user.surname : ''} on ${moment(blog.created_at).format('MMM D, YYYY')}`}</Text>
                       </Flex>
                       <Flex
                         display={"flex"}
@@ -120,7 +120,7 @@ export default () => {
                     <Flex justify="space-between" fontWeight="medium" color="blue.400" _dark={{ color: "green.200" }}>
                       <Link to={`/blog/${blog.id}/${generateSlug(blog.title)}`}>
                         <Flex align="center">
-                          <Text>Read article</Text>
+                          <Text fontSize={{md: '16px', base: '14px'}}>Read article</Text>
                           <ArrowRightIcon w={4} h={4} mx={2} />
                         </Flex>
                       </Link>

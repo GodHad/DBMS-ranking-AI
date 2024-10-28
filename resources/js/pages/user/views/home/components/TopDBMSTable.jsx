@@ -130,7 +130,7 @@ export default function Vendor() {
       <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
         <Text
           color={textColor}
-          fontSize="22px"
+          fontSize={{md: "22px", base: '20px'}}
           mb="4px"
           fontWeight="700"
           lineHeight="100%"
@@ -139,7 +139,7 @@ export default function Vendor() {
         </Text>
       </Flex>
 
-      <Box>
+      <Box overflowX={'auto'}>
         <Table variant="simple" color="gray.500" mb="24px" mt="12px">
           <Thead>
             {table.getHeaderGroups().map((headerGroup) => (

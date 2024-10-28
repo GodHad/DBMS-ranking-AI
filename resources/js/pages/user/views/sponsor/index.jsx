@@ -21,9 +21,8 @@ const SponsorPage = () => {
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     let secondaryText = useColorModeValue('gray.700', 'white');
     const columnCount = useBreakpointValue({
-        base: 4,
         xs: 1,
-        sm: 2,
+        sm: 1,
         md: 2,
         lg: 3,
         xl: 4,

@@ -72,7 +72,7 @@ export default function Navbar(props) {
   return (
     <>
       <Box bg={navbarBg} px={4} my={"10px"}>
-        <Flex w="100%" alignItems={'center'} justifyContent={'space-between'}>
+        <Flex w="100%" display={'flex'} flexDir={{ base: 'column', sm: 'column', md: 'row' }}  alignItems={'center'} justifyContent={'space-between'}>
           <Logo />
           <Box position={'relative'} height={'90px'} width={{ base: '90%', lg: '80%' }} overflow={'hidden'}>
             <link
@@ -88,9 +88,8 @@ export default function Navbar(props) {
             {topBanners &&
               <Slider {...settings} ref={(slider) => setSlider(slider)}>
                 {topBanners.map((image, index) => (
-                  <a href={image.link} target='_blank'>
+                  <a href={image.link} target='_blank' key={image.id + image.url}>
                     <Image
-                      key={image.id + image.url}
                       mb={5}
                       h="90px"
                       maxW="100%"

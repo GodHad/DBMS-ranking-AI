@@ -374,7 +374,7 @@ export default function Vendor() {
                             </Link>
                         </BreadcrumbItem>
                     </Breadcrumb>
-                    <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
+                    <Flex px="25px" mb="8px" gap={4} flexDir={{base: 'column', md: 'row'}} justifyContent="space-between" align={{base: 'inherit', md: "center"}}>
                         <Text
                             color={textColor}
                             fontSize="22px"
@@ -384,7 +384,7 @@ export default function Vendor() {
                         >
                             DBMS Ranking {options && ('for ' + options[showingCategory].label)}
                         </Text>
-                        <Box display={"flex"} gap={2} alignItems={"center"}>
+                        <Box display={"flex"} gap={2} alignItems={"center"} justifyContent={{base: 'right', md: 'inherit'}}>
                             <Select
                                 options={countryOptions}
                                 value={country}

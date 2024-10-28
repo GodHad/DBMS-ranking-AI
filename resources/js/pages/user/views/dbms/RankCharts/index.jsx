@@ -5,6 +5,7 @@ import {
     Text,
     Stack,
     useColorModeValue,
+    useBreakpointValue
 } from "@chakra-ui/react";
 // Custom components
 import Card from "../../../../../components/card/Card";
@@ -27,7 +28,7 @@ const getTrendsDataAndXaxisValue = async (country) => {
 
 export default function RankChart(props) {
     const { showingCategory, country } = props;
-
+    const legendPosition = useBreakpointValue({ base: 'bottom', md: 'right' });
     const [loading, setLoading] = useState(true);
     const textColorSecondary = useColorModeValue("secondaryGray.600", "white");
 
@@ -46,7 +47,7 @@ export default function RankChart(props) {
         },
         legend: {
             showing: true,
-            position: 'right',
+            position: legendPosition,
             labels: {
                 colors: "#A3AED0",
                 fontSize: "12px",
@@ -151,7 +152,7 @@ export default function RankChart(props) {
                                 <Skeleton height={"300px"} borderRadius={"12px"} />
                             </Stack>
                         )
-                    }
+                        }
                     </Box>
                 </Flex>
             </Card>

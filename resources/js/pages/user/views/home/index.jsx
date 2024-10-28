@@ -37,7 +37,7 @@ export default function UserReports() {
           <Flex px="25px" mb="8px" flexDirection={"column"} justifyContent="space-between">
             <Text
               color={textColor}
-              fontSize="40px"
+              fontSize={{md: "40px", base: '34px'}}
               fontWeight="800"
               lineHeight="48px"
               mb={'10px'}
@@ -49,7 +49,7 @@ export default function UserReports() {
             <Text
               color={textColor}
               mt={5}
-              fontSize="18px"
+              fontSize={{md: "18px", base: '16px'}}
               fontWeight="500"
               lineHeight="200%"
             >
@@ -58,7 +58,7 @@ export default function UserReports() {
             <Text
               color={textColor}
               mt={2}
-              fontSize="18px"
+              fontSize={{md: "18px", base: '16px'}}
               fontWeight="500"
               lineHeight="200%"
             >
