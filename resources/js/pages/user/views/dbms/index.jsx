@@ -48,7 +48,7 @@ export default function Vendor() {
             staleTime: 300000,
             enabled: data.length === 0,
             onSuccess: (data) => {
-                setVendors(data)
+                setData(data)
             }
         }
     );
@@ -107,8 +107,8 @@ export default function Vendor() {
                     {columns ? columns.map((items, index) => (
                         <Box key={index} mb={4}>
                             {items.map((item) => (
-                                <Link to={`/dbms/${generateSlug(item.db_name)}`}>
-                                    <Text key={item.db_name} color={textColor} cursor={"pointer"} mb="5px" _hover={{ color: "blue.500" }}>
+                                <Link to={`/dbms/${generateSlug(item.db_name)}`} key={item.db_name}>
+                                    <Text color={textColor} cursor={"pointer"} mb="5px" _hover={{ color: "blue.500" }}>
                                         {item.db_name}
                                     </Text>
                                 </Link>
