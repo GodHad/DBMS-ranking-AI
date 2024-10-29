@@ -1,6 +1,5 @@
 import React from "react";
 
-// chakra imports
 import {
   Box,
   Flex,
@@ -19,12 +18,6 @@ import {
   Button
 } from "@chakra-ui/react";
 import Content from "./components/Content";
-import {
-  renderThumb,
-  renderTrack,
-  renderView,
-} from "../../../../../components/scrollbar/Scrollbar";
-import { Scrollbars } from "react-custom-scrollbars-2";
 import PropTypes from "prop-types";
 
 // Assets

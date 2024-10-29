@@ -261,7 +261,7 @@ export default function VendorForm({ vendor, categories, setOpenedPage }) {
                 <CustomInput title="DBaaS offerings" name="dbaas_offerings" value={form.dbaas_offerings} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 <CustomInput title="Implementation Language" name="implementation_lang" value={form.implementation_lang} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 <CustomInput title="Server Operating System" name="server_os" value={form.server_os} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                <CustomSelect title="Data Scheme" name="data_scheme" value={form.data_scheme} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                <CustomInput title="Data Scheme" name="data_scheme" value={form.data_scheme} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 <CustomSelect title="Typing" name="typing" value={form.typing} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 <CustomSelect title="XML Support" name="xml_support" value={form.xml_support} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 <CustomSelect title="Secondary Indexes" name="secondary_indexes" value={form.secondary_indexes} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
@@ -272,10 +272,10 @@ export default function VendorForm({ vendor, categories, setOpenedPage }) {
                 <CustomSelect title="Triggers" name="triggers" value={form.triggers} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 <CustomInput title="Partitioning Methods" name="partitioning_methods" value={form.partitioning_methods} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 <CustomInput title="Replication Methods" name="replication_methods" value={form.replication_methods} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                <CustomSelect title="MapReduce" name="mapreduce" value={form.mapreduce} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                <CustomInput title="MapReduce" name="mapreduce" value={form.mapreduce} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 <CustomInput title="Consistency Concepts" name="consistency_concepts" value={form.consistency_concepts} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 <CustomSelect title="Foreign Keys" name="foreign_keys" value={form.foreign_keys} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                <CustomSelect title="Transaction Concepts" name="trasaction_concepts" value={form.trasaction_concepts} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                <CustomInput title="Transaction Concepts" name="trasaction_concepts" value={form.trasaction_concepts} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 <CustomSelect title="Concurrency" name="concurrency" value={form.concurrency} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 <CustomSelect title="Durability" name="durability" value={form.durability} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 <CustomSelect title="In Memory Capabilities" name="in_memory_capabilities" value={form.in_memory_capabilities} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />

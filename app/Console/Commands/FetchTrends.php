@@ -8,6 +8,7 @@ use App\Models\PrimaryCategoryVendor;
 use App\Models\CountryTrend;
 use App\Models\Trend;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class FetchTrends extends Command
 {
@@ -147,37 +148,76 @@ class FetchTrends extends Command
     {
         Log::info('Start to re-ranking');
         $latestDate = Trend::max('date');
-        $latestTrends = Trend::where('date', $latestDate)->orderBy('score', 'desc')->get();
+        $latestMonthStart = Carbon::parse($latestDate)->startOfMonth();
+        $latestMonthEnd = Carbon::parse($latestDate)->endOfMonth();
+
+        $latestMonthTrends = Trend::whereBetween('date', [$latestMonthStart, $latestMonthEnd])->get();
+
+        $vendorScores = [];
+
+        foreach ($latestMonthTrends as $trend) {
+            $vendorId = $trend->vendor_id;
+            
+            if (!isset($vendorScores[$vendorId])) {
+                $vendorScores[$vendorId] = [
+                    'totalScore' => 0,
+                    'count' => 0
+                ];
+            }
+
+            $vendorScores[$vendorId]['totalScore'] += $trend->score;
+            $vendorScores[$vendorId]['count']++;
+        }
+
+        $averageScores = [];
+        foreach ($vendorScores as $vendorId => $data) {
+            $averageScores[$vendorId] = $data['totalScore'] / $data['count'];
+        }
+
+        arsort($averageScores);
 
         $rank = 1;
-        foreach ($latestTrends as $trend) {
-            $vendor = Vendor::with('primaryCategory')->find($trend->vendor_id);
-            $vendor->overall_ranking = $rank++;
-            $vendor->primary_ranking = '';
-            $vendor->save();
+        foreach ($averageScores as $vendorId => $averageScore) {
+            $vendor = Vendor::with('primaryCategory')->find($vendorId);
+            if ($vendor) {
+                $vendor->overall_ranking = $rank++;
+                $vendor->primary_ranking = ''; 
+                $vendor->save();
+            }
         }
 
         Log::info('Update overall ranking');
-        $vendors = Vendor::all();
+        $categoryRankings = [];
+
+        $vendors = Vendor::with('primaryCategory')->get();
+
+        $categoryRankings = [];
+
         foreach ($vendors as $vendor) {
-            $primaryCategoryIds = $vendor->primaryCategory ? $vendor->primaryCategory->pluck('category_id')->toArray() : [];
-            $vendor->primary_ranking = '';
+            foreach ($vendor->primaryCategory as $category) {
+                $categoryId = $category->id;
 
-            foreach ($primaryCategoryIds as $category_id) {
-                $sameCategoryVendors = Vendor::whereHas('primaryCategory', function ($query) use ($category_id) {
-                    $query->where('categories.id', $category_id);
-                })->orderBy('overall_ranking', 'asc')->get();
-                // $sameCategoryVendors = Vendor::where('primary_category', 'like', '%' . $category_id . '%')->orderBy('overall_ranking', 'asc')->get();
-
-                foreach ($sameCategoryVendors as $index => $sameVendor) {
-                    if ($sameVendor->id === $vendor->id) {
-                        $vendor->primary_ranking .= ($index + 1) . ' ';
-                    }
+                if (!isset($categoryRankings[$categoryId])) {
+                    $categoryRankings[$categoryId] = [];
                 }
+
+                $categoryRankings[$categoryId][] = $vendor;
             }
-            $vendor->primary_ranking = trim($vendor->primary_ranking);
+        }
+
+        foreach ($categoryRankings as $categoryId => $vendorsInCategory) {
+            usort($vendorsInCategory, fn($a, $b) => $a->overall_ranking <=> $b->overall_ranking);
+
+            foreach ($vendorsInCategory as $index => $vendor) {
+                $currentRanking = $vendor->primary_ranking ?? '';
+                $vendor->primary_ranking = trim($currentRanking . ' ' . ($index + 1));
+            }
+        }
+
+        foreach ($vendors as $vendor) {
             $vendor->save();
         }
+
         Log::info('Finish re-ranking');
     }
 }

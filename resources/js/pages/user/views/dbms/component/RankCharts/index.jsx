@@ -8,12 +8,12 @@ import {
     useBreakpointValue
 } from "@chakra-ui/react";
 // Custom components
-import Card from "../../../../../components/card/Card";
-import LineChart from "../../../../../components/charts/LineChart";
+import Card from "../../../../../../components/card/Card";
+import LineChart from "../../../../../../components/charts/LineChart";
 import React, { useEffect, useState } from "react";
 import { MdOutlineCalendarToday } from "react-icons/md";
 
-import axios from "../../../../../variables/axiosConfig";
+import axios from "../../../../../../variables/axiosConfig";
 import { useQuery } from "react-query";
 import {
     Skeleton,
