@@ -72,9 +72,11 @@ export default function Navbar(props) {
   return (
     <>
       <Box bg={navbarBg} px={4} my={"10px"}>
-        <Flex w="100%" display={'flex'} flexDir={{ base: 'column', sm: 'column', md: 'row' }}  alignItems={'center'} justifyContent={'space-between'}>
-          <Logo />
-          <Box position={'relative'} height={'90px'} width={{ base: '90%', lg: '80%' }} overflow={'hidden'}>
+        <Flex w="100%" display={'flex'} flexDir={{ base: 'column', sm: 'column', lg: 'row' }} alignItems={'center'} justifyContent={'center'}>
+          <Box position={{base: 'block', lg: 'absolute'}} left={'4'}>
+            <Logo />
+          </Box>
+          <Box position={'relative'} height={'90px'} maxW={'728px'} width={{ base: '90%', lg: '80%' }} overflow={'hidden'}>
             <link
               rel="stylesheet"
               type="text/css"
@@ -105,7 +107,6 @@ export default function Navbar(props) {
               </Slider>
             }
           </Box>
-          <Box></Box>
         </Flex>
 
       </Box>

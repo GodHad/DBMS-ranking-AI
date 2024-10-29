@@ -95,7 +95,7 @@ export default function UserReports() {
         <TopDBMSTable />
       </SimpleGrid>
       <RecentBlogs />
-      {bottomBanners.map((image, index) => (
+      {/* {bottomBanners.map((image, index) => (
         <a href={image.link} target='_blank' style={{display: 'flex', justifyContent: 'center'}}>
           <Image
             key={image.id + image.url}
@@ -110,7 +110,7 @@ export default function UserReports() {
             alt={image.url}
           />
         </a>
-      ))}
+      ))} */}
     </Box >
   );
 }
