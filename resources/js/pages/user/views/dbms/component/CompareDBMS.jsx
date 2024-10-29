@@ -87,7 +87,7 @@ export default function CompareDBMS(props) {
 
   const handleSelectChange = (value) => {
     console.log(value.length)
-    if (value.length === 0 && value.length > 5) return;
+    if (value.length < 1 && value.length > 5) return;
     setSelectedOptions(value);
     setSelectedDBMS(value.map(option => vendors.find(vendor => vendor.id === option.value)))
   }

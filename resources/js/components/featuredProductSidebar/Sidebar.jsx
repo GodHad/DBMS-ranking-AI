@@ -38,7 +38,7 @@ function FeaturedProductsSidebar(props) {
   let sidebarMargins = "0px";
 
   return (
-    <Box display={{ lg: "block", base: 'none' }} w="100%" position={"absolute"} top={`${250}px`} minH='100%'>
+    <Box display={{ lg: "block", base: 'none' }} w="100%" position={"absolute"} top={`${278}px`} minH='100%'>
       <Card
         transition={variantChange}
         w='300px'
