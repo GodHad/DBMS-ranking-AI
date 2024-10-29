@@ -16,8 +16,6 @@ class Vendor extends Model
     protected $fillable = [
         'company_name',
         'description',
-        'primary_category',
-        'secondary_category',
         'website_url',
         'technical_doc',
         'developer',
@@ -53,11 +51,25 @@ class Vendor extends Model
 
     public function primaryCategory()
     {
-        return $this->belongsToMany(Category::class, 'primary_category_vendor', 'vendor_id', 'category_id');
+        return $this->hasManyThrough(
+            Category::class,           // Target model
+            PrimaryCategoryVendor::class, // Intermediate/pivot model
+            'vendor_id',              // Foreign key on the pivot table (PrimaryCategoryVendor)
+            'id',                     // Foreign key on the Category table
+            'id',                     // Local key on the Vendor table
+            'category_id'             // Local key on the PrimaryCategoryVendor table
+        );
     }
 
     public function secondaryCategory()
     {
-        return $this->belongsToMany(Category::class, 'secondary_category_vendor', 'vendor_id', 'category_id');
+        return $this->hasManyThrough(
+            Category::class,           // Target model
+            SecondaryCategoryVendor::class, // Intermediate/pivot model
+            'vendor_id',              // Foreign key on the pivot table (PrimaryCategoryVendor)
+            'id',                     // Foreign key on the Category table
+            'id',                     // Local key on the Vendor table
+            'category_id'             // Local key on the PrimaryCategoryVendor table
+        );
     }
 }

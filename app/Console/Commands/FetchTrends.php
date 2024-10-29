@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\Vendor;
+use App\Models\PrimaryCategoryVendor;
 use App\Models\CountryTrend;
 use App\Models\Trend;
 use Illuminate\Support\Facades\Log;
@@ -38,6 +39,8 @@ class FetchTrends extends Command
             
             foreach ($keywords as $id => $keyword) {
                 $command = '/var/www/fetching_data.sh' . " " . escapeshellarg($keyword);
+                // $command = escapeshellcmd($exePath) . " " . escapeshellarg($keyword);
+                
                 Log::info('Running command for keyword: ' . $command);
 
                 $output = [];
@@ -55,6 +58,7 @@ class FetchTrends extends Command
         } else {
             $keyword = $this->argument('keywords');
             $command = '/var/www/fetching_data.sh' . " " . escapeshellarg($keyword);
+            // $command = escapeshellcmd($exePath) . " " . escapeshellarg($keyword);
             
             Log::info('Running command for single keyword: ' . $command);
             $output = [];
@@ -75,6 +79,8 @@ class FetchTrends extends Command
     {
         $country_score_file = '/var/www/trends_data_by_country_weekly.csv';
         $score_file = '/var/www/trends_data.csv';
+        // $country_score_file = 'trends_data_by_country_weekly.csv';
+        // $score_file = 'trends_data.csv';
 
         // Process country trends
         if (file_exists($country_score_file)) {
@@ -145,7 +151,7 @@ class FetchTrends extends Command
 
         $rank = 1;
         foreach ($latestTrends as $trend) {
-            $vendor = Vendor::find($trend->vendor_id);
+            $vendor = Vendor::with('primaryCategory')->find($trend->vendor_id);
             $vendor->overall_ranking = $rank++;
             $vendor->primary_ranking = '';
             $vendor->save();
@@ -154,11 +160,14 @@ class FetchTrends extends Command
         Log::info('Update overall ranking');
         $vendors = Vendor::all();
         foreach ($vendors as $vendor) {
-            $primaryCategoryIds = explode(',', $vendor->primary_category);
+            $primaryCategoryIds = $vendor->primaryCategory ? $vendor->primaryCategory->pluck('category_id')->toArray() : [];
             $vendor->primary_ranking = '';
 
             foreach ($primaryCategoryIds as $category_id) {
-                $sameCategoryVendors = Vendor::where('primary_category', 'like', '%' . $category_id . '%')->orderBy('overall_ranking', 'asc')->get();
+                $sameCategoryVendors = Vendor::whereHas('primaryCategory', function ($query) use ($category_id) {
+                    $query->where('categories.id', $category_id);
+                })->orderBy('overall_ranking', 'asc')->get();
+                // $sameCategoryVendors = Vendor::where('primary_category', 'like', '%' . $category_id . '%')->orderBy('overall_ranking', 'asc')->get();
 
                 foreach ($sameCategoryVendors as $index => $sameVendor) {
                     if ($sameVendor->id === $vendor->id) {

@@ -69,8 +69,8 @@ export default function VendorForm({ vendor, categories, setOpenedPage }) {
         id,
         company_name,
         description,
-        primary_category,
-        secondary_category,
+        primary_category: primary_category.map(category => category.id),
+        secondary_category: secondary_category.map(category => category.id),
         contact_info,
         website_url,
         technical_doc,
@@ -109,8 +109,8 @@ export default function VendorForm({ vendor, categories, setOpenedPage }) {
             id,
             company_name,
             description,
-            primary_category,
-            secondary_category,
+            primary_category: primary_category.map(category => category.id),
+            secondary_category: secondary_category.map(category => category.id),
             contact_info,
             website_url,
             technical_doc,
@@ -202,8 +202,8 @@ export default function VendorForm({ vendor, categories, setOpenedPage }) {
     })
 
     const handleVendor = () => {
-        if (!form.id) createVendorMutation.mutate({ vendor: { ...form, primary_category: form.primary_category.join(','), secondary_category: form.secondary_category.join(',') } })
-        else updateVendorMutation.mutate({ vendor: { ...form, primary_category: form.primary_category.join(','), secondary_category: form.secondary_category.join(',') } });
+        if (!form.id) createVendorMutation.mutate({ vendor: form })
+        else updateVendorMutation.mutate({ vendor: form });
     }
 
     const handleChangeForm = (e) => {
@@ -211,6 +211,7 @@ export default function VendorForm({ vendor, categories, setOpenedPage }) {
     }
 
     const handleChangeMultiSelect = (name, value) => {
+        console.log(name, value)
         setForm({ ...form, [name]: value })
     }
 

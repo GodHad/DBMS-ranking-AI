@@ -7,6 +7,9 @@ use App\Models\User;
 use App\Models\Trend;
 use App\Models\Category;
 use App\Models\CountryTrend;
+use App\Models\PrimaryCategoryVendor;
+use App\Models\SecondaryCategoryVendor;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -98,7 +101,7 @@ class VendorController extends Controller
                 }
             }
 
-            return response()->json(['success' => true, 'vendors' => $vendors->sortBy('overall_ranking')->values(), 'country' => $country || trim($country) === '', 'data' => $currentMonthTrends]);
+            return response()->json(['success' => true, 'vendors' => $vendors->sortBy('overall_ranking')->values()]);
         } catch (\Exception $th) {
             return response()->json(['success' => false, 'error' => $th->getMessage()], 500);
         }
@@ -123,36 +126,37 @@ class VendorController extends Controller
             $validator = Validator::make($data, [
                 'company_name' => ['required', 'string', 'max:255'],
                 'description' => ['required', 'string'],
-                'primary_category' => ['required', 'string'],
-                'secondary_category' => ['sometimes'],
-                'website_url' => ['sometimes'],
-                'technical_doc' => ['sometimes'],
-                'developer' => ['sometimes'],
-                'initial_release' => ['sometimes'],
-                'current_release' => ['sometimes'],
-                'license' => ['sometimes'],
-                'cloud_based_only' => ['sometimes'],
-                'dbaas_offerings' => ['sometimes'],
-                'implementation_lang' => ['sometimes'],
-                'server_os' => ['sometimes'],
-                'data_scheme' => ['sometimes'],
-                'typing' => ['sometimes'],
-                'xml_support' => ['sometimes'],
-                'secondary_indexes' => ['sometimes'],
-                'sql' => ['sometimes'],
-                'apis_access_method' => ['sometimes'],
-                'supported_programming_lang' => ['sometimes'],
-                'server_side_scripts' => ['sometimes'],
-                'triggers' => ['sometimes'],
-                'partitioning_methods' => ['sometimes'],
-                'replication_methods' => ['sometimes'],
-                'mapreduce' => ['sometimes'],
-                'consistency_concepts' => ['sometimes'],
-                'foreign_keys' => ['sometimes'],
-                'concurrency' => ['sometimes'],
-                'durability' => ['sometimes'],
-                'in_memory_capabilities' => ['sometimes'],
-                'user_concepts' => ['sometimes'],
+                'primary_category' => ['required', 'array'],
+                'primary_category.*' => ['integer'],
+                'secondary_category' => ['nullable'],
+                'website_url' => ['nullable'],
+                'technical_doc' => ['nullable'],
+                'developer' => ['nullable'],
+                'initial_release' => ['nullable'],
+                'current_release' => ['nullable'],
+                'license' => ['nullable'],
+                'cloud_based_only' => ['nullable'],
+                'dbaas_offerings' => ['nullable'],
+                'implementation_lang' => ['nullable'],
+                'server_os' => ['nullable'],
+                'data_scheme' => ['nullable'],
+                'typing' => ['nullable'],
+                'xml_support' => ['nullable'],
+                'secondary_indexes' => ['nullable'],
+                'sql' => ['nullable'],
+                'apis_access_method' => ['nullable'],
+                'supported_programming_lang' => ['nullable'],
+                'server_side_scripts' => ['nullable'],
+                'triggers' => ['nullable'],
+                'partitioning_methods' => ['nullable'],
+                'replication_methods' => ['nullable'],
+                'mapreduce' => ['nullable'],
+                'consistency_concepts' => ['nullable'],
+                'foreign_keys' => ['nullable'],
+                'concurrency' => ['nullable'],
+                'durability' => ['nullable'],
+                'in_memory_capabilities' => ['nullable'],
+                'user_concepts' => ['nullable'],
                 'db_name' => ['required'],
             ]);
 
@@ -160,8 +164,29 @@ class VendorController extends Controller
                 return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
             }
 
+            
             $vendor = Vendor::create($validator->validated());
             
+            $primary_category = $data['primary_category'];
+            $secondary_category = $data['secondary_category'];
+
+            $primaryData = array_map(function ($categoryId) use ($vendor) {
+                return [
+                    'category_id' => $categoryId,
+                    'vendor_id' => $vendor->id,
+                ];
+            }, $primary_category);
+            
+            $secondaryData = array_map(function ($categoryId) use ($vendor) {
+                return [
+                    'category_id' => $categoryId,
+                    'vendor_id' => $vendor->id,
+                ];
+            }, $secondary_category);
+            
+            PrimaryCategoryVendor::insert($primaryData);
+            SecondaryCategoryVendor::insert($secondaryData);
+
             ProcessAfterDbmsCreation::dispatch($vendor->db_name);
 
             return response()->json(['success' => true]);
@@ -182,39 +207,40 @@ class VendorController extends Controller
             }
 
             $validator = Validator::make($data, [
-                'company_name' => ['sometimes', 'max:255'],
-                'description' => ['sometimes'],
-                'primary_category' => ['sometimes'],
-                'secondary_category' => ['sometimes'],
-                'website_url' => ['sometimes'],
-                'technical_doc' => ['sometimes'],
-                'developer' => ['sometimes'],
-                'initial_release' => ['sometimes'],
-                'current_release' => ['sometimes'],
-                'license' => ['sometimes'],
-                'cloud_based_only' => ['sometimes'],
-                'dbaas_offerings' => ['sometimes'],
-                'implementation_lang' => ['sometimes'],
-                'server_os' => ['sometimes'],
-                'data_scheme' => ['sometimes'],
-                'typing' => ['sometimes'],
-                'xml_support' => ['sometimes'],
-                'secondary_indexes' => ['sometimes'],
-                'sql' => ['sometimes'],
-                'apis_access_method' => ['sometimes'],
-                'supported_programming_lang' => ['sometimes'],
-                'server_side_scripts' => ['sometimes'],
-                'triggers' => ['sometimes'],
-                'partitioning_methods' => ['sometimes'],
-                'replication_methods' => ['sometimes'],
-                'mapreduce' => ['sometimes'],
-                'consistency_concepts' => ['sometimes'],
-                'foreign_keys' => ['sometimes'],
-                'concurrency' => ['sometimes'],
-                'durability' => ['sometimes'],
-                'in_memory_capabilities' => ['sometimes'],
-                'user_concepts' => ['sometimes'],
-                'db_name' => ['sometimes'],
+                'company_name' => ['required', 'string', 'max:255'],
+                'description' => ['required', 'string'],
+                'primary_category' => ['required', 'array'],
+                'primary_category.*' => ['integer'],
+                'secondary_category' => ['nullable'],
+                'website_url' => ['nullable'],
+                'technical_doc' => ['nullable'],
+                'developer' => ['nullable'],
+                'initial_release' => ['nullable'],
+                'current_release' => ['nullable'],
+                'license' => ['nullable'],
+                'cloud_based_only' => ['nullable'],
+                'dbaas_offerings' => ['nullable'],
+                'implementation_lang' => ['nullable'],
+                'server_os' => ['nullable'],
+                'data_scheme' => ['nullable'],
+                'typing' => ['nullable'],
+                'xml_support' => ['nullable'],
+                'secondary_indexes' => ['nullable'],
+                'sql' => ['nullable'],
+                'apis_access_method' => ['nullable'],
+                'supported_programming_lang' => ['nullable'],
+                'server_side_scripts' => ['nullable'],
+                'triggers' => ['nullable'],
+                'partitioning_methods' => ['nullable'],
+                'replication_methods' => ['nullable'],
+                'mapreduce' => ['nullable'],
+                'consistency_concepts' => ['nullable'],
+                'foreign_keys' => ['nullable'],
+                'concurrency' => ['nullable'],
+                'durability' => ['nullable'],
+                'in_memory_capabilities' => ['nullable'],
+                'user_concepts' => ['nullable'],
+                'db_name' => ['required'],
             ]);
 
             if ($validator->fails()) {
@@ -230,7 +256,9 @@ class VendorController extends Controller
             }
 
             $vendor->update($validator->validated());
-
+            $vendor->overall_ranking = 1000000;
+            $vendor->primary_ranking = 1000000;
+            $vendor->save();
             if ($dbNameChanged) {
                 Trend::where('vendor_id', $vendor->id)->delete();
                 CountryTrend::where('vendor_id', $vendor->id)->delete();
