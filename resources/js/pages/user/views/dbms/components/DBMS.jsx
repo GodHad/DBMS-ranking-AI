@@ -26,8 +26,8 @@ import { useQuery } from 'react-query';
 const headers = [
     { key: 'db_name', name: 'Name' },
     { key: 'description', name: 'Description' },
-    // { key: 'primary_category', name: 'Primary Database Model' },
-    // { key: 'secondary_category', name: 'Secondary Database Models' },
+    { key: 'primary_category', name: 'Primary Database Model' },
+    { key: 'secondary_category', name: 'Secondary Database Models' },
     { key: 'overall_ranking', name: 'DB Ranking' },
     { key: 'webisite_url', name: 'Website' },
     { key: 'technical_doc', name: 'Technical Documentation' },
@@ -98,10 +98,13 @@ export default function DBMS() {
             return {
                 ...dbms,
                 overall_ranking: `
-            <span style="margin-right: 8px">Overall Avg. Score:</span> ${dbms.overall_avg_score}<br> 
-            <span style="margin-right: 8px">Rank:</span> #${dbms.overall_ranking} Overall<br>
-            ${dbms.primary_category.map((category, index) => (`<span style="margin-right: 8px; opacity: 0">Rank: </span> #${primaryRanking[index]} ${category.shortname}<br>`))}
-        `}
+                    <span style="margin-right: 8px">Overall Avg. Score:</span> ${dbms.overall_avg_score}<br> 
+                    <span style="margin-right: 8px">Rank:</span> #${dbms.overall_ranking} Overall<br>
+                    ${dbms.primary_category.map((category, index) => (`<span style="margin-right: 8px; opacity: 0">Rank: </span> #${primaryRanking[index]} ${category.shortname}<br>`))}
+                `,
+                primary_category: dbms.primary_category.map(category => category.title).join(', '),
+                secondary_category: dbms.secondary_category.map(category => category.title).join(', '),
+            }
         }))
 
     }, [selectedDBMS])

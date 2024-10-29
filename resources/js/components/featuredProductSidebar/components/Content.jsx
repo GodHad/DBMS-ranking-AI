@@ -1,14 +1,10 @@
-import { Box, Flex, Stack, HStack, Heading, Image, Text, useColorModeValue } from "@chakra-ui/react";
+import { Box, Flex, Stack, Image, Text, useColorModeValue } from "@chakra-ui/react";
 import React, { useContext } from "react";
-import { useQuery } from "react-query";
-import { getFeaturedProducts } from "../requests/use-request";
-import { Link } from "react-router-dom";
 import {
   Skeleton,
-  SkeletonCircle,
-  SkeletonText,
 } from "@chakra-ui/skeleton"
 import { FeaturedProductSidebarContext } from "../../../contexts/FeaturedProductsContext";
+import { APP_URL } from "../../../variables/statics";
 
 // FUNCTIONS
 
@@ -78,9 +74,7 @@ function FeaturedProduct({ product }) {
         overflow={'hidden'}>
         <Box bg={'navy.700'} mt={-6} mx={-6} mb={6} pos={'relative'}>
           <Image
-            src={
-              `../storage/${product.banner}`
-            }
+            src={APP_URL + `storage/${product.banner}`}
             w={"100%"}
             h={"100px"}
             alt="banner"
