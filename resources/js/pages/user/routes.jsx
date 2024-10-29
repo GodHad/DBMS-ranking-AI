@@ -1,7 +1,8 @@
 import React from 'react';
 
 import Home from './views/home';
-import DBMSRanking from './views/dbms';
+import DBMSRanking from './views/ranking';
+import DBMS from './views/dbms';
 import Encyclopedia from './views/encyclopedia';
 import Blogs from './views/blogs';
 import Sponsor from './views/sponsor';
@@ -13,9 +14,14 @@ const routes = [
         component: <Home />,
     },
     {
-      name: 'DBMS Ranking',
-      path: '/ranking',
-      component: <DBMSRanking />,
+        name: 'DBMS Ranking',
+        path: '/ranking',
+        component: <DBMSRanking />,
+    },
+    {
+        name: 'DBMS',
+        path: '/dbms',
+        component: <DBMS />,
     },
     {
         name: 'Encyclopedia',

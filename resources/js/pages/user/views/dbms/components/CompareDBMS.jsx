@@ -6,9 +6,9 @@ import {
   Td,
   Text,
   Th,
-  Thead,
   Tr,
-  Stack,
+  FormControl,
+  FormLabel,
   Breadcrumb,
   BreadcrumbItem,
   useColorModeValue,
@@ -20,6 +20,8 @@ import Card from '../../../../../components/card/Card';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { DBMSContext } from '../../../../../contexts/DBMSContext';
 import { generateSlug } from '../../../../../variables/statics';
+import { getVendors } from '../../../../admin/views/admin/dbms/dbms/requests/use-request';
+import { useQuery } from 'react-query';
 
 const headers = [
   { key: 'db_name', name: 'Name' },
@@ -61,15 +63,27 @@ const headers = [
 export default function CompareDBMS(props) {
   const navigate = useNavigate();
   const { slug } = useParams();
-  const { vendors } = useContext(DBMSContext);
+  const { vendors, setVendors } = useContext(DBMSContext);
+
+  const { data: _vendors, isLoadingVendor } = useQuery(
+    'vendors',
+    getVendors,
+    {
+      staleTime: 300000,
+      enabled: vendors.length === 0,
+      onSuccess: (data) => {
+        setVendors(data)
+      }
+    }
+  );
 
   const selectedDBMS = useMemo(() => {
     const dbmsNames = decodeURIComponent(slug).split(';');
     return vendors.filter(vendor => dbmsNames.includes(generateSlug(vendor.db_name)));
   }, [vendors, slug]);
-  
+
   useEffect(() => {
-    if (selectedDBMS.length === 0) navigate('/not-found');
+    if (selectedDBMS.length === 0 && vendors.length !== 0 && _vendors) navigate('/not-found');
   }, [selectedDBMS, navigate])
 
   const textColor = useColorModeValue('secondaryGray.900', 'white');
@@ -101,7 +115,7 @@ export default function CompareDBMS(props) {
 
   const handleSelectChange = (value) => {
     const navigateUrl = value.map((option, index) => generateSlug(option.label)).join(';');
-    navigate(`/dbms/${encodeURIComponent(navigateUrl)}`);
+    navigate(`/dbms/compare/${encodeURIComponent(navigateUrl)}`);
   }
 
   return (
@@ -126,16 +140,16 @@ export default function CompareDBMS(props) {
           </BreadcrumbItem>
 
           <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
-            <BreadcrumbLink>
+            <Link to='/dbms'>
               DBMS
-            </BreadcrumbLink>
+            </Link>
           </BreadcrumbItem>
 
-          {/* <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
-          <BreadcrumbLink>
-            Compare DBMS
-          </BreadcrumbLink>
-        </BreadcrumbItem> */}
+          <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
+            <BreadcrumbLink>
+              Compare
+            </BreadcrumbLink>
+          </BreadcrumbItem>
 
           <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
             <BreadcrumbLink>
@@ -164,20 +178,32 @@ export default function CompareDBMS(props) {
         </Flex>
         <Box display={"flex"} gap={2} alignItems={"center"} px={6} w={'full'} justifyContent={{ base: 'right', md: 'inherit' }}>
           {options &&
-            <MultiSelect
-              isMulti
-              isSearchable
-              value={selectedOptions}
-              placeholder='Select categories'
-              variant='auth'
-              fontSize='sm'
-              ms={{ base: "0px", md: "0px" }}
-              type='text'
-              fontWeight='500'
-              size='lg'
-              options={options}
-              onChange={handleSelectChange}
-            />
+            <FormControl mb={"24px"}>
+              <FormLabel
+                display='flex'
+                ms='4px'
+                fontSize='sm'
+                fontWeight='500'
+                color={textColor}
+                mb='8px'
+              >
+                Compare with: 
+              </FormLabel>
+              <MultiSelect
+                isMulti
+                isSearchable
+                value={selectedOptions}
+                placeholder='Select categories'
+                variant='auth'
+                fontSize='sm'
+                ms={{ base: "0px", md: "0px" }}
+                type='text'
+                fontWeight='500'
+                size='lg'
+                options={options}
+                onChange={handleSelectChange}
+              />
+            </FormControl>
           }
         </Box>
 

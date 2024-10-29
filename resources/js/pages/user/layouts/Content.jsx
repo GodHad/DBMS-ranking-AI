@@ -13,7 +13,8 @@ import { APP_URL } from '../../../variables/statics';
 import { getBanners } from '../../admin/views/admin/banner/requests/use-request';
 import { getFeaturedProducts } from '../../../components/featuredProductSidebar/requests/use-request';
 import { useQuery } from 'react-query';
-import CompareDBMS from '../views/dbms/component/CompareDBMS';
+import CompareDBMS from '../views/dbms/components/CompareDBMS';
+import DBMS from '../views/dbms/components/DBMS';
 import { DBMSContext } from '../../../contexts/DBMSContext';
 
 // Custom Chakra theme
@@ -157,7 +158,8 @@ export default function Dashboard(props) {
               <Routes>
                 {getRoutes(routes)}
                 <Route path="/blog/:id/:slug" element={<BlogPage />} />
-                <Route path="/dbms/:slug" element={<CompareDBMS />} />
+                <Route path="/dbms/:slug" element={<DBMS />} />
+                <Route path="/dbms/compare/:slug" element={<CompareDBMS />} />
                 <Route
                   path="/"
                   element={<Navigate to="/home" replace />}
