@@ -31,28 +31,28 @@ const headers = [
   { key: 'initial_release', name: 'Initial Release' },
   { key: 'current_release', name: 'Current Release' },
   { key: 'license', name: 'License' },
-  { key: 'cloud_based_only', name: 'Cloud-based only' },
+  { key: 'cloud_based_only', name: 'Cloud-based only', yes: true },
   { key: 'dbaas_offerings', name: 'DBaas Offerings' },
   { key: 'implementation_lang', name: 'Implementation Language' },
   { key: 'server_os', name: 'Server Operating Systems' },
   { key: 'data_scheme', name: 'Data Scheme' },
-  { key: 'typing', name: 'Typing' },
-  { key: 'xml_support', name: 'XML Support' },
-  { key: 'secondary_indexes', name: 'Secondary Indexes' },
+  { key: 'typing', name: 'Typing', yes: true },
+  { key: 'xml_support', name: 'XML Support', yes: true },
+  { key: 'secondary_indexes', name: 'Secondary Indexes', yes: true },
   { key: 'sql', name: 'SQL' },
   { key: 'apis_access_method', name: 'APIS And Other Access Methods' },
   { key: 'supported_programming_lang', name: 'Supported Programming Languages' },
   { key: 'server_side_scripts', name: 'Server-side Scripts' },
-  { key: 'triggers', name: 'Triggers' },
+  { key: 'triggers', name: 'Triggers', yes: true },
   { key: 'partitioning_methods', name: 'Partitioning Methods' },
   { key: 'replication_methods', name: 'Replication Methods' },
   { key: 'mapreduce', name: 'MapReduce' },
   { key: 'consistency_concepts', name: 'Consistency Concepts' },
-  { key: 'foreign_keys', name: 'Foreign Keys' },
+  { key: 'foreign_keys', name: 'Foreign Keys', yes: true },
   { key: 'transaction_concepts', name: 'Transcation Concepts' },
-  { key: 'concurrency', name: 'Concurrency' },
-  { key: 'durability', name: 'Durability' },
-  { key: 'in_memory_capabilities', name: 'In-memory capabilities' },
+  { key: 'concurrency', name: 'Concurrency', yes: true },
+  { key: 'durability', name: 'Durability', yes: true },
+  { key: 'in_memory_capabilities', name: 'In-memory capabilities', yes: true },
   { key: 'user_concepts', name: 'User Concepts' },
 ]
 
@@ -68,7 +68,7 @@ export default function CompareDBMS(props) {
 
   useEffect(() => {
     setData(selectedDBMS.map(dbms => {
-      const primaryRanking = dbms.primary_ranking.split(',');
+      const primaryRanking = dbms.primary_ranking.split(' ');
       return {
         ...dbms,
         overall_ranking: `
@@ -86,7 +86,6 @@ export default function CompareDBMS(props) {
   }, [vendors])
 
   const handleSelectChange = (value) => {
-    console.log(value.length)
     if (value.length < 1 && value.length > 5) return;
     setSelectedOptions(value);
     setSelectedDBMS(value.map(option => vendors.find(vendor => vendor.id === option.value)))
@@ -158,7 +157,24 @@ export default function CompareDBMS(props) {
         }
       </Box>
 
-      <Box overflowX={'auto'}>
+      <Box 
+        overflow={'auto'} 
+        maxH={'80vh'}
+        sx={{
+          '&::-webkit-scrollbar': {
+            width: '8px',
+            height: '8px',
+            backgroundColor: 'transparent', // Change to transparent or the desired color
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: borderColor, // Color for the scrollbar thumb
+            borderRadius: '20px',
+          },
+          '&::-webkit-scrollbar-track': {
+            backgroundColor: 'rgba(0, 0, 0, 0.15)', // Track color, adjust as needed
+            borderRadius: '20px',
+          },
+        }}>
         <Table variant="simple" color="gray.500" mb="24px" mt="12px" style={{ tableLayout: 'fixed' }}>
           <Tbody>
             {headers.map(header => (
@@ -182,7 +198,7 @@ export default function CompareDBMS(props) {
                       mb="4px"
                       fontWeight="500"
                       lineHeight="120%"
-                      dangerouslySetInnerHTML={{ __html: dbms[header.key] }}
+                      dangerouslySetInnerHTML={{ __html: header.yes ? dbms[header.key] ? 'Yes' : 'No' : dbms[header.key] }}
                     />
                   </Td>
                 ))}

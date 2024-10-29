@@ -96,12 +96,12 @@ export default function UserReports() {
       </SimpleGrid>
       <RecentBlogs />
       {bottomBanners.map((image, index) => (
-        <a href={image.link} target='_blank'>
+        <a href={image.link} target='_blank' style={{display: 'flex', justifyContent: 'center'}}>
           <Image
             key={image.id + image.url}
             mb={5}
             h="90px"
-            maxW="100%"
+            maxW="728px"
             w="100%"
             borderRadius="xl"
             objectFit="cover"

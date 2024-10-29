@@ -36,7 +36,6 @@ const columnHelper = createColumnHelper();
 export default function Vendor() {
   const textColor = useColorModeValue('secondaryGray.900', 'white');
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
-  const [data, setData] = useState([]);
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
@@ -107,7 +106,7 @@ export default function Vendor() {
   ];
 
   const table = useReactTable({
-    data: vendors || [],
+    data: vendors.slice(0, 5) || [],
     columns,
     state: {
       pagination
