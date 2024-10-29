@@ -11,7 +11,7 @@ import {
   Stack,
   useColorModeValue,
 } from '@chakra-ui/react';
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 
 import {
   createColumnHelper,
@@ -41,7 +41,7 @@ export default function Vendor() {
     pageSize: 10,
   })
 
-  const { data: vendors } = useQuery('vendors', getVendors, { staleTime: 300000 });
+  const { data: vendors = [] } = useQuery('vendors', getVendors, { staleTime: 300000 });
 
   const columns = [
 
@@ -105,8 +105,10 @@ export default function Vendor() {
     }),
   ];
 
+  const elements = useMemo(() => vendors.slice(0, 5), [vendors])
+
   const table = useReactTable({
-    data: vendors.slice(0, 5) || [],
+    data: elements,
     columns,
     state: {
       pagination
