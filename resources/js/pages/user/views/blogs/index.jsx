@@ -14,14 +14,7 @@ import {
 } from "@chakra-ui/skeleton";
 import Sidebar from './Sidebar/Sidebar';
 import { SidebarResponsive } from './Sidebar/Sidebar';
-
-function generateSlug(title) {
-    return title
-        .toLowerCase()                  // Convert to lowercase
-        .trim()                         // Remove whitespace from both ends
-        .replace(/[\s\W-]+/g, '-')      // Replace spaces and non-word characters with hyphens
-        .replace(/^-+|-+$/g, '');       // Remove leading and trailing hyphens
-}
+import { generateSlug } from '../../../../variables/statics';
 
 export default () => {
 

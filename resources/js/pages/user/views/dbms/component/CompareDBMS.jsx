@@ -14,10 +14,12 @@ import {
   useColorModeValue,
   BreadcrumbLink,
 } from '@chakra-ui/react';
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext, useMemo } from 'react'
 import { Select as MultiSelect } from 'chakra-react-select';
-
-import { Link } from 'react-router-dom';
+import Card from '../../../../../components/card/Card';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { DBMSContext } from '../../../../../contexts/DBMSContext';
+import { generateSlug } from '../../../../../variables/statics';
 
 const headers = [
   { key: 'db_name', name: 'Name' },
@@ -57,7 +59,19 @@ const headers = [
 ]
 
 export default function CompareDBMS(props) {
-  const { selectedDBMS, setSelectedDBMS, vendors } = props;
+  const navigate = useNavigate();
+  const { slug } = useParams();
+  const { vendors } = useContext(DBMSContext);
+
+  const selectedDBMS = useMemo(() => {
+    const dbmsNames = decodeURIComponent(slug).split(';');
+    return vendors.filter(vendor => dbmsNames.includes(generateSlug(vendor.db_name)));
+  }, [vendors, slug]);
+  
+  useEffect(() => {
+    if (selectedDBMS.length === 0) navigate('/not-found');
+  }, [selectedDBMS, navigate])
+
   const textColor = useColorModeValue('secondaryGray.900', 'white');
   const secondaryText = useColorModeValue('gray.700', 'white');
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
@@ -86,9 +100,8 @@ export default function CompareDBMS(props) {
   }, [vendors])
 
   const handleSelectChange = (value) => {
-    if (value.length < 1 && value.length > 5) return;
-    setSelectedOptions(value);
-    setSelectedDBMS(value.map(option => vendors.find(vendor => vendor.id === option.value)))
+    const navigateUrl = value.map((option, index) => generateSlug(option.label)).join(';');
+    navigate(`/dbms/${encodeURIComponent(navigateUrl)}`);
   }
 
   return (
@@ -98,115 +111,127 @@ export default function CompareDBMS(props) {
       px="0px"
       overflow={'hidden'}
     >
-      <Breadcrumb px="25px">
-        <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
-          <Link to='/'>
-            Home
-          </Link>
-        </BreadcrumbItem>
+      <Card
+        flexDirection="column"
+        w="100%"
+        px="0px"
+        minH="calc(100vh - 150px)"
+        overflowX={{ sm: 'auto', lg: 'hidden' }}
+      >
+        <Breadcrumb px="25px">
+          <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
+            <Link to='/'>
+              Home
+            </Link>
+          </BreadcrumbItem>
 
-        <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px' onClick={() => setSelectedDBMS(null)}>
-          <BreadcrumbLink>
-            DB Ranking
-          </BreadcrumbLink>
-        </BreadcrumbItem>
+          <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
+            <BreadcrumbLink>
+              DBMS
+            </BreadcrumbLink>
+          </BreadcrumbItem>
 
-        <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
+          {/* <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
           <BreadcrumbLink>
             Compare DBMS
           </BreadcrumbLink>
-        </BreadcrumbItem>
+        </BreadcrumbItem> */}
 
-        <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
-          <BreadcrumbLink>
+          <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
+            <BreadcrumbLink>
+              {
+                selectedDBMS.length === 1 ?
+                  selectedDBMS[0].db_name
+                  : selectedDBMS.map((dbms, index) => (index === selectedDBMS.length - 1) ? dbms.db_name : `${dbms.db_name} vs. `)
+              }
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+        </Breadcrumb>
+        <Flex px="25px" mb="8px" gap={4} flexDir={{ base: 'column', md: 'row' }} justifyContent="space-between" align={{ base: 'inherit', md: "center" }}>
+          <Text
+            color={textColor}
+            fontSize={{ md: "22px", base: '20px' }}
+            mb="4px"
+            fontWeight="700"
+            lineHeight="100%"
+          >
             {
               selectedDBMS.length === 1 ?
                 selectedDBMS[0].db_name
                 : selectedDBMS.map((dbms, index) => (index === selectedDBMS.length - 1) ? dbms.db_name : `${dbms.db_name} vs. `)
             }
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-      </Breadcrumb>
-      <Flex px="25px" mb="8px" gap={4} flexDir={{ base: 'column', md: 'row' }} justifyContent="space-between" align={{ base: 'inherit', md: "center" }}>
-        <Text
-          color={textColor}
-          fontSize={{ md: "22px", base: '20px' }}
-          mb="4px"
-          fontWeight="700"
-          lineHeight="100%"
-        >
-          DBMS Comparison
-        </Text>
-      </Flex>
-      <Box display={"flex"} gap={2} alignItems={"center"} px={6} w={'full'} justifyContent={{ base: 'right', md: 'inherit' }}>
-        {options &&
-          <MultiSelect
-            isMulti
-            isSearchable
-            value={selectedOptions}
-            placeholder='Select categories'
-            variant='auth'
-            fontSize='sm'
-            ms={{ base: "0px", md: "0px" }}
-            type='text'
-            fontWeight='500'
-            size='lg'
-            options={options}
-            onChange={handleSelectChange}
-          />
-        }
-      </Box>
+          </Text>
+        </Flex>
+        <Box display={"flex"} gap={2} alignItems={"center"} px={6} w={'full'} justifyContent={{ base: 'right', md: 'inherit' }}>
+          {options &&
+            <MultiSelect
+              isMulti
+              isSearchable
+              value={selectedOptions}
+              placeholder='Select categories'
+              variant='auth'
+              fontSize='sm'
+              ms={{ base: "0px", md: "0px" }}
+              type='text'
+              fontWeight='500'
+              size='lg'
+              options={options}
+              onChange={handleSelectChange}
+            />
+          }
+        </Box>
 
-      <Box 
-        overflow={'auto'} 
-        maxH={'80vh'}
-        sx={{
-          '&::-webkit-scrollbar': {
-            width: '8px',
-            height: '8px',
-            backgroundColor: 'transparent', // Change to transparent or the desired color
-          },
-          '&::-webkit-scrollbar-thumb': {
-            backgroundColor: borderColor, // Color for the scrollbar thumb
-            borderRadius: '20px',
-          },
-          '&::-webkit-scrollbar-track': {
-            backgroundColor: 'rgba(0, 0, 0, 0.15)', // Track color, adjust as needed
-            borderRadius: '20px',
-          },
-        }}>
-        <Table variant="simple" color="gray.500" mb="24px" mt="12px" style={{ tableLayout: 'fixed' }}>
-          <Tbody>
-            {headers.map(header => (
-              <Tr key={header.key}>
-                <Th
-                  pe="10px"
-                  borderColor={borderColor}
-                  width={'150px'}
-                >
-                  {header.name}
-                </Th>
-                {data && data.map(dbms => (
-                  <Td
-                    key={dbms.id}
+        <Box
+          overflow={'auto'}
+          maxH={'80vh'}
+          sx={{
+            '&::-webkit-scrollbar': {
+              width: '8px',
+              height: '8px',
+              backgroundColor: 'transparent', // Change to transparent or the desired color
+            },
+            '&::-webkit-scrollbar-thumb': {
+              backgroundColor: borderColor, // Color for the scrollbar thumb
+              borderRadius: '20px',
+            },
+            '&::-webkit-scrollbar-track': {
+              backgroundColor: 'rgba(0, 0, 0, 0.15)', // Track color, adjust as needed
+              borderRadius: '20px',
+            },
+          }}>
+          <Table variant="simple" color="gray.500" mb="24px" mt="12px" style={{ tableLayout: 'fixed' }}>
+            <Tbody>
+              {headers.map(header => (
+                <Tr key={header.key}>
+                  <Th
                     pe="10px"
                     borderColor={borderColor}
-                    width={'300px'}
+                    width={'150px'}
                   >
-                    <Text
-                      color={textColor}
-                      mb="4px"
-                      fontWeight="500"
-                      lineHeight="120%"
-                      dangerouslySetInnerHTML={{ __html: header.yes ? dbms[header.key] ? 'Yes' : 'No' : dbms[header.key] }}
-                    />
-                  </Td>
-                ))}
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </Box>
+                    {header.name}
+                  </Th>
+                  {data && data.map(dbms => (
+                    <Td
+                      key={dbms.id}
+                      pe="10px"
+                      borderColor={borderColor}
+                      width={'300px'}
+                    >
+                      <Text
+                        color={textColor}
+                        mb="4px"
+                        fontWeight="500"
+                        lineHeight="120%"
+                        dangerouslySetInnerHTML={{ __html: header.yes ? dbms[header.key] ? 'Yes' : 'No' : dbms[header.key] }}
+                      />
+                    </Td>
+                  ))}
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        </Box>
+      </Card>
     </Box>
   );
 }

@@ -18,7 +18,7 @@ import {
     useColorModeValue,
     useBreakpointValue,
 } from '@chakra-ui/react';
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useContext } from 'react'
 import { Select } from 'chakra-react-select';
 import countryList from 'react-select-country-list';
 
@@ -41,16 +41,18 @@ import {
     Skeleton,
 } from "@chakra-ui/skeleton"
 import CompareDBMS from './component/CompareDBMS';
+import { generateSlug } from '../../../../variables/statics';
+import { DBMSContext } from '../../../../contexts/DBMSContext';
 
 const columnHelper = createColumnHelper();
 
 export default function Vendor() {
-
+    const {vendors: data, setVendors: setData} = useContext(DBMSContext);
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     let secondaryText = useColorModeValue('gray.700', 'white');
     const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
 
-    const [data, setData] = useState([]);
+    // const [data, setData] = useState([]);
 
     const [country, setCountry] = useState({ value: ' ', label: 'WorldWide' });
 
@@ -166,9 +168,11 @@ export default function Vendor() {
                     header: null,
                     cell: (info) => (
                         <Flex align="center">
-                            <Text color={textColor} fontSize="sm" fontWeight="700" _hover={{ color: 'blue.600' }} cursor={'pointer'} onClick={() => setSelectedDBMS([info.row.original])}>
-                                {info.getValue()}
-                            </Text>
+                            <Link to={`/dbms/${generateSlug(info.getValue())}`}>
+                                <Text color={textColor} fontSize="sm" fontWeight="700" _hover={{ color: 'blue.600' }} cursor={'pointer'} onClick={() => setSelectedDBMS([info.row.original])}>
+                                    {info.getValue()}
+                                </Text>
+                            </Link>
                         </Flex>
                     ),
                 }),
@@ -516,7 +520,7 @@ export default function Vendor() {
                         </Box>
                     </Flex>
                 </>
-                : <CompareDBMS selectedDBMS={selectedDBMS} setSelectedDBMS={setSelectedDBMS} vendors={vendors} />
+                    : <CompareDBMS selectedDBMS={selectedDBMS} setSelectedDBMS={setSelectedDBMS} vendors={vendors} />
             }
         </Card>
     );

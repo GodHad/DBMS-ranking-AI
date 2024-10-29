@@ -13,6 +13,8 @@ import { APP_URL } from '../../../variables/statics';
 import { getBanners } from '../../admin/views/admin/banner/requests/use-request';
 import { getFeaturedProducts } from '../../../components/featuredProductSidebar/requests/use-request';
 import { useQuery } from 'react-query';
+import CompareDBMS from '../views/dbms/component/CompareDBMS';
+import { DBMSContext } from '../../../contexts/DBMSContext';
 
 // Custom Chakra theme
 export default function Dashboard(props) {
@@ -106,81 +108,84 @@ export default function Dashboard(props) {
   }, [banners]);
 
   const location = useLocation();
-  console.log(location)
+  const [vendors, setVendors] = useState([])
 
   return (
     <Box>
-      <Box
-        float="right"
-        minHeight="100vh"
-        height="100%"
-        overflow="hidden"
-        position="relative"
-        maxHeight="100%"
-        w={"100%"}
-        maxWidth={"100%"}
-        transition="all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1)"
-        transitionDuration=".2s, .2s, .35s"
-        transitionProperty="top, bottom, width"
-        transitionTimingFunction="linear, linear, ease"
-      >
-        <FeaturedProductSidebarContext.Provider
-          value={{
-            toggleSidebar,
-            setToggleSidebar,
-            featuredProducts
-          }}
+      <DBMSContext.Provider value={{ vendors, setVendors }}>
+        <Box
+          float="right"
+          minHeight="100vh"
+          height="100%"
+          overflow="hidden"
+          position="relative"
+          maxHeight="100%"
+          w={"100%"}
+          maxWidth={"100%"}
+          transition="all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1)"
+          transitionDuration=".2s, .2s, .35s"
+          transitionProperty="top, bottom, width"
+          transitionTimingFunction="linear, linear, ease"
         >
-          <Navbar
-            onOpen={onOpen}
-            logoText={'Horizon UI Dashboard PRO'}
-            brandText={getActiveRoute(routes)}
-            secondary={getActiveNavbar(routes)}
-            message={getActiveNavbarText(routes)}
-            fixed={fixed}
-            {...rest}
-          />
-          <Box
-            mx="auto"
-            p={{ base: '20px', md: '30px' }}
-            pe="20px"
-            minH="100vh"
-            w={{ base: '100%', lg: 'calc( 100% - 290px )' }}
-            maxWidth={{ base: '100%', lg: 'calc( 100% - 290px )' }}
-            float="left"
-            position={'relative'}
-            zIndex={1}
+          <FeaturedProductSidebarContext.Provider
+            value={{
+              toggleSidebar,
+              setToggleSidebar,
+              featuredProducts
+            }}
           >
-            <Routes>
-              {getRoutes(routes)}
-              <Route path="/blog/:id/:slug" element={<BlogPage />} />
-              <Route
-                path="/"
-                element={<Navigate to="/home" replace />}
-              />
-              <Route path='/*' element={<Page404 />} />
-            </Routes>
-          </Box>
-          <FeaturedProductsSidebar display="none" {...rest} />
-        </FeaturedProductSidebarContext.Provider>
-      </Box>
+            <Navbar
+              onOpen={onOpen}
+              logoText={'Horizon UI Dashboard PRO'}
+              brandText={getActiveRoute(routes)}
+              secondary={getActiveNavbar(routes)}
+              message={getActiveNavbarText(routes)}
+              fixed={fixed}
+              {...rest}
+            />
+            <Box
+              mx="auto"
+              p={{ base: '20px', md: '30px' }}
+              pe="20px"
+              minH="100vh"
+              w={{ base: '100%', lg: 'calc( 100% - 290px )' }}
+              maxWidth={{ base: '100%', lg: 'calc( 100% - 290px )' }}
+              float="left"
+              position={'relative'}
+              zIndex={1}
+            >
+              <Routes>
+                {getRoutes(routes)}
+                <Route path="/blog/:id/:slug" element={<BlogPage />} />
+                <Route path="/dbms/:slug" element={<CompareDBMS />} />
+                <Route
+                  path="/"
+                  element={<Navigate to="/home" replace />}
+                />
+                <Route path='/*' element={<Page404 />} />
+              </Routes>
+            </Box>
+            <FeaturedProductsSidebar display="none" {...rest} />
+          </FeaturedProductSidebarContext.Provider>
+        </Box>
+      </DBMSContext.Provider>
       <Box width={'full'}>
-      {location.pathname === '/home' && bottomBanners.map((image, index) => (
-        <a href={image.link} target='_blank' style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-          <Image
-            key={image.id + image.url}
-            mb={5}
-            h="90px"
-            maxW="728px"
-            w="100%"
-            borderRadius="xl"
-            objectFit="cover"
-            objectPosition="center"
-            src={`${APP_URL}storage/${image.url}?w=1400&auto=compression,format`}
-            alt={image.url}
-          />
-        </a>
-      ))}
+        {location.pathname === '/home' && bottomBanners.map((image, index) => (
+          <a href={image.link} target='_blank' style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+            <Image
+              key={image.id + image.url}
+              mb={5}
+              h="90px"
+              maxW="728px"
+              w="100%"
+              borderRadius="xl"
+              objectFit="cover"
+              objectPosition="center"
+              src={`${APP_URL}storage/${image.url}?w=1400&auto=compression,format`}
+              alt={image.url}
+            />
+          </a>
+        ))}
       </Box>
       <Footer />
     </Box>
