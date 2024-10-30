@@ -13,6 +13,8 @@ import {
     InputGroup,
     InputLeftElement,
     Textarea,
+    Breadcrumb,
+    BreadcrumbItem,
     useColorModeValue,
     useToast
 } from '@chakra-ui/react'
@@ -26,6 +28,7 @@ import { BsPerson } from 'react-icons/bs'
 import { useMutation } from 'react-query';
 import { sendRequest } from './request/use-request';
 import { Helmet } from 'react-helmet';
+import { Link } from 'react-router-dom';
 
 export default function Contact() {
     const toast = useToast();
@@ -85,8 +88,20 @@ export default function Contact() {
                 borderRadius="lg"
                 mx={{ sm: 4, md: 16, lg: 10 }}
                 px={{ sm: 5, md: 5, lg: 16 }}>
+                <Breadcrumb>
+                    <BreadcrumbItem color={textColor} fontSize='sm' mb='5px'>
+                        <Link to='/'>
+                            Home
+                        </Link>
+                    </BreadcrumbItem>
+                    <BreadcrumbItem color={textColor} fontSize='sm' mb='5px'>
+                        <Link to='/contactus'>
+                            Contact us
+                        </Link>
+                    </BreadcrumbItem>
+                </Breadcrumb>
                 <Heading>Contact us</Heading>
-                <Text mt={{ sm: 3, md: 3, lg: 5 }} color={secondaryText}>
+                <Text mt={{ sm: 3, md: 3, lg: 5 }} color={textColor}>
                     Fill up the form below to contact
                 </Text>
                 <Box p={4}>

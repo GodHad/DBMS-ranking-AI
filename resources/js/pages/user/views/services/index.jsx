@@ -11,9 +11,12 @@ import {
     AccordionPanel,
     AccordionItem,
     List,
-    ListItem
+    ListItem,
+    Breadcrumb,
+    BreadcrumbItem
 } from "@chakra-ui/react";
 import { MdKeyboardArrowDown } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 export default function UserReports() {
     const textColor = useColorModeValue('secondaryGray.900', 'white');
@@ -28,6 +31,18 @@ export default function UserReports() {
                 overflow={'hidden'}
                 shadow={"none"}
             >
+                <Breadcrumb px={'25px'}>
+                    <BreadcrumbItem color={textColor} fontSize='sm' mb='5px'>
+                        <Link to='/'>
+                            Home
+                        </Link>
+                    </BreadcrumbItem>
+                    <BreadcrumbItem color={textColor} fontSize='sm' mb='5px'>
+                        <Link to='/services'>
+                            Services
+                        </Link>
+                    </BreadcrumbItem>
+                </Breadcrumb>
                 <Flex px="25px" mb="8px" flexDirection={"column"} justifyContent="space-between">
                     <Text
                         color={textColor}
