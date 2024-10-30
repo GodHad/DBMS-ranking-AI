@@ -41,6 +41,7 @@ import {
 import CompareDBMS from '../dbms/components/CompareDBMS';
 import { generateSlug } from '../../../../variables/statics';
 import { DBMSContext } from '../../../../contexts/DBMSContext';
+import { Helmet } from 'react-helmet';
 
 const columnHelper = createColumnHelper();
 
@@ -346,6 +347,10 @@ export default function Vendor() {
     const [selectedDBMS, setSelectedDBMS] = useState(null);
 
     return (
+        <>
+        <Helmet>
+                <title>DB Rank AI | DBMS Ranking</title>
+            </Helmet>
         <Card
             flexDirection="column"
             w="100%"
@@ -521,5 +526,6 @@ export default function Vendor() {
                     : <CompareDBMS selectedDBMS={selectedDBMS} setSelectedDBMS={setSelectedDBMS} vendors={vendors} />
             }
         </Card>
+        </>
     );
 }
