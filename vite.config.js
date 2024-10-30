@@ -8,12 +8,28 @@ export default defineConfig({
             input: ['resources/css/app.css', 'resources/js/app.js', 'resources/js/app.jsx'],
             refresh: true,
         }),
-        react()
+        react(),
     ],
     server: {
         host: '127.0.0.1',
     },
     define: {
         global: {}
-    }
+    },
+    build: {
+        rollupOptions: {
+            output: {
+                manualChunks(id) {
+                    if (id.includes('node_modues')) {
+                        return 'vendor';
+                    }
+
+                    if (id.includes('some-large-library')) {
+                        return 'large-lib'
+                    }
+                }
+            }
+        },
+        chunkSizeWarningLimit: 300
+    },
 });

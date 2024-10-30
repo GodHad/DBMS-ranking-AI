@@ -1,23 +1,23 @@
 import { Box, useDisclosure, Image } from '@chakra-ui/react';
 import Footer from './Footer/Footer';
 import Navbar from '../../../components/navbar/NavbarUser';
-import React, { useState, useMemo } from 'react';
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import React, { useState, useMemo, Suspense, lazy } from 'react';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import routes from '../routes';
 import FeaturedProductsSidebar from '../../../components/featuredProductSidebar/Sidebar';
 import { FeaturedProductSidebarContext } from '../../../contexts/FeaturedProductsContext';
-import BlogPage from '../views/blogs/BlogPage';
 import Page404 from '../../../components/404';
 import { APP_URL } from '../../../variables/statics';
 import { getBanners } from '../../admin/views/admin/banner/requests/use-request';
 import { getFeaturedProducts } from '../../../components/featuredProductSidebar/requests/use-request';
 import { useQuery } from 'react-query';
 import { DBMSContext } from '../../../contexts/DBMSContext';
-import CompareDBMS from '../views/dbms/components/CompareDBMS';
-import DBMS from '../views/dbms/components/DBMS';
-import ContactUs from '../views/contactus';
-import Services from '../views/services'
-import EncyclopediaPage from '../views/encyclopedia/Encyclopedia';
+const BlogPage = lazy(() => import('../views/blogs/BlogPage'));
+const CompareDBMS = lazy(() => import('../views/dbms/components/CompareDBMS'));
+const DBMS = lazy(() => import('../views/dbms/components/DBMS'));
+const ContactUs = lazy(() => import('../views/contactus'));
+const Services = lazy(() => import('../views/services'));
+const EncyclopediaPage = lazy(() => import('../views/encyclopedia/Encyclopedia'))
 
 export default function Dashboard(props) {
   const { ...rest } = props;
@@ -95,8 +95,16 @@ export default function Dashboard(props) {
   };
   const getRoutes = (routes) => {
     return routes.map((route, key) => {
+      const LazyComponent = lazy(route.component)
       return (
-        <Route path={`${route.path}`} element={route.component} key={route.path} />
+        <Route
+          path={`${route.path}`}
+          element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <LazyComponent />
+            </Suspense>
+          }
+          key={route.path} />
       );
     });
   };
@@ -158,12 +166,47 @@ export default function Dashboard(props) {
             >
               <Routes>
                 {getRoutes(routes)}
-                <Route path="/blog/:id/:slug" element={<BlogPage />} />
-                <Route path="/dbms/:slug" element={<DBMS />} />
-                <Route path="/dbms/compare/:slug" element={<CompareDBMS />} />
-                <Route path="/encyclopedia/:slug" element={<EncyclopediaPage />} />
-                <Route path='/contact-us' element={<ContactUs />} />
-                <Route path='/services' element={<Services />} />
+                <Route
+                  path="/blog/:id/:slug"
+                  element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <BlogPage />
+                    </Suspense>
+                  } />
+                <Route
+                  path="/dbms/:slug"
+                  element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <DBMS />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/dbms/compare/:slug"
+                  element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <CompareDBMS />
+                    </Suspense>
+                  }
+                />
+                <Route
+                  path="/encyclopedia/:slug"
+                  element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <EncyclopediaPage />
+                    </Suspense>
+                  }
+                />
+                <Route path='/contact-us' element={
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <ContactUs />
+                  </Suspense>
+                } />
+                <Route path='/services' element={
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <Services />
+                  </Suspense>
+                } />
                 <Route path='/*' element={<Page404 />} />
               </Routes>
             </Box>

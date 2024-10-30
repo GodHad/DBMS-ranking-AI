@@ -42,55 +42,55 @@ const routes = [
     layout: '/admin',
     path: '/banner',
     icon: <Icon as={MdImage} width={'20px'} height={'20px'} color='inherit' />,
-    component: <Banner />
+    component: () => import('./views/admin/banner')
   },
   {
     name: 'Users',
     layout: '/admin',
     path: '/user',
     icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-    component: <User />
+    component: () => import('./views/admin/users')
   },
   {
     name: 'DBMS',
     layout: '/admin',
     path: '/default',
     icon: <Icon as={MdStorage} width={"20px"} height={"20px"} color="inherit" />,
-    component: <DBMS />
+    component: () => import('./views/admin/dbms')
   },
   {
     name: 'Encyclopedias',
     layout: '/admin',
     path: '/encyclopedia',
     icon: <Icon as={MdTranslate} width={"20px"} height={"20px"} color="inherit" />,
-    component: <Encyclopedia />
+    component: () => import('./views/admin/encyclopedia')
   },
   {
     name: 'Blogs',
     layout: '/admin',
     path: '/blog',
     icon: <Icon as={MdCommentBank} width={"20px"} height={"20px"} color="inherit" />,
-    component: <Blog />
+    component: () => import('./views/admin/blog')
   },
   {
     name: 'Sponsors',
     layout: '/admin',
     path: '/sponsor',
     icon: <Icon as={MdAttachMoney} width={"20px"} height={"20px"} color="inherit" />,
-    component: <Sponsor />
+    component: () => import('./views/admin/sponsors')
   },
   {
     name: 'Featured Products',
     layout: '/admin',
     path: '/featured-products',
     icon: <Icon as={MdFavorite} width="20px" height="20px" color="inherit" />,
-    component: <FeaturedProduct />
+    component: () => import('./views/admin/featured products')
   },
   {
     name: 'Sign In',
     path: 'sign-in',
     icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
-    component: <SignInCentered />,
+    component: () => import('./views/auth/signIn'),
   },
   // {
   //   name: 'Sign Up',

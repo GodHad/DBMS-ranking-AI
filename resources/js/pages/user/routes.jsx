@@ -11,32 +11,32 @@ const routes = [
     {
         name: 'Home',
         path: '/home',
-        component: <Home />,
+        component: () => import('./views/home')
     },
     {
         name: 'DBMS Ranking',
         path: '/ranking',
-        component: <DBMSRanking />,
+        component: () => import('./views/ranking'),
     },
     {
         name: 'DBMS',
         path: '/dbms',
-        component: <DBMS />,
+        component: () => import('./views/dbms'),
     },
     {
         name: 'Encyclopedia',
         path: '/encyclopedia',
-        component: <Encyclopedia />
+        component: () => import('./views/encyclopedia')
     },
     {
         name: 'Blog',
         path: '/blog',
-        component: <Blogs />
+        component: () => import('./views/blogs')
     },
     {
         name: 'Sponsors',
         path: '/sponsors',
-        component: <Sponsor />
+        component: () => import('./views/sponsor')
     },
 ];
 

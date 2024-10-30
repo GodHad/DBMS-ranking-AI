@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, Suspense, lazy } from 'react';
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import { ReactNotifications } from 'react-notifications-component'
 
@@ -6,7 +6,7 @@ import { Box, useColorModeValue } from '@chakra-ui/react';
 
 import { SidebarContext } from '../../../../contexts/SidebarContext';
 import { UserContext } from '../../../../contexts/UserContext';
-import SignIn from '../../views/auth/signIn';
+const SignIn = lazy(() => import('../../views/auth/signIn'));
 
 export default function Auth() {
   const navigate = useNavigate();
@@ -39,7 +39,9 @@ export default function Auth() {
           transitionTimingFunction="linear, linear, ease"
         >
           <Box mx="auto" minH="100vh">
-            <SignIn />
+            <Suspense fallback={<div>Loading...</div>}>
+              <SignIn />
+            </Suspense>
           </Box>
         </Box>
       </SidebarContext.Provider>

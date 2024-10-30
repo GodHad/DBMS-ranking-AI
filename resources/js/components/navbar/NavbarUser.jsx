@@ -43,7 +43,7 @@ const NavLink = ({ route }) => {
       px={3}
       py={3}
       rounded={'md'}
-      bg={location.pathname === route.path ? bg : 'transparent'}
+      bg={location.pathname.startsWith(route.path) ? bg : 'transparent'}
       _hover={{
         textDecoration: 'none',
         bg: bg

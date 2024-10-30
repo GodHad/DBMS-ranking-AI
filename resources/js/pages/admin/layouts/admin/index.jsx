@@ -8,6 +8,7 @@ import { Navigate, Route, Routes, Outlet } from 'react-router-dom';
 import routes from '../../routes';
 import { UserContext } from '../../../../contexts/UserContext';
 import Page404 from '../../../../components/404';
+import { Suspense, lazy } from 'react';
 
 export default function Dashboard(props) {
   const { ...rest } = props;
@@ -89,10 +90,15 @@ export default function Dashboard(props) {
   };
   const getRoutes = (routes) => {
     return routes.map((route, key) => {
+      const LazyComponent = lazy(route.component)
       if (route.layout === '/admin') {
         return (
           <Route key={key} element={<AdminRoute />}>
-            <Route path={route.path} element={route.component} />
+            <Route path={route.path} element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <LazyComponent />
+              </Suspense>
+            } />
           </Route>
         );
       }
