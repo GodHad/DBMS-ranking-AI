@@ -7,12 +7,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>DBMS ranking AI</title>
     @viteReactRefresh
-    @vite('resources/js/app.tsx')
+    @vite('resources/js/app.jsx')
 </head>
 
 <body>
     <div id="app"></div>
 </body>
-
 </html>
           

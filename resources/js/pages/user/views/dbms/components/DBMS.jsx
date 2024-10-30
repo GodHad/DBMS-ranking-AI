@@ -15,7 +15,7 @@ import {
     BreadcrumbLink,
 } from '@chakra-ui/react';
 import React, { useState, useEffect, useContext, useMemo } from 'react'
-import { MdCheckCircle, MdOutlineRemoveCircle } from 'react-icons/md';
+import { MdCheckCircle, MdOutlineRemoveCircle, MdVisibility } from 'react-icons/md';
 import Card from '../../../../../components/card/Card';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { DBMSContext } from '../../../../../contexts/DBMSContext';
@@ -222,13 +222,23 @@ export default function DBMS() {
                                         lineHeight="120%"
                                         fontSize={'16px'}
                                     >By {selectedDBMS[0].company_name}</Text>
-                                    <Text
-                                        color={viewsColor}
-                                        mb="4px"
-                                        fontWeight="600"
-                                        lineHeight="120%"
-                                        fontSize={'18px'}
-                                    >{selectedDBMS[0].profile_views} views</Text>
+                                    <Flex align="center">
+                                        <Icon
+                                            w="24px"
+                                            h="24px"
+                                            me="5px"
+                                            color={viewsColor}
+                                            as={MdVisibility}
+                                        />
+                                        <Text
+                                            color={viewsColor}
+                                            fontWeight="600"
+                                            lineHeight="120%"
+                                            fontSize={'18px'}
+                                        >
+                                            {selectedDBMS[0].profile_views} views
+                                        </Text>
+                                    </Flex>
                                     <Flex align="center">
                                         <Icon
                                             w="24px"
