@@ -30,11 +30,10 @@ import { Helmet } from 'react-helmet';
 export default function Contact() {
     const toast = useToast();
     const textColor = useColorModeValue('secondaryGray.900', 'white');
-    const boxTextColor = useColorModeValue('white', 'secondaryGray.900');
     let secondaryText = useColorModeValue('gray.700', 'gray.400');
     let buttonText = useColorModeValue('gray.700', 'gray.300');
-    const formBg = useColorModeValue("navy.700", "white");
-
+    const formTextColor = useColorModeValue('secondaryGray.900', 'white');
+    const formCardBg = useColorModeValue("gray.200", "navy.900");
     const [form, setForm] = useState({
         email: '',
         title: '',
@@ -128,8 +127,8 @@ export default function Contact() {
                                 </HStack>
                             </Box>
                         </Box>
-                        <Box bg={formBg} borderRadius="lg">
-                            <Box m={8} color={boxTextColor}>
+                        <Box bg={formCardBg} borderRadius="lg">
+                            <Box m={8} color={formTextColor}>
                                 <VStack spacing={5}>
                                     <FormControl>
                                         <FormLabel>Your Mail</FormLabel>
