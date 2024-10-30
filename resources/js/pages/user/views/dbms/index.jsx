@@ -18,6 +18,7 @@ import { getVendors } from '../../../admin/views/admin/dbms/dbms/requests/use-re
 import { DBMSContext } from '../../../../contexts/DBMSContext';
 import { generateSlug } from '../../../../variables/statics';
 import { Helmet } from 'react-helmet';
+import axios from '../../../../variables/axiosConfig';
 
 const chunkIntoColumns = (data, columnCount) => {
     const rowsPerColumn = Math.ceil(data.length / columnCount);
@@ -38,7 +39,7 @@ export default function Vendor() {
 
     const { data: vendors = [], isLoading } = useQuery(
         'vendors',
-        getVendors,
+        () => getVendors(' '),
         {
             staleTime: 300000,
             enabled: data.length === 0,
@@ -66,6 +67,10 @@ export default function Vendor() {
     useEffect(() => {
         if (data) setColumns(chunkIntoColumns(data, columnCount));
     }, [data, columnCount]);
+
+    const handleIncreaseViews = async (id) => {
+        await axios.get(`/api/increase-views?id=${id}`);
+    }
 
     return (
         <>
@@ -133,7 +138,7 @@ export default function Vendor() {
                             columns.map((items, index) => (
                                 <Box key={index} mb={4}>
                                     {items.map((item) => (
-                                        <Link to={`/dbms/${generateSlug(item.db_name)}`} key={item.db_name}>
+                                        <Link to={`/dbms/${generateSlug(item.db_name)}`} key={item.db_name} onClick={() => handleIncreaseViews(item.id)}>
                                             <Text color={'blue.500'} cursor={"pointer"} mb="15px" _hover={{ textDecor: 'underline' }}>
                                                 {item.db_name}
                                             </Text>

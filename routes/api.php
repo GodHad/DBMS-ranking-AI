@@ -76,6 +76,7 @@ Route::group([
     // vendor routes
     Route::get('/get-vendors', [VendorController::class, 'vendors']);
     Route::get('/get-vendor', [VendorController::class, 'vendor']);
+    Route::get('/increase-views', [VendorController::class, 'increaseViews']);
 
     // sponsor routes
     Route::get('/get-sponsors', [SponsorController::class, 'sponsors']);

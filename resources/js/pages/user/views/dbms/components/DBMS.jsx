@@ -13,6 +13,7 @@ import {
     BreadcrumbItem,
     useColorModeValue,
     BreadcrumbLink,
+    Button,
 } from '@chakra-ui/react';
 import React, { useState, useEffect, useContext, useMemo } from 'react'
 import { MdCheckCircle, MdOutlineRemoveCircle, MdVisibility } from 'react-icons/md';
@@ -67,9 +68,9 @@ export default function DBMS() {
     const { slug } = useParams();
     const { vendors, setVendors } = useContext(DBMSContext);
 
-    const { data: _vendors, isLoadingVendor } = useQuery(
+    const { data: _vendors } = useQuery(
         'vendors',
-        getVendors,
+        () => getVendors(' '),
         {
             staleTime: 300000,
             enabled: vendors.length === 0,
@@ -90,7 +91,6 @@ export default function DBMS() {
 
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     let secondaryText = useColorModeValue('gray.700', 'white');
-    let secondaryTexts = useColorModeValue('gray.700', 'gray.500');
     const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
     const viewsColor = useColorModeValue('blue.300', 'blue.600');
 
@@ -102,9 +102,9 @@ export default function DBMS() {
             return {
                 ...dbms,
                 overall_ranking: `
-                    <span style="margin-right: 8px">Overall Avg. Score:</span> ${dbms.overall_avg_score}<br> 
-                    <span style="margin-right: 8px">Rank:</span> #${dbms.overall_ranking} Overall<br>
-                    ${dbms.primary_category.map((category, index) => (`<span style="margin-right: 8px; opacity: 0">Rank: </span> #${primaryRanking[index]} ${category.shortname}<br>`))}
+                    <span style="margin-right: 8px; line-height: 36px;">Overall Avg. Score:</span> ${dbms.overall_avg_score}<br> 
+                    <span style="margin-right: 8px; line-height: 36px;">Rank:</span> #${dbms.overall_ranking} Overall<br>
+                    ${dbms.primary_category.map((category, index) => (`<span style="margin-right: 8px; line-height: 36px; opacity: 0">Rank: </span> #${primaryRanking[index]} ${category.shortname}<br>`)).join(' ')}
                 `,
                 primary_category: dbms.primary_category.map(category => category.title).join(', '),
                 secondary_category: dbms.secondary_category.map(category => category.title).join(', '),
@@ -205,53 +205,86 @@ export default function DBMS() {
                                     src={`${APP_URL}storage/${selectedDBMS[0].logo_url}?w=1400&auto=compression,format`}
                                     alt={selectedDBMS[0].db_name}
                                 />
-                                <Flex flexDir={'column'} gap={2}>
-                                    <a href={selectedDBMS[0].website_url} target='_blank'>
-                                        <Text
-                                            color={textColor}
-                                            mb="4px"
-                                            fontWeight="700"
-                                            lineHeight="120%"
-                                            fontSize={'20px'}
-                                        >{selectedDBMS[0].db_name}</Text>
-                                    </a>
-                                    <Text
-                                        color={secondaryTexts}
-                                        mb="4px"
-                                        fontWeight="500"
-                                        lineHeight="120%"
-                                        fontSize={'16px'}
-                                    >By {selectedDBMS[0].company_name}</Text>
-                                    <Flex align="center">
-                                        <Icon
-                                            w="24px"
-                                            h="24px"
-                                            me="5px"
-                                            color={viewsColor}
-                                            as={MdVisibility}
-                                        />
-                                        <Text
-                                            color={viewsColor}
-                                            fontWeight="600"
-                                            lineHeight="120%"
-                                            fontSize={'18px'}
-                                        >
-                                            {selectedDBMS[0].profile_views} views
-                                        </Text>
+                                <Flex justifyContent={'space-between'} flexDir={'row'} w='full' mx={'16px'}>
+                                    <Flex flexDir={'column'} gap={2}>
+                                        <a href={selectedDBMS[0].website_url} target='_blank'>
+                                            <Text
+                                                color={textColor}
+                                                mb="4px"
+                                                fontWeight="700"
+                                                lineHeight="120%"
+                                                fontSize={'20px'}
+                                            >{selectedDBMS[0].db_name}</Text>
+                                        </a>
+                                        <Flex align="center">
+                                            <Icon
+                                                w="24px"
+                                                h="24px"
+                                                me="5px"
+                                                color={viewsColor}
+                                                as={MdVisibility}
+                                            />
+                                            <Text
+                                                color={viewsColor}
+                                                fontWeight="600"
+                                                lineHeight="120%"
+                                                fontSize={'18px'}
+                                            >
+                                                {selectedDBMS[0].profile_views} views
+                                            </Text>
+                                        </Flex>
+                                        {data && data.length > 0 &&
+                                            <Text
+                                                color={textColor}
+                                                fontWeight="400"
+                                                lineHeight="120%"
+                                                fontSize={'16px'}
+                                                dangerouslySetInnerHTML={{ __html: data[0].overall_ranking }}
+                                            />
+                                        }
                                     </Flex>
-                                    <Flex align="center">
-                                        <Icon
-                                            w="24px"
-                                            h="24px"
-                                            me="5px"
-                                            color={selectedDBMS[0].approved === 1 ? 'green.500' : 'gray.500'}
-                                            as={selectedDBMS[0].approved === 1 ? MdCheckCircle : MdOutlineRemoveCircle}
-                                        />
-                                        <Text color={selectedDBMS[0].approved === 1 ? 'green.500' : 'gray.500'} fontSize="sm" fontWeight="700">
-                                            {selectedDBMS[0].approved === 1 ? 'Claimed' : 'Unclaimed'}
-                                        </Text>
+                                    <Flex flexDir={'column'}>
+                                        <Flex gap={4}>
+                                            <Link to={selectedDBMS[0].website_url}>
+                                                <Button
+                                                    fontSize='sm'
+                                                    variant='outline'
+                                                    fontWeight='500'
+                                                    minW={'120px'}
+                                                    w='100%'
+                                                    h='50'
+                                                    mb='24px'
+                                                >
+                                                    Contact
+                                                </Button>
+                                            </Link>
+                                            <Link to={selectedDBMS[0].website_url}>
+                                                <Button
+                                                    fontSize='sm'
+                                                    variant='brand'
+                                                    fontWeight='500'
+                                                    minW={'120px'}
+                                                    w='100%'
+                                                    h='50'
+                                                    mb='24px'
+                                                >
+                                                    Website
+                                                </Button>
+                                            </Link>
+                                        </Flex>
+                                        <Flex align="center">
+                                            <Icon
+                                                w="24px"
+                                                h="24px"
+                                                me="5px"
+                                                color={selectedDBMS[0].approved === 1 ? 'green.500' : 'gray.500'}
+                                                as={selectedDBMS[0].approved === 1 ? MdCheckCircle : MdOutlineRemoveCircle}
+                                            />
+                                            <Text color={selectedDBMS[0].approved === 1 ? 'green.500' : 'gray.500'} fontSize="sm" fontWeight="700">
+                                                {selectedDBMS[0].approved === 1 ? 'Claimed' : 'Unclaimed'}
+                                            </Text>
+                                        </Flex>
                                     </Flex>
-
                                 </Flex>
                             </Flex>
                         </>

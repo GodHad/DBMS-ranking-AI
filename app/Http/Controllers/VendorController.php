@@ -316,6 +316,24 @@ class VendorController extends Controller
         }
     }
 
+    public function increaseViews(Request $request)
+    {
+        $id = $request->query('id');
+
+        if (!$id) {
+            return response()->json(['success' => false, 'error' => 'Id is not defined'], 422);
+        }
+
+        try {
+            $vendor = Vendor::findOrFail($id);
+            $vendor->increment('profile_views');
+            return response()->json(['success' => true]);
+
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => 'Failed to update views'], 500);
+        }
+    }
+
     public function test()
     {
         Mail::raw('This is a test email from Laravel using Amazon SES!', function ($message) {
