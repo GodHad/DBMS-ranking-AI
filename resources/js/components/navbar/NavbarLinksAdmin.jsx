@@ -331,7 +331,7 @@ export default function HeaderLinks(props) {
                 borderRadius="8px"
                 px="14px"
               >
-                <ReactLink to='/auth/sign-in'>
+                <ReactLink to='/sign-in'>
                   <Text fontSize="sm">Log in</Text>
                 </ReactLink>
               </MenuItem>

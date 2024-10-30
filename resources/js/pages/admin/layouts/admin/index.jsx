@@ -175,6 +175,6 @@ const AdminRoute = () => {
   return (user && user.admin) ? (
     <Outlet />
   ) : (
-    <Navigate to="/auth/sign-in" />
+    <Navigate to="/sign-in" />
   );
 };

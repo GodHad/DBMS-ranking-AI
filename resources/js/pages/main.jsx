@@ -13,6 +13,7 @@ import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../contexts/UserContext';
 import { useQuery } from 'react-query';
 import axios from 'axios';
+import SignIn from './admin/views/auth/signIn';
 
 export function Main() {
   const [currentTheme, setCurrentTheme] = useState(initialTheme);
@@ -23,7 +24,7 @@ export function Main() {
     return response.data.user;
   };
 
-  const { data: resUser } = useQuery('getUser', getUser, {staleTime: 300000});
+  const { data: resUser } = useQuery('getUser', getUser, { staleTime: 300000 });
 
   useEffect(() => {
     setUser(resUser);
@@ -34,16 +35,24 @@ export function Main() {
   return (
     <ChakraProvider theme={currentTheme}>
       <Routes>
-        <Route path="auth/*" element={<AuthLayout />} />
         <Route
           path="/admin/*"
           element={
             <AdminLayout theme={currentTheme} setTheme={setCurrentTheme} />
           }
         />
-        <Route path="/*" element={
-          <UserLayout theme={currentTheme} setTheme={setCurrentTheme} />
-        } />
+        <Route path="/">
+          <Route
+            path="/"
+            element={<Navigate to="/home" replace />}
+          />
+          <Route path='/*'
+            element={
+              <UserLayout theme={currentTheme} setTheme={setCurrentTheme} />
+            }
+          />
+          <Route path="/sign-in" element={<AuthLayout />} />
+        </Route>
       </Routes>
     </ChakraProvider>
   );

@@ -162,10 +162,6 @@ export default function Dashboard(props) {
                 <Route path="/dbms/:slug" element={<DBMS />} />
                 <Route path="/dbms/compare/:slug" element={<CompareDBMS />} />
                 <Route path="/encyclopedia/:slug" element={<EncyclopediaPage />} />
-                <Route
-                  path="/"
-                  element={<Navigate to="/home" replace />}
-                />
                 <Route path='/contact-us' element={<ContactUs />} />
                 <Route path='/services' element={<Services />} />
                 <Route path='/*' element={<Page404 />} />

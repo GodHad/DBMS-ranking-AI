@@ -86,7 +86,7 @@ function SignUp() {
                     onScreen: true
                 }
             })
-            navigate('/auth/sign-in')
+            navigate('/sign-in')
         }
     }
 
@@ -273,7 +273,7 @@ function SignUp() {
                         mt='0px'>
                         <Text color={textColorDetails} fontWeight='400' fontSize='14px'>
                             Already registered?
-                            <NavLink to='/auth/sign-in'>
+                            <NavLink to='/sign-in'>
                                 <Text
                                     color={textColorBrand}
                                     as='span'
