@@ -59,7 +59,7 @@ export default function Footer() {
           <Link to={'/blog'}>
             Blog
           </Link>
-          <Link to={'/contactus'}>
+          <Link to={'/contact-us'}>
             Contact us
           </Link>
         </Stack>

@@ -23,6 +23,7 @@ import { APP_URL, generateSlug } from '../../../../../variables/statics';
 import { getVendors } from '../../../../admin/views/admin/dbms/dbms/requests/use-request';
 import { useQuery } from 'react-query';
 import { Skeleton } from '@chakra-ui/skeleton';
+import { Helmet } from 'react-helmet';
 
 export const headers = [
     { key: 'db_name', name: 'Name' },
@@ -88,7 +89,8 @@ export default function DBMS() {
     }, [selectedDBMS, navigate])
 
     const textColor = useColorModeValue('secondaryGray.900', 'white');
-    const secondaryText = useColorModeValue('gray.700', 'gray.600');
+    let secondaryText = useColorModeValue('gray.700', 'white');
+    let secondaryTexts = useColorModeValue('gray.700', 'gray.500');
     const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
     const viewsColor = useColorModeValue('blue.300', 'blue.600');
 
@@ -112,215 +114,220 @@ export default function DBMS() {
     }, [selectedDBMS])
 
     return (
-        <Box
-            flexDirection="column"
-            w="100%"
-            px="0px"
-            overflow={'hidden'}
-        >
-            <Card
+        <>
+            <Helmet>
+                <title>DB Rank AI | DBMS | {selectedDBMS.length > 0 && selectedDBMS[0].db_name}</title>
+            </Helmet>
+            <Box
                 flexDirection="column"
                 w="100%"
                 px="0px"
-                minH="calc(100vh - 150px)"
-                overflowX={{ sm: 'auto', lg: 'hidden' }}
+                overflow={'hidden'}
             >
-                <Breadcrumb px="25px">
-                    <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
-                        <Link to='/'>
-                            Home
-                        </Link>
-                    </BreadcrumbItem>
+                <Card
+                    flexDirection="column"
+                    w="100%"
+                    px="0px"
+                    minH="calc(100vh - 150px)"
+                    overflowX={{ sm: 'auto', lg: 'hidden' }}
+                >
+                    <Breadcrumb px="25px">
+                        <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
+                            <Link to='/'>
+                                Home
+                            </Link>
+                        </BreadcrumbItem>
 
-                    <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
-                        <Link to='/dbms'>
-                            DBMS
-                        </Link>
-                    </BreadcrumbItem>
+                        <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
+                            <Link to='/dbms'>
+                                DBMS
+                            </Link>
+                        </BreadcrumbItem>
 
-                    <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
-                        <BreadcrumbLink>
+                        <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
+                            <BreadcrumbLink>
+                                {
+                                    selectedDBMS.length === 1 ?
+                                        selectedDBMS[0].db_name
+                                        : selectedDBMS.map((dbms, index) => (index === selectedDBMS.length - 1) ? dbms.db_name : `${dbms.db_name} vs. `)
+                                }
+                            </BreadcrumbLink>
+                        </BreadcrumbItem>
+                    </Breadcrumb>
+                    <Flex px="25px" mb="20px" gap={4} flexDir={{ base: 'column', md: 'row' }} justifyContent="space-between" align={{ base: 'inherit', md: "center" }}>
+                        <Text
+                            color={textColor}
+                            fontSize={{ md: "22px", base: '20px' }}
+                            mb="4px"
+                            fontWeight="700"
+                            lineHeight="100%"
+                        >
                             {
                                 selectedDBMS.length === 1 ?
                                     selectedDBMS[0].db_name
                                     : selectedDBMS.map((dbms, index) => (index === selectedDBMS.length - 1) ? dbms.db_name : `${dbms.db_name} vs. `)
                             }
-                        </BreadcrumbLink>
-                    </BreadcrumbItem>
-                </Breadcrumb>
-                <Flex px="25px" mb="8px" gap={4} flexDir={{ base: 'column', md: 'row' }} justifyContent="space-between" align={{ base: 'inherit', md: "center" }}>
-                    <Text
-                        color={textColor}
-                        fontSize={{ md: "22px", base: '20px' }}
-                        mb="4px"
-                        fontWeight="700"
-                        lineHeight="100%"
-                    >
-                        {
-                            selectedDBMS.length === 1 ?
-                                selectedDBMS[0].db_name
-                                : selectedDBMS.map((dbms, index) => (index === selectedDBMS.length - 1) ? dbms.db_name : `${dbms.db_name} vs. `)
-                        }
-                    </Text>
-                    <Link to={`/dbms/compare/${slug}`}>
-                        <Text
-                            color={'blue.400'}
-                            fontSize={{ md: "14px", base: '20px' }}
-                            mb="4px"
-                            fontWeight="400"
-                            lineHeight="100%"
-                        >
-                            Compare with other
                         </Text>
-                    </Link>
-                </Flex>
-                {selectedDBMS.length > 0 ?
-                    <>
-                        <Image
-                            mb={5}
-                            w="100%"
-                            maxH={'300px'}
-                            objectFit="cover"
-                            objectPosition="center"
-                            src={`${APP_URL}storage/${selectedDBMS[0].banner}?w=1400&auto=compression,format`}
-                            alt={selectedDBMS[0].db_name}
-                        />
-                        <Flex alignItems={'center'}>
+                        <Link to={`/dbms/compare/${slug}`}>
+                            <Text
+                                color={'blue.500'}
+                                fontSize={{ md: "14px", base: '20px' }}
+                                mb="4px"
+                                fontWeight="400"
+                                lineHeight="100%"
+                            >
+                                Compare with other
+                            </Text>
+                        </Link>
+                    </Flex>
+                    {selectedDBMS.length > 0 ?
+                        <>
                             <Image
                                 mb={5}
-                                mx={5}
-                                w="172px"
-                                h={'172px'}
+                                w="100%"
+                                maxH={'300px'}
                                 objectFit="cover"
                                 objectPosition="center"
-                                border={borderColor}
-                                borderStyle={'solid'}
-                                borderWidth={1}
-                                src={`${APP_URL}storage/${selectedDBMS[0].logo_url}?w=1400&auto=compression,format`}
+                                src={`${APP_URL}storage/${selectedDBMS[0].banner}?w=1400&auto=compression,format`}
                                 alt={selectedDBMS[0].db_name}
                             />
-                            <Flex flexDir={'column'} gap={2}>
-                                <a href={selectedDBMS[0].website_url} target='_blank'>
+                            <Flex alignItems={'center'}>
+                                <Image
+                                    mb={5}
+                                    mx={5}
+                                    w="172px"
+                                    h={'172px'}
+                                    objectFit="cover"
+                                    objectPosition="center"
+                                    border={borderColor}
+                                    borderStyle={'solid'}
+                                    borderWidth={1}
+                                    src={`${APP_URL}storage/${selectedDBMS[0].logo_url}?w=1400&auto=compression,format`}
+                                    alt={selectedDBMS[0].db_name}
+                                />
+                                <Flex flexDir={'column'} gap={2}>
+                                    <a href={selectedDBMS[0].website_url} target='_blank'>
+                                        <Text
+                                            color={textColor}
+                                            mb="4px"
+                                            fontWeight="700"
+                                            lineHeight="120%"
+                                            fontSize={'20px'}
+                                        >{selectedDBMS[0].db_name}</Text>
+                                    </a>
                                     <Text
-                                        color={textColor}
+                                        color={secondaryTexts}
                                         mb="4px"
-                                        fontWeight="700"
+                                        fontWeight="500"
                                         lineHeight="120%"
-                                        fontSize={'20px'}
-                                    >{selectedDBMS[0].db_name}</Text>
-                                </a>
-                                <Text
-                                    color={secondaryText}
-                                    mb="4px"
-                                    fontWeight="500"
-                                    lineHeight="120%"
-                                    fontSize={'16px'}
-                                >By {selectedDBMS[0].company_name}</Text>
-                                <Text
-                                    color={viewsColor}
-                                    mb="4px"
-                                    fontWeight="600"
-                                    lineHeight="120%"
-                                    fontSize={'18px'}
-                                >{selectedDBMS[0].profile_views} views</Text>
-                                <Flex align="center">
-                                    <Icon
-                                        w="24px"
-                                        h="24px"
-                                        me="5px"
-                                        color={selectedDBMS[0].approved === 1 ? 'green.500' : 'gray.500'}
-                                        as={selectedDBMS[0].approved === 1 ? MdCheckCircle : MdOutlineRemoveCircle}
-                                    />
-                                    <Text color={selectedDBMS[0].approved === 1 ? 'green.500' : 'gray.500'} fontSize="sm" fontWeight="700">
-                                        {selectedDBMS[0].approved === 1 ? 'Claimed' : 'Unclaimed'}
-                                    </Text>
-                                </Flex>
+                                        fontSize={'16px'}
+                                    >By {selectedDBMS[0].company_name}</Text>
+                                    <Text
+                                        color={viewsColor}
+                                        mb="4px"
+                                        fontWeight="600"
+                                        lineHeight="120%"
+                                        fontSize={'18px'}
+                                    >{selectedDBMS[0].profile_views} views</Text>
+                                    <Flex align="center">
+                                        <Icon
+                                            w="24px"
+                                            h="24px"
+                                            me="5px"
+                                            color={selectedDBMS[0].approved === 1 ? 'green.500' : 'gray.500'}
+                                            as={selectedDBMS[0].approved === 1 ? MdCheckCircle : MdOutlineRemoveCircle}
+                                        />
+                                        <Text color={selectedDBMS[0].approved === 1 ? 'green.500' : 'gray.500'} fontSize="sm" fontWeight="700">
+                                            {selectedDBMS[0].approved === 1 ? 'Claimed' : 'Unclaimed'}
+                                        </Text>
+                                    </Flex>
 
+                                </Flex>
                             </Flex>
-                        </Flex>
-                    </>
-                    :
-                    <>
-                        <Skeleton height={"300px"} borderRadius={"12px"} mb={5} />
-                        <Flex alignItems={'center'}>
-                            <Skeleton 
-                                mb={5}
-                                mx={5}
-                                w="172px"
-                                h={'172px'}
-                                objectFit="cover"
-                                objectPosition="center"
-                                border={borderColor}
-                                borderStyle={'solid'}
-                                borderWidth={1} />
-                            <Flex flexDir={'column'} gap={2}>
-                                <Skeleton width={'200px'} height={"30px"} borderRadius={"12px"} />
-                                <Skeleton width={'200px'} height={"30px"} borderRadius={"12px"} />
-                                <Skeleton width={'200px'} height={"30px"} borderRadius={"12px"} />
-                                <Skeleton width={'200px'} height={"30px"} borderRadius={"12px"} />
+                        </>
+                        :
+                        <>
+                            <Skeleton height={"300px"} borderRadius={"12px"} mb={5} />
+                            <Flex alignItems={'center'}>
+                                <Skeleton
+                                    mb={5}
+                                    mx={5}
+                                    w="172px"
+                                    h={'172px'}
+                                    objectFit="cover"
+                                    objectPosition="center"
+                                    border={borderColor}
+                                    borderStyle={'solid'}
+                                    borderWidth={1} />
+                                <Flex flexDir={'column'} gap={2}>
+                                    <Skeleton width={'200px'} height={"30px"} borderRadius={"12px"} />
+                                    <Skeleton width={'200px'} height={"30px"} borderRadius={"12px"} />
+                                    <Skeleton width={'200px'} height={"30px"} borderRadius={"12px"} />
+                                    <Skeleton width={'200px'} height={"30px"} borderRadius={"12px"} />
+                                </Flex>
                             </Flex>
-                        </Flex>
-                    </>
-                }
-                <Box
-                    overflow={'auto'}
-                    maxH={'80vh'}
-                    sx={{
-                        '&::-webkit-scrollbar': {
-                            width: '8px',
-                            height: '8px',
-                            backgroundColor: 'transparent', // Change to transparent or the desired color
-                        },
-                        '&::-webkit-scrollbar-thumb': {
-                            backgroundColor: borderColor, // Color for the scrollbar thumb
-                            borderRadius: '20px',
-                        },
-                        '&::-webkit-scrollbar-track': {
-                            backgroundColor: 'rgba(0, 0, 0, 0.15)', // Track color, adjust as needed
-                            borderRadius: '20px',
-                        },
-                    }}>
-                    <Table variant="simple" color="gray.500" mb="24px" mt="12px" style={{ tableLayout: 'fixed' }}>
-                        <Tbody>
-                            {headers.map(header => (
-                                <Tr key={header.key}>
-                                    <Th
-                                        pe="10px"
-                                        borderColor={borderColor}
-                                        width={'150px'}
-                                    >
-                                        {header.name}
-                                    </Th>
-                                    {data && data.length > 0 ? data.map(dbms => (
-                                        <Td
-                                            key={dbms.id}
+                        </>
+                    }
+                    <Box
+                        overflow={'auto'}
+                        maxH={'80vh'}
+                        sx={{
+                            '&::-webkit-scrollbar': {
+                                width: '8px',
+                                height: '8px',
+                                backgroundColor: 'transparent', // Change to transparent or the desired color
+                            },
+                            '&::-webkit-scrollbar-thumb': {
+                                backgroundColor: borderColor, // Color for the scrollbar thumb
+                                borderRadius: '20px',
+                            },
+                            '&::-webkit-scrollbar-track': {
+                                backgroundColor: 'rgba(0, 0, 0, 0.15)', // Track color, adjust as needed
+                                borderRadius: '20px',
+                            },
+                        }}>
+                        <Table variant="simple" color="gray.500" mb="24px" mt="12px" style={{ tableLayout: 'fixed' }}>
+                            <Tbody>
+                                {headers.map(header => (
+                                    <Tr key={header.key}>
+                                        <Th
                                             pe="10px"
                                             borderColor={borderColor}
-                                            width={'300px'}
+                                            width={'150px'}
                                         >
-                                            <Text
-                                                color={textColor}
-                                                mb="4px"
-                                                fontWeight="500"
-                                                lineHeight="120%"
-                                                dangerouslySetInnerHTML={{ __html: header.yes ? dbms[header.key] ? 'Yes' : 'No' : dbms[header.key] }}
-                                            />
-                                        </Td>
-                                    )) : (
-                                        <Td
-                                            pe="10px"
-                                            borderColor={borderColor}
-                                            width={'300px'}
-                                        >
-                                            <Skeleton width={'300px'} height={"30px"} borderRadius={"12px"} />
-                                        </Td>
-                                    )}
-                                </Tr>
-                            ))}
-                        </Tbody>
-                    </Table>
-                </Box>
-            </Card>
-        </Box>
+                                            {header.name}
+                                        </Th>
+                                        {data && data.length > 0 ? data.map(dbms => (
+                                            <Td
+                                                key={dbms.id}
+                                                pe="10px"
+                                                borderColor={borderColor}
+                                                width={'300px'}
+                                            >
+                                                <Text
+                                                    color={textColor}
+                                                    mb="4px"
+                                                    fontWeight="500"
+                                                    lineHeight="120%"
+                                                    dangerouslySetInnerHTML={{ __html: header.yes ? dbms[header.key] ? 'Yes' : 'No' : dbms[header.key] }}
+                                                />
+                                            </Td>
+                                        )) : (
+                                            <Td
+                                                pe="10px"
+                                                borderColor={borderColor}
+                                                width={'300px'}
+                                            >
+                                                <Skeleton width={'300px'} height={"30px"} borderRadius={"12px"} />
+                                            </Td>
+                                        )}
+                                    </Tr>
+                                ))}
+                            </Tbody>
+                        </Table>
+                    </Box>
+                </Card>
+            </Box>
+        </>
     );
 }

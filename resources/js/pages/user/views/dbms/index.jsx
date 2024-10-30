@@ -22,6 +22,7 @@ import { Link } from 'react-router-dom';
 import { getVendors } from '../../../admin/views/admin/dbms/dbms/requests/use-request';
 import { DBMSContext } from '../../../../contexts/DBMSContext';
 import { generateSlug } from '../../../../variables/statics';
+import { Helmet } from 'react-helmet';
 
 const chunkIntoColumns = (data, columnCount) => {
     const rowsPerColumn = Math.ceil(data.length / columnCount);
@@ -73,58 +74,63 @@ export default function Vendor() {
     }, [data]);
 
     return (
-        <Card
-            flexDirection="column"
-            w="100%"
-            px="0px"
-            minH="calc(100vh - 150px)"
-            overflowX={{ sm: 'auto', lg: 'hidden' }}
-        >
-            <Breadcrumb px="25px">
-                <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
-                    <Link to='/'>
-                        Home
-                    </Link>
-                </BreadcrumbItem>
+        <>
+            <Helmet>
+                <title>DB Rank AI | DBMS</title>
+            </Helmet>
+            <Card
+                flexDirection="column"
+                w="100%"
+                px="0px"
+                minH="calc(100vh - 150px)"
+                overflowX={{ sm: 'auto', lg: 'hidden' }}
+            >
+                <Breadcrumb px="25px">
+                    <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
+                        <Link to='/'>
+                            Home
+                        </Link>
+                    </BreadcrumbItem>
 
-                <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
-                    <Link to='/dbms'>
+                    <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
+                        <Link to='/dbms'>
+                            DBMS
+                        </Link>
+                    </BreadcrumbItem>
+                </Breadcrumb>
+                <Flex px="25px" mb="8px" gap={4} flexDir={{ base: 'column' }} justifyContent="space-between" align={{ base: 'inherit' }}>
+                    <Text
+                        color={textColor}
+                        fontSize={{ md: "22px", base: '20px' }}
+                        mb="4px"
+                        fontWeight="700"
+                        lineHeight="100%"
+                    >
                         DBMS
-                    </Link>
-                </BreadcrumbItem>
-            </Breadcrumb>
-            <Flex px="25px" mb="8px" gap={4} flexDir={{ base: 'column' }} justifyContent="space-between" align={{ base: 'inherit' }}>
-                <Text
-                    color={textColor}
-                    fontSize={{ md: "22px", base: '20px' }}
-                    mb="4px"
-                    fontWeight="700"
-                    lineHeight="100%"
-                >
-                    DBMS
-                </Text>
-                <SimpleGrid columns={columnCount} spacing={4}>
-                    {columns ? columns.map((items, index) => (
-                        <Box key={index} mb={4}>
-                            {items.map((item) => (
-                                <Link to={`/dbms/${generateSlug(item.db_name)}`} key={item.db_name}>
-                                    <Text color={textColor} cursor={"pointer"} mb="5px" _hover={{ color: "blue.500" }}>
-                                        {item.db_name}
-                                    </Text>
-                                </Link>
-                            ))}
-                        </Box>
-                    )) : <>
-                        <Stack gap="1">
-                            <Skeleton height={"20px"} borderRadius={"12px"} />
-                            <Skeleton height={"20px"} borderRadius={"12px"} />
-                            <Skeleton height={"20px"} borderRadius={"12px"} />
-                            <Skeleton height={"20px"} borderRadius={"12px"} />
-                        </Stack>
-                    </>
-                    }
-                </SimpleGrid>
-            </Flex>
-        </Card >
+                    </Text>
+                    <SimpleGrid columns={columnCount} spacing={4} gap={4}>
+                        {columns ? columns.map((items, index) => (
+                            <Box key={index} mb={4}>
+                                {items.map((item) => (
+                                    <Link to={`/dbms/${generateSlug(item.db_name)}`} key={item.db_name}>
+                                        <Text color={'blue.500'} cursor={"pointer"} mb="15px" _hover={{ textDecor: 'underline' }}>
+                                            {item.db_name}
+                                        </Text>
+                                    </Link>
+                                ))}
+                            </Box>
+                        )) : <>
+                            <Stack gap="1">
+                                <Skeleton height={"20px"} borderRadius={"12px"} />
+                                <Skeleton height={"20px"} borderRadius={"12px"} />
+                                <Skeleton height={"20px"} borderRadius={"12px"} />
+                                <Skeleton height={"20px"} borderRadius={"12px"} />
+                            </Stack>
+                        </>
+                        }
+                    </SimpleGrid>
+                </Flex>
+            </Card >
+        </>
     );
 }

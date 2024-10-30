@@ -111,13 +111,13 @@ export default () => {
                       >
                         {blog.tags &&
                           blog.tags.slice(0, 2).map((category) => (
-                            <Tag key={category.name} color="white" bgColor="blue.400" _dark={{ bgColor: "green.500" }}>{category.name}</Tag>
+                            <Tag key={category.name} color="white" bgColor="blue.500" _dark={{ bgColor: "green.500" }}>{category.name}</Tag>
                           ))}
                         {blog.tags.length > 2 && <Text>{`+${blog.tags.length - 2}`}</Text>}
                       </Flex>
                     </Flex>
 
-                    <Flex justify="space-between" fontWeight="medium" color="blue.400" _dark={{ color: "green.200" }}>
+                    <Flex justify="space-between" fontWeight="medium" color="blue.500" _dark={{ color: "green.200" }}>
                       <Link to={`/blog/${blog.id}/${generateSlug(blog.title)}`}>
                         <Flex align="center">
                           <Text fontSize={{md: '16px', base: '14px'}}>Read article</Text>

@@ -124,6 +124,7 @@ export default function Navbar(props) {
               {routes.map((route, index) => (
                 <NavLink key={route.path + index} route={route} />
               ))}
+              <NavLink route={{path: '/auth/sign-in', name: 'Login'}} />
             </HStack>
           </HStack>
           <Flex alignItems={'center'}>
@@ -159,7 +160,7 @@ export default function Navbar(props) {
                 <a key={product.title + index} href={product.link} target='_blank'>
                   <Text
                     mr={{ base: 2, md: 4 }}
-                    color={'blue.400'}
+                    color={'blue.500'}
                     textDecor={'underline'}
                   >
                     {product.title}

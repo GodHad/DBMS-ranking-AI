@@ -13,9 +13,12 @@ import { APP_URL } from '../../../variables/statics';
 import { getBanners } from '../../admin/views/admin/banner/requests/use-request';
 import { getFeaturedProducts } from '../../../components/featuredProductSidebar/requests/use-request';
 import { useQuery } from 'react-query';
+import { DBMSContext } from '../../../contexts/DBMSContext';
 import CompareDBMS from '../views/dbms/components/CompareDBMS';
 import DBMS from '../views/dbms/components/DBMS';
-import { DBMSContext } from '../../../contexts/DBMSContext';
+import ContactUs from '../views/contactus';
+import Services from '../views/services'
+import EncyclopediaPage from '../views/encyclopedia/Encyclopedia';
 
 // Custom Chakra theme
 export default function Dashboard(props) {
@@ -96,7 +99,7 @@ export default function Dashboard(props) {
   const getRoutes = (routes) => {
     return routes.map((route, key) => {
       return (
-        <Route path={`${route.path}`} element={route.component} key={key} />
+        <Route path={`${route.path}`} element={route.component} key={route.path} />
       );
     });
   };
@@ -110,10 +113,11 @@ export default function Dashboard(props) {
 
   const location = useLocation();
   const [vendors, setVendors] = useState([])
+  const [encyclopedias, setEncyclopedias] = useState([])
 
   return (
     <Box>
-      <DBMSContext.Provider value={{ vendors, setVendors }}>
+      <DBMSContext.Provider value={{ vendors, setVendors, encyclopedias, setEncyclopedias }}>
         <Box
           float="right"
           minHeight="100vh"
@@ -160,10 +164,13 @@ export default function Dashboard(props) {
                 <Route path="/blog/:id/:slug" element={<BlogPage />} />
                 <Route path="/dbms/:slug" element={<DBMS />} />
                 <Route path="/dbms/compare/:slug" element={<CompareDBMS />} />
+                <Route path="/encyclopedia/:slug" element={<EncyclopediaPage />} />
                 <Route
                   path="/"
                   element={<Navigate to="/home" replace />}
                 />
+                <Route path='/contact-us' element={<ContactUs />} />
+                <Route path='/services' element={<Services />} />
                 <Route path='/*' element={<Page404 />} />
               </Routes>
             </Box>
@@ -173,9 +180,8 @@ export default function Dashboard(props) {
       </DBMSContext.Provider>
       <Box width={'full'}>
         {location.pathname === '/home' && bottomBanners.map((image, index) => (
-          <a href={image.link} target='_blank' style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+          <a key={image.id + image.url} href={image.link} target='_blank' style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
             <Image
-              key={image.id + image.url}
               mb={5}
               h="90px"
               maxW="728px"

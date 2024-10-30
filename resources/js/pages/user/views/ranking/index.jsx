@@ -13,10 +13,8 @@ import {
     Breadcrumb,
     BreadcrumbItem,
     Stack,
-    Button,
-    FormControl,
     useColorModeValue,
-    useBreakpointValue,
+    Tooltip,
 } from '@chakra-ui/react';
 import React, { useState, useEffect, useMemo, useContext } from 'react'
 import { Select } from 'chakra-react-select';
@@ -47,7 +45,7 @@ import { DBMSContext } from '../../../../contexts/DBMSContext';
 const columnHelper = createColumnHelper();
 
 export default function Vendor() {
-    const {vendors: data, setVendors: setData} = useContext(DBMSContext);
+    const { vendors: data, setVendors: setData } = useContext(DBMSContext);
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     let secondaryText = useColorModeValue('gray.700', 'white');
     const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
@@ -398,21 +396,23 @@ export default function Vendor() {
                                             }),
                                         }}
                                     />
-                                    <IconButton
-                                        align='center'
-                                        justifyContent='center'
-                                        bg={bgButton}
-                                        _hover={bgHover}
-                                        _focus={bgFocus}
-                                        _active={bgFocus}
-                                        w='37px'
-                                        h='37px'
-                                        lineHeight='100%'
-                                        borderRadius='10px'
-                                        onClick={() => setShowing(prev => 1 - prev)}
-                                    >
-                                        <Icon as={showing === 0 ? MdAutoGraph : MdTableView} width={"20px"} height={"20px"} color="inherit" />
-                                    </IconButton>
+                                    <Tooltip label={showing === 0 ? 'Chart View' : 'Table View'}>
+                                        <IconButton
+                                            align='center'
+                                            justifyContent='center'
+                                            bg={bgButton}
+                                            _hover={bgHover}
+                                            _focus={bgFocus}
+                                            _active={bgFocus}
+                                            w='37px'
+                                            h='37px'
+                                            lineHeight='100%'
+                                            borderRadius='10px'
+                                            onClick={() => setShowing(prev => 1 - prev)}
+                                        >
+                                            <Icon as={showing === 0 ? MdAutoGraph : MdTableView} width={"20px"} height={"20px"} color="inherit" />
+                                        </IconButton>
+                                    </Tooltip>
                                     <SidebarResponsive categories={options} showingCategory={showingCategory} setShowingCategory={setShowingCategory} />
                                 </Box>
                             </Flex>

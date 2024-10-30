@@ -133,7 +133,7 @@ export default function Banner() {
                 </Text>
             ),
             cell: (info) => (
-                <Text color={textColor} fontSize="sm" fontWeight="700" _hover={{ color: 'blue.400' }}>
+                <Text color={textColor} fontSize="sm" fontWeight="700" _hover={{ color: 'blue.500' }}>
                     {info.getValue() === 0 ? 'Top Banner' : 'Bottom Banner'}
                 </Text>
             )

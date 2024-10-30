@@ -5,12 +5,13 @@ import React from "react";
 import Footer from "../../../../components/footer/FooterAuth";
 import FixedPlugin from "../../../../components/fixedPlugin/FixedPlugin";
 // Custom components
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 // Assets
 import { FaChevronLeft } from "react-icons/fa";
 
 function AuthIllustration(props) {
   const { children, illustrationBackground } = props;
+  const navigate = useNavigate();
   // Chakra color mode
   return (
     <Flex position='relative' h='max-content'>
@@ -30,7 +31,7 @@ function AuthIllustration(props) {
         justifyContent='start'
         direction='column'>
         <NavLink
-          to='/admin'
+          onClick={() => navigate(-1)}
           style={() => ({
             width: "fit-content",
             marginTop: "40px",

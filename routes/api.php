@@ -13,6 +13,7 @@ use App\Http\Controllers\VendorRequestController;
 use App\Http\Controllers\AuthorRequestController;
 use App\Http\Controllers\FeaturedProductController;
 use App\Http\Controllers\BannerController;
+use App\Http\Controllers\ContactController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -121,5 +122,6 @@ Route::group([
     Route::delete('/delete-banner', [BannerController::class, 'deleteBanner']);
 
     // testing route for fetching data
+    Route::post('/send-request', [ContactController::class, 'index']);
     Route::get('/test', [VendorController::class, 'test']);
 });

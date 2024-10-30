@@ -157,7 +157,7 @@ export default function Sponsor() {
             ),
             cell: (info) => (
                 <a href={info.getValue()} target='_blank'>
-                    <Text color={textColor} fontSize="sm" fontWeight="700" _hover={{ color: 'blue.400' }}>
+                    <Text color={textColor} fontSize="sm" fontWeight="700" _hover={{ color: 'blue.500' }}>
                         {info.getValue()}
                     </Text>
                 </a>

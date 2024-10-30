@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Box, SimpleGrid, Heading, Text, Flex, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Stack, useBreakpointValue, useColorModeValue } from '@chakra-ui/react';
 import Card from "../../../../components/card/Card";
 import { getEncyclopedias } from '../../../admin/views/admin/encyclopedia/requests/use-request';
-import Encyclopedia from './Encyclopedia';
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 import {
@@ -10,6 +9,8 @@ import {
     SkeletonCircle,
     SkeletonText,
 } from "@chakra-ui/skeleton";
+import { generateSlug } from '../../../../variables/statics';
+import { DBMSContext } from '../../../../contexts/DBMSContext';
 
 const groupByFirstLetter = (data) => {
     const groupedData = {};
@@ -45,7 +46,7 @@ const chunkIntoColumns = (data, columnCount) => {
 };
 
 const EncyclopediaPage = () => {
-
+    const { encyclopedias: data, setEncyclopedias: setData } = useContext(DBMSContext);
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     let secondaryText = useColorModeValue('gray.700', 'white');
     const columnCount = useBreakpointValue({
@@ -57,20 +58,27 @@ const EncyclopediaPage = () => {
         xl: 5,
     });
 
-    const { data: encyclopedias, isLoading } = useQuery('encyclopedias', getEncyclopedias, { staleTime: 300000 });
+    const { data: encyclopedias = [], isLoading } = useQuery(
+        'encyclopedias',
+        getEncyclopedias,
+        {
+            staleTime: 300000,
+            enabled: data.length === 0,
+            onSuccess: (data) => {
+                if (data.length !== setData.length)
+                    setData(data)
+            }
+        });
 
     const [columns, setColumns] = useState(null);
 
     useEffect(() => {
-        if (encyclopedias) {
+        if (encyclopedias.length > 0) {
             const groupedData = groupByFirstLetter(encyclopedias);
             const sortedData = sortAlphabetically(groupedData);
             setColumns(chunkIntoColumns(sortedData, columnCount));
         }
-    }, [encyclopedias]);
-
-    const [encyclopedia, setEncyclopedia] = useState(null);
-    const [isOpen, setIsOpen] = useState(false);
+    }, [encyclopedias, columnCount]);
 
     return (
         <Card
@@ -86,70 +94,61 @@ const EncyclopediaPage = () => {
                         </Link>
                     </BreadcrumbItem>
 
-                    <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px' onClick={() => { setIsOpen(false), setEncyclopedia(null) }}>
+                    <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
                         <Link to='/encyclopedia'>
                             Encyclopedia
                         </Link>
                     </BreadcrumbItem>
-                    {(isOpen && encyclopedia) && (
-                        <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
-                            <Text>{encyclopedia.title}</Text>
-                        </BreadcrumbItem>
-                    )}
                 </Breadcrumb>
-                {!isOpen ?
-                    <>
-                        <Text
-                            color={textColor}
-                            fontSize="22px"
-                            mb="30px"
-                            fontWeight="700"
-                            lineHeight="100%"
-                        >
-                            Encyclopedia
-                        </Text>
-                        <SimpleGrid columns={columnCount} spacing={4}>
-                            {columns ? columns.map((column, index) => (
-                                <Box key={index}>
-                                    {column.map(({ letter, items }) => (
-                                        <Box key={letter} mb={4}>
-                                            <Heading size="md" mb="18px">{letter}</Heading>
-                                            {items.map((item) => (
-                                                <Text key={item.title} color="blue.500" cursor={"pointer"} mb="5px" onClick={() => { setEncyclopedia(item); setIsOpen(true) }}>
-                                                    {item.title}
-                                                </Text>
-                                            ))}
-                                        </Box>
+                <Text
+                    color={textColor}
+                    fontSize="22px"
+                    mb="30px"
+                    fontWeight="700"
+                    lineHeight="100%"
+                >
+                    Encyclopedia
+                </Text>
+                <SimpleGrid columns={columnCount} spacing={4}>
+                    {columns ? columns.map((column, index) => (
+                        <Box key={index}>
+                            {column.map(({ letter, items }) => (
+                                <Box key={letter} mb={4}>
+                                    <Heading size="md" mb="18px">{letter}</Heading>
+                                    {items.map((item) => (
+                                        <Link key={item.title} to={`/encyclopedia/${generateSlug(item.title)}`}>
+                                            <Text color="blue.500" cursor={"pointer"} mb="5px" _hover={{ textDecor: 'underline' }}>
+                                                {item.title}
+                                            </Text>
+                                        </Link>
                                     ))}
                                 </Box>
-                            )) : <>
-                                <Stack gap="1">
-                                    <SkeletonCircle size={10} />
-                                    <Skeleton height={"20px"} borderRadius={"12px"} />
-                                    <Skeleton height={"20px"} borderRadius={"12px"} />
-                                </Stack>
-                                <Stack gap="1">
-                                    <SkeletonCircle size={10} />
-                                    <Skeleton height={"20px"} borderRadius={"12px"} />
-                                    <Skeleton height={"20px"} borderRadius={"12px"} />
-                                </Stack>
-                                <Stack gap="1">
-                                    <SkeletonCircle size={10} />
-                                    <Skeleton height={"20px"} borderRadius={"12px"} />
-                                    <Skeleton height={"20px"} borderRadius={"12px"} />
-                                </Stack>
-                                <Stack gap="1">
-                                    <SkeletonCircle size={10} />
-                                    <Skeleton height={"20px"} borderRadius={"12px"} />
-                                    <Skeleton height={"20px"} borderRadius={"12px"} />
-                                </Stack>
-                            </>
-                            }
-                        </SimpleGrid>
+                            ))}
+                        </Box>
+                    )) : <>
+                        <Stack gap="1">
+                            <SkeletonCircle size={10} />
+                            <Skeleton height={"20px"} borderRadius={"12px"} />
+                            <Skeleton height={"20px"} borderRadius={"12px"} />
+                        </Stack>
+                        <Stack gap="1">
+                            <SkeletonCircle size={10} />
+                            <Skeleton height={"20px"} borderRadius={"12px"} />
+                            <Skeleton height={"20px"} borderRadius={"12px"} />
+                        </Stack>
+                        <Stack gap="1">
+                            <SkeletonCircle size={10} />
+                            <Skeleton height={"20px"} borderRadius={"12px"} />
+                            <Skeleton height={"20px"} borderRadius={"12px"} />
+                        </Stack>
+                        <Stack gap="1">
+                            <SkeletonCircle size={10} />
+                            <Skeleton height={"20px"} borderRadius={"12px"} />
+                            <Skeleton height={"20px"} borderRadius={"12px"} />
+                        </Stack>
                     </>
-                    :
-                    <Encyclopedia encyclopedia={encyclopedia} />
-                }
+                    }
+                </SimpleGrid>
             </Box>
         </Card >
     )

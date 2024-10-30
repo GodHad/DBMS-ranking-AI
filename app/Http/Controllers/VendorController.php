@@ -319,7 +319,8 @@ class VendorController extends Controller
     public function test()
     {
         Mail::raw('This is a test email from Laravel using Amazon SES!', function ($message) {
-            $message->to('sunharius@gmail.com')
+            $message->from('sunharius@gmail.com');
+            $message->to('office@dbrank.ai')
                     ->subject('Test SES Email');
         });
         return response()->json(['success' => true]);
