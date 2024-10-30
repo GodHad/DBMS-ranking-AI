@@ -1,21 +1,16 @@
 import React, { useContext, useState } from 'react';
-import { Navigate, Route, Routes, Outlet, useNavigate } from 'react-router-dom';
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import routes from '../../routes';
 import { ReactNotifications } from 'react-notifications-component'
 
-// Chakra imports
 import { Box, useColorModeValue } from '@chakra-ui/react';
 
-// Layout components
 import { SidebarContext } from '../../../../contexts/SidebarContext';
 import { UserContext } from '../../../../contexts/UserContext';
 
-// Custom Chakra theme
 export default function Auth() {
-  // states and functions
   const navigate = useNavigate();
   const [toggleSidebar, setToggleSidebar] = useState(false);
-  // functions for changing the states from components
   const { user } = useContext(UserContext);
 
   if (user) navigate('/admin');

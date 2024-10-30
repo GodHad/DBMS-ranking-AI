@@ -35,9 +35,7 @@ import {
     getPaginationRowModel
 } from '@tanstack/react-table';
 
-// Custom components
 import Card from '../../../../../../components/card/Card';
-import Menu from '../../../../../../components/menu/MainMenu';
 import DBMSForm from './components/DBMSForm';
 import { MdAdd } from 'react-icons/md'
 import moment from 'moment';
@@ -450,18 +448,6 @@ export default function Vendor() {
         >
             {openedPage === 0 && (
                 <>
-                    {/* <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
-                        <Text
-                            color={textColor}
-                            fontSize="22px"
-                            mb="4px"
-                            fontWeight="700"
-                            lineHeight="100%"
-                        >
-                            DBMS
-                        </Text>
-                        <Menu />
-                    </Flex> */}
                     <div style={{ display: 'flex', justifyContent: "space-between", marginTop: '20px', marginLeft: '20px', alignItems: 'center' }}>
                         <Flex w='100%'>
                             <Button

@@ -1,14 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
     Button,
     FormControl,
     FormLabel,
-    Input,
     Text,
     Box,
-    Textarea,
-    Icon,
-    Image,
     Switch,
     useToast,
     useColorModeValue
@@ -21,7 +17,6 @@ export default function VendorForm({ vendor, setOpenedPage }) {
     const queryClient = useQueryClient();
     const toast = useToast();
     const textColor = useColorModeValue("navy.400", "white");
-    const bgColor = useColorModeValue('white', 'navy.800')
     const brandStars = useColorModeValue("brand.500", "brand.400");
 
     const {

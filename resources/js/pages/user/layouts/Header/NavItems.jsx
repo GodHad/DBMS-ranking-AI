@@ -1,7 +1,6 @@
 import React from "react";
 import { linkDetails } from "./__linkDetails";
 import { HStack, Button, ButtonGroup } from "@chakra-ui/react";
-// import Link from "next/link";
 import { Link } from "react-router-dom";
 
 const NavItems = () => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext, useMemo } from 'react'
+import React, { useEffect, useRef, useContext, useMemo } from 'react'
 import {
     Text,
     Box,
@@ -57,10 +57,9 @@ export default function EncyclopediaForm() {
 
     const textColor = useColorModeValue("grey", "white");
     let secondaryText = useColorModeValue('gray.700', 'white');
-    const brandStars = useColorModeValue("brand.500", "brand.400");
     const editorBgColor = useColorModeValue('#f9f9f9', '#1a202c'); // light/dark background
 
-    const { data: _encyclopedias, isLoading } = useQuery(
+    const { data: _encyclopedias } = useQuery(
         'encyclopedias',
         getEncyclopedias,
         {

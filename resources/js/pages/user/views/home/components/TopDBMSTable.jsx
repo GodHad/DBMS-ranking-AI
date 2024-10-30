@@ -11,7 +11,7 @@ import {
   Stack,
   useColorModeValue,
 } from '@chakra-ui/react';
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useMemo } from 'react'
 
 import {
   createColumnHelper,
@@ -21,13 +21,9 @@ import {
   getPaginationRowModel
 } from '@tanstack/react-table';
 import { Link } from 'react-router-dom';
-// Custom components
-import Card from '../../../../../components/card/Card';
 import { useQuery } from 'react-query';
 import { getVendors } from '../requests/use-request.js';
 import {
-  Skeleton,
-  SkeletonCircle,
   SkeletonText,
 } from "@chakra-ui/skeleton"
 

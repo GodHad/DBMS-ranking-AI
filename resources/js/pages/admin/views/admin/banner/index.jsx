@@ -30,8 +30,6 @@ import {
     MdArrowRight,
     MdChevronLeft,
     MdChevronRight,
-    MdCheckCircle,
-    MdOutlineRemoveCircle
 } from 'react-icons/md';
 import {
     createColumnHelper,
@@ -68,7 +66,7 @@ export default function Banner() {
     const [openedPage, setOpenedPage] = useState(0);
 
     const [banner, setBanner] = useState(initialBanner);
-    const { data: banners, isLoadingBanners } = useQuery('banners', getBanners);
+    const { data: banners } = useQuery('banners', getBanners);
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: 10,

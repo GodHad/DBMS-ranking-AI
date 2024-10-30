@@ -1,9 +1,4 @@
-// Basic Imports
 import React, { useState } from "react";
-// import Link from "next/link";
-// import { useRouter } from "next/router";
-
-// Chakra UI Imports
 import {
   Box,
   Flex,
@@ -12,37 +7,15 @@ import {
   Text,
   ButtonGroup,
   IconButton,
-  HStack,
-  Avatar,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
 } from "@chakra-ui/react";
 
-// Components Imports
-import logo from "../../../../assets/img/auth/logo.png";
 import NavItems from "./NavItems";
 import CollapseMenu from "./CollapseMenu";
-// import ColorModeSwitcher from "@/website/ColorModeSwitcher";
-// import { useAuth } from "@/context/auth/AuthContext";
 import { Link } from "react-router-dom";
-// Icon Imports
 import { FiMenu } from "react-icons/fi";
-import { GrUserSettings } from "react-icons/gr";
-import { HiOutlineLogout } from "react-icons/hi";
 
 const Header = () => {
   const [isOpen, setOpen] = useState(false);
-
-  // const { user, logout } = useAuth();
-  // const router = useRouter();
-
-  // const logoutUser = () => {
-  //   logout();
-  //   router.reload();
-  //   router.push("/");
-  // };
 
   const handleToggle = () => {
     setOpen((prevState) => !prevState);
@@ -108,7 +81,6 @@ const Header = () => {
               base: 0,
             }}
           >
-            {/* <ColorModeSwitcher /> */}
             <Box display={{ md: "none", lg: "none" }}>
               <IconButton
                 variant="outline"
@@ -154,52 +126,6 @@ const Header = () => {
                   </Button>
                 </ButtonGroup>
               </>
-              {/* {!user ? (
-              ) : (
-                <>
-                  <HStack gap="2">
-                    <Button
-                      colorScheme="blue"
-                      as={Link}
-                      href="/app/dashboard"
-                      passHref
-                      variant="solid"
-                      size="md"
-                      _focus={{ boxShadow: "outline" }}
-                    >
-                      {`Continue as ${
-                        user?.displayName.split(" ")[0] ?? "Test User"
-                      }`}
-                    </Button>
-                    <Menu>
-                      <MenuButton
-                        as={Avatar}
-                        aria-label="User Account"
-                        size="sm"
-                        cursor="pointer"
-                        name={user?.displayName ?? "Test"}
-                        src={user?.photoURL}
-                      />
-                      <MenuList>
-                        <MenuItem
-                          style={{ margin: 0 }}
-                          onClick={() => router.push("/app/settings")}
-                          icon={<GrUserSettings />}
-                        >
-                          Settings
-                        </MenuItem>
-                        <MenuItem
-                          style={{ margin: 0 }}
-                          onClick={() => logoutUser()}
-                          icon={<HiOutlineLogout />}
-                        >
-                          Logout
-                        </MenuItem>
-                      </MenuList>
-                    </Menu>
-                  </HStack>
-                </>
-              )} */}
             </Box>
           </Stack>
         </Flex>

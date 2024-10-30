@@ -27,7 +27,6 @@ export default function FeaturedProductForm({ featuredProduct, setOpenedPage }) 
     const queryClient = useQueryClient();
     const toast = useToast();
     const textColor = useColorModeValue("navy.400", "white");
-    const bgColor = useColorModeValue('white', 'navy.800')
     const brandStars = useColorModeValue("brand.500", "brand.400");
 
     const {
@@ -231,7 +230,6 @@ export default function FeaturedProductForm({ featuredProduct, setOpenedPage }) 
                             textAlign: { inDropdown: true },
                             link: { inDropdown: false },
                             history: { inDropdown: false },
-                            // Remove image and embed
                             image: { visible: false },
                             embed: { visible: false }
                         }}

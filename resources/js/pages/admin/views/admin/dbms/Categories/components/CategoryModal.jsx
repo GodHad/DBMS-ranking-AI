@@ -11,21 +11,18 @@ import {
   FormControl,
   FormLabel,
   Input,
-  Flex,
-  Icon,
-  Text
+  Text,
+  useToast
 } from '@chakra-ui/react'
 import { useDisclosure, useColorModeValue } from '@chakra-ui/react'
 import axios from 'axios';
 import { Store } from 'react-notifications-component';
 
 export default function CategoryModal({ category, onopen, handleOnClose, handleOnUpdate }) {
+  const toast = useToast();
   const { id, title, shortname } = category;
   const { isOpen, onOpen, onClose } = useDisclosure()
   const textColor = useColorModeValue("navy.700", "white");
-  const textColorSecondary = "gray.400";
-  const textColorDetails = useColorModeValue("navy.700", "secondaryGray.600");
-  const textColorBrand = useColorModeValue("brand.500", "white");
   const brandStars = useColorModeValue("brand.500", "brand.400");
 
   const [form, setForm] = useState({
@@ -44,32 +41,22 @@ export default function CategoryModal({ category, onopen, handleOnClose, handleO
       if (res.data.success) {
         onClose()
         handleOnUpdate()
-        Store.addNotification({
+        toast({
           title: "You create new category successfully.",
-          message: '',
-          type: "success",
+          position: 'top-right',
+          status: "success",
           insert: "top",
-          container: "top-right",
-          animationIn: ["animate__animated", "animate__fadeIn"],
-          animationOut: ["animate__animated", "animate__fadeOut"],
-          dismiss: {
-            duration: 5000,
-            onScreen: true
-          }
+          duration: 5000,
+          isClosable: true
         })
       } else {
-        Store.addNotification({
-          title: "You create new category successfully.",
-          message: '',
-          type: "danger",
+        toast({
+          title: "Failed to create new category.",
+          position: 'top-right',
+          status: "error",
           insert: "top",
-          container: "top-right",
-          animationIn: ["animate__animated", "animate__fadeIn"],
-          animationOut: ["animate__animated", "animate__fadeOut"],
-          dismiss: {
-            duration: 5000,
-            onScreen: true
-          }
+          duration: 5000,
+          isClosable: true
         })
       }
     } else {
@@ -77,32 +64,22 @@ export default function CategoryModal({ category, onopen, handleOnClose, handleO
       if (res.data.success) {
         onClose()
         handleOnUpdate()
-        Store.addNotification({
+        toast({
           title: "You update new category successfully.",
-          message: '',
-          type: "success",
+          position: 'top-right',
+          status: "success",
           insert: "top",
-          container: "top-right",
-          animationIn: ["animate__animated", "animate__fadeIn"],
-          animationOut: ["animate__animated", "animate__fadeOut"],
-          dismiss: {
-            duration: 5000,
-            onScreen: true
-          }
+          duration: 5000,
+          isClosable: true
         })
       } else {
-        Store.addNotification({
+        toast({
           title: "Failed to update category.",
-          message: '',
-          type: "danger",
+          position: 'top-right',
+          status: "error",
           insert: "top",
-          container: "top-right",
-          animationIn: ["animate__animated", "animate__fadeIn"],
-          animationOut: ["animate__animated", "animate__fadeOut"],
-          dismiss: {
-            duration: 5000,
-            onScreen: true
-          }
+          duration: 5000,
+          isClosable: true
         })
       }
     }
@@ -117,7 +94,7 @@ export default function CategoryModal({ category, onopen, handleOnClose, handleO
   }, [category])
 
   const clearForm = () => {
-    setForm({id: null, title: '', shortname: ''})
+    setForm({ id: null, title: '', shortname: '' })
   }
 
   const handleCloseModal = () => {

@@ -7,28 +7,23 @@ import UserLayout from './user/layouts/Content';
 import {
   ChakraProvider,
   Spinner
-  // extendTheme
 } from '@chakra-ui/react';
-import initialTheme from './admin/theme/theme'; //  { themeGreen }
+import initialTheme from './admin/theme/theme';
 import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../contexts/UserContext';
 import { useQuery } from 'react-query';
 import axios from 'axios';
-// Chakra imports
 
 export function Main() {
-  // eslint-disable-next-line
   const [currentTheme, setCurrentTheme] = useState(initialTheme);
 
   const { user, setUser } = useContext(UserContext);
-  // const [isLoading, setIsLoading] = useState(true)
   const getUser = async () => {
     const response = await axios.get('/api/user');
-    // setIsLoading(false)
     return response.data.user;
   };
 
-  const { data: resUser, isLoading } = useQuery('getUser', getUser, {staleTime: 300000});
+  const { data: resUser } = useQuery('getUser', getUser, {staleTime: 300000});
 
   useEffect(() => {
     setUser(resUser);
@@ -40,7 +35,6 @@ export function Main() {
     <ChakraProvider theme={currentTheme}>
       <Routes>
         <Route path="auth/*" element={<AuthLayout />} />
-        {/* <Route path="/" element={<Navigate to="/admin" replace />} /> */}
         <Route
           path="/admin/*"
           element={

@@ -12,7 +12,7 @@ import {
     useToast
 } from '@chakra-ui/react'
 import { MdUploadFile } from 'react-icons/md';
-import { useDisclosure, useColorModeValue } from '@chakra-ui/react'
+import { useColorModeValue } from '@chakra-ui/react'
 import { useQueryClient, useMutation } from 'react-query';
 import { createVendor, updateVendor } from '../requests/use-request';
 import { CustomMultiSelect } from '../../../../../../../components/form/CustomMultiSelect';
@@ -68,9 +68,6 @@ export default function VendorForm({ vendor, categories, setOpenedPage }) {
 
     const textColor = useColorModeValue("navy.700", "white");
     const bgColor = useColorModeValue('white', 'navy.800')
-    const textColorSecondary = "gray.400";
-    const textColorDetails = useColorModeValue("navy.700", "secondaryGray.600");
-    const textColorBrand = useColorModeValue("brand.500", "white");
     const brandStars = useColorModeValue("brand.500", "brand.400");
 
     const [form, setForm] = useState({
@@ -312,7 +309,6 @@ export default function VendorForm({ vendor, categories, setOpenedPage }) {
                     <CustomMultiSelect title="Primary Categories" name="primary_category" value={form.primary_category} handleChangeMultiSelect={handleChangeMultiSelect} options={categories.map(category => ({ id: category.id, value: category.title, label: category.title }))} />
                     <CustomMultiSelect title="Secondary Categories" name="secondary_category" value={form.secondary_category} handleChangeMultiSelect={handleChangeMultiSelect} options={categories.map(category => ({ id: category.id, value: category.title, label: category.title }))} />
                 </FormControl>
-                {/* <CustomInput title="Contact Info" name="contact_info" value={form.contact_info} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} /> */}
                 <FormControl display={'flex'} justifyContent={'space-between'} flexDir={{ base: 'column', md: 'row' }} gap={{ md: 6, base: 2 }} alignItems={'center'}>
 
                     <CustomInput type="url" title="Website URL" name="website_url" value={form.website_url} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />

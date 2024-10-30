@@ -34,13 +34,11 @@ import {
     getPaginationRowModel,
 } from '@tanstack/react-table';
 
-// Custom components
 import Card from '../../../../../components/card/Card';
-import Menu from '../../../../../components/menu/MainMenu';
 import EncyclopediaForm from './components/EncyclopediaForm';
 import { MdAdd } from 'react-icons/md'
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { getEncyclopedia, getEncyclopedias, deleteEncyclopedia } from './requests/use-request';
+import { getEncyclopedias, deleteEncyclopedia } from './requests/use-request';
 
 const columnHelper = createColumnHelper();
 
@@ -85,7 +83,7 @@ export default function Encyclopedia() {
             })
         },
         onError: (error) => {
-            const errors = error.response.data.errors ? error.response.data.errors : {error: error.response.data.error};
+            const errors = error.response.data.errors ? error.response.data.errors : { error: error.response.data.error };
             const key = errors[Object.keys(errors)[0]];
             toast({
                 title: "Delete Encyclopedia successfully",
@@ -220,18 +218,6 @@ export default function Encyclopedia() {
             >
                 {openedPage === 0 && (
                     <>
-                        {/* <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
-                            <Text
-                                color={textColor}
-                                fontSize="22px"
-                                mb="4px"
-                                fontWeight="700"
-                                lineHeight="100%"
-                            >
-                                Encyclopedias
-                            </Text>
-                            <Menu />
-                        </Flex> */}
                         <Flex w='100%'>
                             <Button
                                 mb='50px'

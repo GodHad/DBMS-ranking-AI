@@ -1,29 +1,23 @@
-// Chakra imports
 import { Portal, Box, useDisclosure } from '@chakra-ui/react';
 import Footer from '../../../../components/footer/FooterAdmin';
 import Navbar from '../../../../components/navbar/NavbarAdmin';
 import Sidebar from '../../../../components/sidebar/Sidebar';
 import { SidebarContext } from '../../../../contexts/SidebarContext';
 import React, { useContext, useState } from 'react';
-import { Navigate, Route, Routes, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Navigate, Route, Routes, Outlet } from 'react-router-dom';
 import routes from '../../routes';
-import Header from '../../../user/layouts/Header';
 import { UserContext } from '../../../../contexts/UserContext';
 import Page404 from '../../../../components/404';
 
-// Custom Chakra theme
 export default function Dashboard(props) {
   const { ...rest } = props;
-  // states and functions
   const [fixed] = useState(false);
   const [toggleSidebar, setToggleSidebar] = useState(false);
 
-  const location = useLocation();
-
-  // functions for changing the states from components
   const getRoute = () => {
     return window.location.pathname !== '/admin/full-screen-maps';
   };
+
   const getActiveRoute = (routes) => {
     let activeRoute = 'DB Ranking AI';
     for (let i = 0; i < routes.length; i++) {
@@ -113,7 +107,6 @@ export default function Dashboard(props) {
   return (
     <Box>
       <Box>
-        {/* <Header /> */}
         <SidebarContext.Provider
           value={{
             toggleSidebar,
@@ -179,7 +172,6 @@ export default function Dashboard(props) {
 
 const AdminRoute = () => {
   const { user } = useContext(UserContext);
-  console.log("user", user)
   return (user && user.admin) ? (
     <Outlet />
   ) : (

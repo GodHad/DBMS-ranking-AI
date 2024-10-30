@@ -1,22 +1,12 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
 import { Text, Stack, useColorModeValue } from "@chakra-ui/react";
 import {
   Skeleton,
-  SkeletonCircle,
-  SkeletonText,
 } from "@chakra-ui/skeleton";
 
 export function SidebarLinks(props) {
-  //   Chakra color mode
   let activeColor = useColorModeValue("gray.700", "white");
-  let inactiveColor = useColorModeValue(
-    "secondaryGray.600",
-    "secondaryGray.600"
-  );
-  let activeIcon = useColorModeValue("brand.500", "white");
   let textColor = useColorModeValue("secondaryGray.500", "gray.400");
-  let brandColor = useColorModeValue("brand.500", "brand.400");
 
   const { categories, showingCategory, setShowingCategory } = props;
 

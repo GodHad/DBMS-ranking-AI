@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Box, SimpleGrid, Heading, Text, Flex, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Stack, useBreakpointValue, useColorModeValue } from '@chakra-ui/react';
+import { Box, SimpleGrid, Heading, Text, Breadcrumb, BreadcrumbItem, Stack, useBreakpointValue, useColorModeValue } from '@chakra-ui/react';
 import Card from "../../../../components/card/Card";
 import { getEncyclopedias } from '../../../admin/views/admin/encyclopedia/requests/use-request';
 import { useQuery } from 'react-query';
@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 import {
     Skeleton,
     SkeletonCircle,
-    SkeletonText,
 } from "@chakra-ui/skeleton";
 import { generateSlug } from '../../../../variables/statics';
 import { DBMSContext } from '../../../../contexts/DBMSContext';

@@ -10,18 +10,9 @@ import {
 } from "@chakra-ui/react";
 import TopDBMSTable from "./components/TopDBMSTable";
 import RecentBlogs from "./components/RecentBlogs";
-import { useQuery } from "react-query";
-import { getBanners } from "../../../admin/views/admin/banner/requests/use-request";
-import { APP_URL } from "../../../../variables/statics";
 
 export default function UserReports() {
   const textColor = useColorModeValue('secondaryGray.900', 'white');
-
-  const { data: banners, isLoadingBanner } = useQuery('banners', getBanners, { staleTime: 100000 });
-
-  const bottomBanners = useMemo(() => {
-    return banners ? banners.filter(banner => banner.type === 1) : [];
-  }, [banners]);
 
   return (
     <Box>
@@ -64,53 +55,11 @@ export default function UserReports() {
             >
               The DB Ranking is a list of DBMS ranked by their current popularity. The list is updated weekly.
             </Text>
-            {/* <FormControl
-              display={'flex'}
-              alignItems={'center'}
-              mt={10}
-            >
-              <InputGroup display={'flex'} alignItems={'center'}>
-                <InputLeftElement mt={1}>
-                  <Icon as={MdSearch} color={'navy.700'} size={'lg'} />
-                </InputLeftElement>
-                <Input
-                  fontSize='md'
-                  ms={{ base: "0px", md: "0px" }}
-                  p={4} // Adjust padding
-                  pl={8}
-                  type='text'
-                  bgColor='white'
-                  placeholder='Search...'
-                  mb='24px'
-                  fontWeight='500'
-                  color='navy.700'
-                  size='lg'
-                  borderColor='gray.300' // Make sure border color is light enough
-                  _placeholder={{ color: 'gray.500' }} // Ensure placeholder color is set
-                />
-              </InputGroup>
-            </FormControl> */}
           </Flex>
         </Card>
         <TopDBMSTable />
       </SimpleGrid>
       <RecentBlogs />
-      {/* {bottomBanners.map((image, index) => (
-        <a href={image.link} target='_blank' style={{display: 'flex', justifyContent: 'center'}}>
-          <Image
-            key={image.id + image.url}
-            mb={5}
-            h="90px"
-            maxW="728px"
-            w="100%"
-            borderRadius="xl"
-            objectFit="cover"
-            objectPosition="center"
-            src={`${APP_URL}storage/${image.url}?w=1400&auto=compression,format`}
-            alt={image.url}
-          />
-        </a>
-      ))} */}
     </Box >
   );
 }

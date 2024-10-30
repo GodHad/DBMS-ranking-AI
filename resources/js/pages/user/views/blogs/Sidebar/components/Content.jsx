@@ -7,7 +7,7 @@ function SidebarContent(props) {
   const textColor = useColorModeValue('secondaryGray.900', 'white');
 
   const handleCategoryChange = (values) => {
-    setShowingCategories(values.map(Number)); // Ensure category IDs are numbers
+    setShowingCategories(values.map(Number));
   };
 
   return (
@@ -62,4 +62,3 @@ function SidebarContent(props) {
 }
 
 export default SidebarContent;
-Animation

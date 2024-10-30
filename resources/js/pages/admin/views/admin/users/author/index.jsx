@@ -42,13 +42,11 @@ import {
     getPaginationRowModel,
 } from '@tanstack/react-table';
 
-// Custom components
 import Card from '../../../../../../components/card/Card';
-import Menu from '../../../../../../components/menu/MainMenu';
 import AuthorForm from './components/AuthorForm';
 import { MdAdd } from 'react-icons/md'
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { getAuthors, getAuthor, deleteAuthor } from './requests/use-request';
+import { getAuthors, deleteAuthor } from './requests/use-request';
 
 const columnHelper = createColumnHelper();
 
@@ -74,7 +72,7 @@ const Author = () => {
     const [openedPage, setOpenedPage] = useState(0);
 
     const [author, setAuthor] = useState(initialAuthor);
-    const { data: authors, isLoadingSponsors } = useQuery('authors', getAuthors);
+    const { data: authors } = useQuery('authors', getAuthors);
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: 10,
@@ -93,7 +91,7 @@ const Author = () => {
             })
         },
         onError: (error) => {
-            const errors = error.response.data.errors ? error.response.data.errors : {error: error.response.data.error};
+            const errors = error.response.data.errors ? error.response.data.errors : { error: error.response.data.error };
             const key = errors[Object.keys(errors)[0]];
             toast({
                 title: "Failed to delete author",
@@ -198,24 +196,6 @@ const Author = () => {
                 </Text>
             )
         }),
-        // columnHelper.accessor('job_title', {
-        //     id: 'job_title',
-        //     header: () => (
-        //         <Text
-        //             justifyContent="center"
-        //             align="center"
-        //             fontSize={{ sm: '10px', lg: '12px' }}
-        //             color="gray.400"
-        //         >
-        //             Job Title
-        //         </Text>
-        //     ),
-        //     cell: (info) => (
-        //         <Text color={textColor} fontSize="sm" fontWeight="700">
-        //             {info.getValue()}
-        //         </Text>
-        //     )
-        // }),
         columnHelper.accessor('company', {
             id: 'company',
             header: () => (
@@ -319,18 +299,6 @@ const Author = () => {
         >
             {openedPage === 0 && (
                 <>
-                    {/* <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
-                        <Text
-                            color={textColor}
-                            fontSize="22px"
-                            mb="4px"
-                            fontWeight="700"
-                            lineHeight="100%"
-                        >
-                            Authors
-                        </Text>
-                        <Menu />
-                    </Flex> */}
                     <Flex w='100%'>
                         <Button
                             mb='50px'

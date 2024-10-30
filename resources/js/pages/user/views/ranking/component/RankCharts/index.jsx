@@ -7,7 +7,6 @@ import {
     useColorModeValue,
     useBreakpointValue
 } from "@chakra-ui/react";
-// Custom components
 import Card from "../../../../../../components/card/Card";
 import LineChart from "../../../../../../components/charts/LineChart";
 import React, { useEffect, useState } from "react";
@@ -17,8 +16,6 @@ import axios from "../../../../../../variables/axiosConfig";
 import { useQuery } from "react-query";
 import {
     Skeleton,
-    SkeletonCircle,
-    SkeletonText,
 } from "@chakra-ui/skeleton";
 
 const getTrendsDataAndXaxisValue = async (country) => {
@@ -53,9 +50,6 @@ export default function RankChart(props) {
                 fontSize: "12px",
                 fontWeight: "500",
             }
-            // tooltipHoverFormatter: function (val, opts) {
-            //     return val + ' - <strong>' + opts.w.globals.series[opts.seriesIndex][opts.dataPointIndex] + '</strong>'
-            // }
         },
         dataLabels: {
             enabled: false,
@@ -93,7 +87,7 @@ export default function RankChart(props) {
         }
     });
 
-    const { data, isLoading } = useQuery(
+    const { data } = useQuery(
         ['getTrends', country],
         () => getTrendsDataAndXaxisValue(country.value),
         {

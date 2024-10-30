@@ -26,22 +26,17 @@ import {
     useReactTable,
 } from '@tanstack/react-table';
 
-// Custom components
 import Card from '../../../../../../components/card/Card';
-import Menu from '../../../../../../components/menu/MainMenu';
 import CategoryModal from './components/CategoryModal';
 import axios from "../../../../../../variables/axiosConfig";
-import { Store } from 'react-notifications-component';
 import { MdAdd } from 'react-icons/md'
 
 const columnHelper = createColumnHelper();
 
-// const columns = columnsDataCheck;
 export default function ColumnTable(props) {
     const [sorting, setSorting] = React.useState([]);
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
-    // const [defaultData, setDefaultData] = React.useState([])
     const [category, setCategory] = React.useState({
         id: null,
         title: '',
@@ -204,18 +199,6 @@ export default function ColumnTable(props) {
             px="0px"
             overflowX={{ sm: 'scroll', lg: 'hidden' }}
         >
-            {/* <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
-                <Text
-                    color={textColor}
-                    fontSize="22px"
-                    mb="4px"
-                    fontWeight="700"
-                    lineHeight="100%"
-                >
-                    Categories
-                </Text>
-                <Menu />
-            </Flex> */}
             <Flex w='100%'>
                 <Button
                     me='100%'

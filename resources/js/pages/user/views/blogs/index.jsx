@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Heading, Avatar, Text, Flex, Breadcrumb, BreadcrumbItem, NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper, Select, Stack, Tag, Image, Tooltip, IconButton, useColorModeValue } from '@chakra-ui/react';
 import Card from "../../../../components/card/Card";
 import { ArrowRightIcon } from "@chakra-ui/icons";
-import { MdArrowLeft, MdArrowRight, MdChevronLeft, MdChevronRight } from 'react-icons/md';
+import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
 import { getBlogs, getCategories, getTags } from '../../../admin/views/admin/blog/components/blogs/requests/use-request';
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
@@ -10,7 +10,6 @@ import moment from 'moment';
 import {
     Skeleton,
     SkeletonCircle,
-    SkeletonText,
 } from "@chakra-ui/skeleton";
 import Sidebar from './Sidebar/Sidebar';
 import { SidebarResponsive } from './Sidebar/Sidebar';
@@ -28,8 +27,8 @@ export default () => {
     const [showingCategories, setShowingCategories] = useState([]);
     const [showingTags, setShowingTags] = useState([]);
 
-    const { data: blogs, isLoadingBlogs } = useQuery(['blogs', showingCategories, showingTags, page, countPerPage], () => getBlogs({ categories: showingCategories, tags: showingTags.map(tag => tag.id), page, countPerPage }), { staleTime: 300000 });
-    const { data: categories, isLoadingCategory } = useQuery('bcategories', getCategories, { staleTime: 300000 });
+    const { data: blogs } = useQuery(['blogs', showingCategories, showingTags, page, countPerPage], () => getBlogs({ categories: showingCategories, tags: showingTags.map(tag => tag.id), page, countPerPage }), { staleTime: 300000 });
+    const { data: categories } = useQuery('bcategories', getCategories, { staleTime: 300000 });
     const { data: tags, isLoadingTag } = useQuery('tags', getTags, { staleTime: 300000 });
 
     const [options, setOptions] = useState(null);

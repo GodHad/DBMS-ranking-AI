@@ -21,7 +21,7 @@ class ContactController extends Controller
 
         Mail::raw($data['content'], function ($message) use ($data) {
             $message->from($data['email']);
-            $message->to('sunharius@gmail.com')
+            $message->to('office@dbrank.ai')
                     ->subject($data['title']);
         });
         return response()->json(['success' => true]);

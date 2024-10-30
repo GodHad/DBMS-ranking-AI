@@ -1,22 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
     Box,
-    SimpleGrid,
-    Heading as ChakraHeading,
     Avatar,
     Text as ChakraText,
     Flex,
     Breadcrumb,
     BreadcrumbItem,
-    BreadcrumbLink,
-    Link as ChakraLink,
     Image as ChakraImage,
     Tag,
-    useBreakpointValue,
     useColorModeValue
 } from '@chakra-ui/react';
 import Card from "../../../../components/card/Card";
-import { ArrowRightIcon } from "@chakra-ui/icons";
 import { getBlog } from '../../../admin/views/admin/blog/components/blogs/requests/use-request';
 import { useQuery } from 'react-query';
 import { Link as ReactLink, useParams } from 'react-router-dom';
@@ -63,16 +57,15 @@ export default () => {
     const { id } = useParams();
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     let secondaryText = useColorModeValue('gray.700', 'white');
-    const editorBgColor = useColorModeValue('#f9f9f9', '#1a202c'); // light/dark background
+    const editorBgColor = useColorModeValue('#f9f9f9', '#1a202c');
 
     const { data: blog, isLoadingBlog } = useQuery(['blog', id], () => getBlog(id), {
-        enabled: !!id, // only fetch if id exists
-        staleTime: 300000 // optional: adjust stale time as needed
+        enabled: !!id, 
+        staleTime: 300000
     });
 
     const editorRef = useRef();
 
-    // Update CKEditor with new blog content when `id` changes
     useEffect(() => {
         if (editorRef.current) {
             editorRef.current.setData(blog?.content || '');

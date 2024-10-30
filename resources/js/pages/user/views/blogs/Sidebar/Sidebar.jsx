@@ -1,6 +1,5 @@
 import React from "react";
 
-// chakra imports
 import {
   Box,
   Flex,
@@ -10,12 +9,9 @@ import {
   Popover,
   PopoverContent,
   PopoverBody,
-  Text
 } from "@chakra-ui/react";
 import Content from "./components/Content";
 import PropTypes from "prop-types";
-
-// Assets
 import { IoMenuOutline } from "react-icons/io5";
 
 function Sidebar(props) {
@@ -26,7 +22,6 @@ function Sidebar(props) {
     "14px 17px 40px 4px rgba(112, 144, 176, 0.08)",
     "unset"
   );
-  let sidebarBg = useColorModeValue("white", "navy.800");
   let sidebarMargins = "0px";
 
   return (
@@ -45,7 +40,6 @@ function Sidebar(props) {
   );
 }
 
-// FUNCTIONS
 export function SidebarResponsive(props) {
   let sidebarBackgroundColor = useColorModeValue("white", "navy.800");
   let menuColor = useColorModeValue("gray.400", "white");
@@ -71,23 +65,15 @@ export function SidebarResponsive(props) {
         isOpen={isOpen}
         onClose={onClose}
       >
-        {/* <DrawerOverlay /> */}
         <PopoverContent w='285px' maxW='285px' bg={sidebarBackgroundColor} top={'100px'}>
           <PopoverBody maxW='285px' px='0rem' pb='0' p='5'>
-            {/* <Scrollbars
-              autoHide
-              renderTrackVertical={renderTrack}
-              renderThumbVertical={renderThumb}
-              renderView={renderView}> */}
             <Content categories={categories} showingCategories={showingCategories} setShowingCategories={setShowingCategories} tags={tags} showingTags={showingTags} setShowingTags={setShowingTags} />
-            {/* </Scrollbars> */}
           </PopoverBody>
         </PopoverContent>
       </Popover>
     </Flex>
   );
 }
-// PROPS
 
 Sidebar.propTypes = {
   logoText: PropTypes.string,

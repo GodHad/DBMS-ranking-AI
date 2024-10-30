@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 // chakra imports
 import {
@@ -22,23 +22,19 @@ import {
 import Card from '../card/Card';
 import { Scrollbars } from "react-custom-scrollbars-2";
 import PropTypes from "prop-types";
-
-// Assets
 import { MdFavoriteBorder } from "react-icons/md";
 
-function FeaturedProductsSidebar(props) {
-  const { routes } = props;
+function FeaturedProductsSidebar() {
 
   let variantChange = "0.2s linear";
   let shadow = useColorModeValue(
     "14px 17px 40px 4px rgba(112, 144, 176, 0.08)",
     "unset"
   );
-  let sidebarBg = useColorModeValue("white", "navy.800");
   let sidebarMargins = "0px";
 
   return (
-    <Box display={{ lg: "block", base: 'none' }} w="100%" position={"absolute"} top={`${278}px`} minH='100%'>
+    <Box display={{ lg: "block", base: 'none' }} w="100%" position={"absolute"} top={`${268}px`} minH='100%'>
       <Card
         transition={variantChange}
         w='300px'

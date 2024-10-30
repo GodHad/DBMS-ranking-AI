@@ -30,13 +30,10 @@ import {
     getCoreRowModel,
     getSortedRowModel,
     useReactTable,
-    getPaginationRowModel,
 } from '@tanstack/react-table';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 
-// Custom components
 import Card from '../../../../../../../components/card/Card';
-import Menu from '../../../../../../../components/menu/MainMenu';
 import BlogForm from './components/BlogForm';
 import { MdAdd } from 'react-icons/md'
 import { getBlogs, getBlog, deleteBlog } from './requests/use-request';
@@ -75,11 +72,11 @@ export default () => {
     const [page, setPage] = useState(1);
     const [countPerPage, setCountPerPage] = useState(10);
 
-    const { data: blogs = {}, isLoadingBlogs } = useQuery(['blogs', page, countPerPage], () => getBlogs({ page, countPerPage }), { staleTime: 30000 });
+    const { data: blogs = {} } = useQuery(['blogs', page, countPerPage], () => getBlogs({ page, countPerPage }), { staleTime: 30000 });
 
     const memorizedData = useMemo(() => {
         if (Array.isArray(blogs.data)) {
-            return blogs.data; // Return data directly if it's an array
+            return blogs.data; 
         }
         return [];
     }, [blogs.data]);
@@ -88,7 +85,7 @@ export default () => {
     const [blog, setBlog] = useState(initialBlog);
     const [blogId, setBlogId] = useState(null)
 
-    const { data: _blog, isLoading: isLoadingBlog } = useQuery(
+    const { data: _blog } = useQuery(
         ['blog', blogId],
         () => getBlog(blogId),
         {
@@ -102,7 +99,6 @@ export default () => {
                 ..._blog,
                 tags: _blog.tags.map(tag => tag.id),
                 categories: _blog.categories.map(category => category.id),
-                // featured_images: _blog.featured_images.map(image => (APP_URL + 'storage/' + image.url)) || [],
             });
     }, [_blog])
 
@@ -259,7 +255,7 @@ export default () => {
                 </Tooltip>
                 <Tooltip label="Previous Page">
                     <IconButton
-                        onClick={() => { if (page > 1) setPage(page - 1) }} // Ensure it doesn't go below 1
+                        onClick={() => { if (page > 1) setPage(page - 1) }}
                         isDisabled={blogs.current_page === 1}
                         icon={<MdChevronLeft h={6} w={6} />}
                     />
@@ -284,7 +280,7 @@ export default () => {
                     w={20}
                     min={1}
                     max={blogs.last_page}
-                    value={blogs.current_page} // Use value instead of defaultValue for controlled input
+                    value={blogs.current_page}
                     onChange={(_, value) => {
                         if (value >= 1 && value <= blogs.last_page) {
                             setPage(value);
@@ -300,7 +296,7 @@ export default () => {
                 <Select
                     w={32}
                     color={textColor}
-                    value={countPerPage} // Make sure this reflects the current countPerPage
+                    value={countPerPage}
                     onChange={e => setCountPerPage(Number(e.target.value))}
                 >
                     {[10, 20, 30, 40, 50].map((pageSize) => (
@@ -340,18 +336,6 @@ export default () => {
         >
             {openedPage === 0 && (
                 <>
-                    {/* <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
-                        <Text
-                            color={textColor}
-                            fontSize="22px"
-                            mb="4px"
-                            fontWeight="700"
-                            lineHeight="100%"
-                        >
-                            Blogs
-                        </Text>
-                        <Menu />
-                    </Flex> */}
                     <Flex w='100%'>
                         <Button
                             mb='50px'

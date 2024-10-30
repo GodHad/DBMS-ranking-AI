@@ -1,5 +1,4 @@
-// Chakra imports
-import { Portal, Box, useDisclosure, Image } from '@chakra-ui/react';
+import { Box, useDisclosure, Image } from '@chakra-ui/react';
 import Footer from './Footer/Footer';
 import Navbar from '../../../components/navbar/NavbarUser';
 import React, { useState, useMemo } from 'react';
@@ -20,11 +19,9 @@ import ContactUs from '../views/contactus';
 import Services from '../views/services'
 import EncyclopediaPage from '../views/encyclopedia/Encyclopedia';
 
-// Custom Chakra theme
 export default function Dashboard(props) {
   const { ...rest } = props;
-  // states and functions
-  const { data: featuredProducts, isLoading } = useQuery('featured_products', getFeaturedProducts, { staleTime: 300000 });
+  const { data: featuredProducts } = useQuery('featured_products', getFeaturedProducts, { staleTime: 300000 });
   const [fixed] = useState(false);
   const [toggleSidebar, setToggleSidebar] = useState(false);
   const getActiveRoute = (routes) => {
@@ -105,7 +102,7 @@ export default function Dashboard(props) {
   };
   const { onOpen } = useDisclosure();
 
-  const { data: banners, isLoadingBanner } = useQuery('banners', getBanners, { staleTime: 100000 });
+  const { data: banners } = useQuery('banners', getBanners, { staleTime: 100000 });
 
   const bottomBanners = useMemo(() => {
     return banners ? banners.filter(banner => banner.type === 1) : [];

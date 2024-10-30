@@ -15,31 +15,24 @@ import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { ArrowRightIcon } from "@chakra-ui/icons";
-// Custom components
 import Card from '../../../../../components/card/Card';
 import { getRecentlyBlogs } from '../requests/use-request';
 import {
   Skeleton,
-  SkeletonCircle,
-  SkeletonText,
 } from "@chakra-ui/skeleton"
 
 function generateSlug(title) {
   return title
-      .toLowerCase()                  // Convert to lowercase
-      .trim()                         // Remove whitespace from both ends
-      .replace(/[\s\W-]+/g, '-')      // Replace spaces and non-word characters with hyphens
-      .replace(/^-+|-+$/g, '');       // Remove leading and trailing hyphens
+      .toLowerCase()
+      .trim()       
+      .replace(/[\s\W-]+/g, '-')
+      .replace(/^-+|-+$/g, '');
 }
 
 export default () => {
   const textColor = useColorModeValue('secondaryGray.900', 'white');
-  const bgGradient = useColorModeValue(
-    'radial(orange.600 1px, transparent 1px)',
-    'radial(orange.300 1px, transparent 1px)',
-  );
   const blogCardBg = useColorModeValue("gray.200", "navy.900");
-  const { data: blogs, isLoadingBlogs } = useQuery('blogs', getRecentlyBlogs, {staleTime: 300000});
+  const { data: blogs } = useQuery('blogs', getRecentlyBlogs, {staleTime: 300000});
   return (
     <Box
       flexDirection="column"
@@ -56,7 +49,6 @@ export default () => {
         >
           Recently Blogs
         </Text>
-        {/* <Menu /> */}
       </Flex>
       <SimpleGrid columns={{ base: 1, lg: 3 }} gap='20px' mb='20px' justifyContent={"center"}>
         {
@@ -100,7 +92,6 @@ export default () => {
                   <Box>
                     <Flex direction={"column"} justify="space-between" mb={4} gap={2}>
                       <Flex align="center" color="gray.500" _dark={{ color: "gray.400" }}>
-                        {/* <Avatar name={`${blog.user.name} ${blog.user.surname ? blog.user.surname : ''}`} size="sm" /> */}
                         <Text fontSize={{md: '16px', base: '14px'}}>{`By ${blog.user.name} ${blog.user.surname ? blog.user.surname : ''} on ${moment(blog.created_at).format('MMM D, YYYY')}`}</Text>
                       </Flex>
                       <Flex

@@ -50,8 +50,6 @@ export default function Vendor() {
     let secondaryText = useColorModeValue('gray.700', 'white');
     const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
 
-    // const [data, setData] = useState([]);
-
     const [country, setCountry] = useState({ value: ' ', label: 'WorldWide' });
 
     const handleChangeCountry = value => {

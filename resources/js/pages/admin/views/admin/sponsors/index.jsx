@@ -42,9 +42,7 @@ import {
     getPaginationRowModel,
 } from '@tanstack/react-table';
 
-// Custom components
 import Card from '../../../../../components/card/Card';
-import Menu from '../../../../../components/menu/MainMenu';
 import SponsorForm from './components/SponsorForm';
 import { MdAdd } from 'react-icons/md'
 import { useMutation, useQuery, useQueryClient } from 'react-query';
@@ -92,7 +90,7 @@ export default function Sponsor() {
             })
         },
         onError: (error) => {
-            const errors = error.response.data.errors ? error.response.data.errors : {error: error.response.data.error};
+            const errors = error.response.data.errors ? error.response.data.errors : { error: error.response.data.error };
             const key = errors[Object.keys(errors)[0]];
             toast({
                 title: "Failed to delete sponsor",
@@ -178,16 +176,13 @@ export default function Sponsor() {
             cell: (info) => {
                 return (
                     <Flex align="center">
-                            <Icon
-                                w="24px"
-                                h="24px"
-                                me="5px"
-                                color={info.getValue() === 1 ? 'green.500' : 'gray.500'}
-                                as={info.getValue() === 1 ? MdCheckCircle : MdOutlineRemoveCircle}
-                            />
-                        {/* <Text color={textColor} fontSize="sm" fontWeight="700">
-                            {info.getValue() === 1 ? 'Featured' : 'Not Featured'}
-                        </Text> */}
+                        <Icon
+                            w="24px"
+                            h="24px"
+                            me="5px"
+                            color={info.getValue() === 1 ? 'green.500' : 'gray.500'}
+                            as={info.getValue() === 1 ? MdCheckCircle : MdOutlineRemoveCircle}
+                        />
                     </Flex>
                 )
             },
@@ -254,18 +249,6 @@ export default function Sponsor() {
             >
                 {openedPage === 0 && (
                     <>
-                        {/* <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
-                            <Text
-                                color={textColor}
-                                fontSize="22px"
-                                mb="4px"
-                                fontWeight="700"
-                                lineHeight="100%"
-                            >
-                                Sponsors
-                            </Text>
-                            <Menu />
-                        </Flex> */}
                         <Flex w='100%'>
                             <Button
                                 mb='50px'

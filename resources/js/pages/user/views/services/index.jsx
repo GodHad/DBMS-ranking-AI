@@ -3,11 +3,9 @@ import {
     Box,
     Flex,
     Text,
-    SimpleGrid,
     Card,
     useColorModeValue,
     Heading,
-    Container,
     Accordion,
     AccordionButton,
     AccordionPanel,
@@ -37,8 +35,6 @@ export default function UserReports() {
                         fontWeight="800"
                         lineHeight="48px"
                         mb={'10px'}
-                    // bgClip="text"
-                    // bgGradient={"linear(to-r, #2ac349, #018cc1)"}
                     >
                         Advertising options and additional services
                     </Text>
@@ -122,8 +118,6 @@ export default function UserReports() {
                         fontWeight="800"
                         lineHeight="48px"
                         mb={'10px'}
-                    // bgClip="text"
-                    // bgGradient={"linear(to-r, #2ac349, #018cc1)"}
                     >
                         General
                     </Text>
@@ -161,7 +155,7 @@ export default function UserReports() {
                         fontWeight="500"
                         lineHeight="150%"
                     >
-                        Please contact us at <a href="mailto:office@dbrank.ai"><Text display={'inline'} color={'blue.600'} textDecor={'underline'}>office@dbrank.ai</Text></a>.
+                        Please contact us at <a href="mailto:office@dbrank.ai"><span style={{ color: '#2b6cb0', textDecoration: 'underline' }}>office@dbrank.ai</span></a>.
                     </Text>
                 </Flex>
             </Card>

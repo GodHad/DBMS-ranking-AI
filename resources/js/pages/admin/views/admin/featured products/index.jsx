@@ -42,7 +42,6 @@ import {
     getPaginationRowModel,
 } from '@tanstack/react-table';
 
-// Custom components
 import Card from '../../../../../components/card/Card';
 import FeaturedProductForm from './components/FeaturedProductForm';
 import { MdAdd } from 'react-icons/md'
@@ -95,7 +94,7 @@ export default function FeaturedProduct() {
             })
         },
         onError: (error) => {
-            const errors = error.response.data.errors ? error.response.data.errors : {error: error.response.data.error};
+            const errors = error.response.data.errors ? error.response.data.errors : { error: error.response.data.error };
             const key = errors[Object.keys(errors)[0]];
             toast({
                 title: "Failed to delete featured product",
@@ -146,28 +145,6 @@ export default function FeaturedProduct() {
                 </Text>
             ),
         }),
-        // columnHelper.accessor('content', {
-        //     id: 'content',
-        //     header: () => (
-        //         <Text
-        //             justifyContent="center"
-        //             align="center"
-        //             fontSize={{ sm: '10px', lg: '12px' }}
-        //             color="gray.400"
-        //         >
-        //             Content
-        //         </Text>
-        //     ),
-        //     cell: (info) => {
-        //         return (
-        //             <Box maxW={"400px"}>
-        //                 <Text color={textColor} fontSize="sm" fontWeight="700" isTruncated>
-        //                     {stripHTML(info.getValue())}
-        //                 </Text>
-        //             </Box>
-        //         )
-        //     },
-        // }),
         columnHelper.accessor('link', {
             id: 'link',
             header: () => (
@@ -203,16 +180,13 @@ export default function FeaturedProduct() {
             cell: (info) => {
                 return (
                     <Flex align="center">
-                            <Icon
-                                w="24px"
-                                h="24px"
-                                me="5px"
-                                color={info.getValue() === 1 ? 'green.500' : 'gray.500'}
-                                as={info.getValue() === 1 ? MdCheckCircle : MdOutlineRemoveCircle}
-                            />
-                        {/* <Text color={textColor} fontSize="sm" fontWeight="700">
-                            {info.getValue() === 1 ? 'Featured' : 'Not Featured'}
-                        </Text> */}
+                        <Icon
+                            w="24px"
+                            h="24px"
+                            me="5px"
+                            color={info.getValue() === 1 ? 'green.500' : 'gray.500'}
+                            as={info.getValue() === 1 ? MdCheckCircle : MdOutlineRemoveCircle}
+                        />
                     </Flex>
                 )
             },
@@ -279,18 +253,6 @@ export default function FeaturedProduct() {
             >
                 {openedPage === 0 && (
                     <>
-                        {/* <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
-                            <Text
-                                color={textColor}
-                                fontSize="22px"
-                                mb="4px"
-                                fontWeight="700"
-                                lineHeight="100%"
-                            >
-                                Featured Product
-                            </Text>
-                            <Menu />
-                        </Flex> */}
                         <Flex w='100%'>
                             <Button
                                 mb='50px'
