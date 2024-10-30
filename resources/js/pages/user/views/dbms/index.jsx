@@ -117,14 +117,8 @@ export default function Vendor() {
                     )) : <>
                         <Stack gap="1">
                             <Skeleton height={"20px"} borderRadius={"12px"} />
-                        </Stack>
-                        <Stack gap="1">
                             <Skeleton height={"20px"} borderRadius={"12px"} />
-                        </Stack>
-                        <Stack gap="1">
                             <Skeleton height={"20px"} borderRadius={"12px"} />
-                        </Stack>
-                        <Stack gap="1">
                             <Skeleton height={"20px"} borderRadius={"12px"} />
                         </Stack>
                     </>

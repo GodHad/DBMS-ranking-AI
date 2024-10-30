@@ -15,8 +15,8 @@ const createVendor = async ({ vendor }) => {
     return data;
 }
 
-const updateVendor = async ({ vendor }) => {
-    const { data } = await axios.post(`/api/update-vendor?id=${vendor.id}`, vendor);
+const updateVendor = async ({ id, vendor }) => {
+    const { data } = await axios.post(`/api/update-vendor?id=${id}`, vendor);
     return data;
 }
 

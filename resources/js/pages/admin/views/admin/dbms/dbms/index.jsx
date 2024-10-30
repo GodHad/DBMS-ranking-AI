@@ -46,7 +46,7 @@ import { deleteVendor, getCategories, getVendors } from './requests/use-request'
 
 const columnHelper = createColumnHelper();
 
-const initialVendor = {
+export const initialVendor = {
     id: null,
     company_name: '',
     description: '',
@@ -63,7 +63,7 @@ const initialVendor = {
     dbaas_offerings: '',
     implementation_lang: '',
     server_os: '',
-    data_scheme: 0,
+    data_scheme: '',
     typing: 0,
     xml_support: 0,
     secondary_indexes: 0,
@@ -74,15 +74,17 @@ const initialVendor = {
     triggers: 0,
     partitioning_methods: '',
     replication_methods: '',
-    mapreduce: 1,
-    consistency_concepts: '',
+    mapreduce: '',
+    consistency_concepts: 0,
     foreign_keys: 0,
-    trasaction_concepts: 0,
+    trasaction_concepts: '',
     concurrency: 0,
     durability: 0,
     in_memory_capabilities: 0,
     user_concepts: '',
     db_name: '',
+    logo_url: '',
+    banner: '',
 }
 
 export default function Vendor() {

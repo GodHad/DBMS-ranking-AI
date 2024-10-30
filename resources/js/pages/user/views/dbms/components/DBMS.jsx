@@ -7,23 +7,24 @@ import {
     Text,
     Th,
     Tr,
-    FormControl,
-    FormLabel,
+    Image,
+    Icon,
     Breadcrumb,
     BreadcrumbItem,
     useColorModeValue,
     BreadcrumbLink,
 } from '@chakra-ui/react';
 import React, { useState, useEffect, useContext, useMemo } from 'react'
-import { Select as MultiSelect } from 'chakra-react-select';
+import { MdCheckCircle, MdOutlineRemoveCircle } from 'react-icons/md';
 import Card from '../../../../../components/card/Card';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { DBMSContext } from '../../../../../contexts/DBMSContext';
-import { generateSlug } from '../../../../../variables/statics';
+import { APP_URL, generateSlug } from '../../../../../variables/statics';
 import { getVendors } from '../../../../admin/views/admin/dbms/dbms/requests/use-request';
 import { useQuery } from 'react-query';
+import { Skeleton } from '@chakra-ui/skeleton';
 
-const headers = [
+export const headers = [
     { key: 'db_name', name: 'Name' },
     { key: 'description', name: 'Description' },
     { key: 'primary_category', name: 'Primary Database Model' },
@@ -87,8 +88,9 @@ export default function DBMS() {
     }, [selectedDBMS, navigate])
 
     const textColor = useColorModeValue('secondaryGray.900', 'white');
-    const secondaryText = useColorModeValue('gray.700', 'white');
+    const secondaryText = useColorModeValue('gray.700', 'gray.600');
     const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
+    const viewsColor = useColorModeValue('blue.300', 'blue.600');
 
     const [data, setData] = useState(null);
 
@@ -172,7 +174,94 @@ export default function DBMS() {
                         </Text>
                     </Link>
                 </Flex>
+                {selectedDBMS.length > 0 ?
+                    <>
+                        <Image
+                            mb={5}
+                            w="100%"
+                            maxH={'300px'}
+                            objectFit="cover"
+                            objectPosition="center"
+                            src={`${APP_URL}storage/${selectedDBMS[0].banner}?w=1400&auto=compression,format`}
+                            alt={selectedDBMS[0].db_name}
+                        />
+                        <Flex alignItems={'center'}>
+                            <Image
+                                mb={5}
+                                mx={5}
+                                w="172px"
+                                h={'172px'}
+                                objectFit="cover"
+                                objectPosition="center"
+                                border={borderColor}
+                                borderStyle={'solid'}
+                                borderWidth={1}
+                                src={`${APP_URL}storage/${selectedDBMS[0].logo_url}?w=1400&auto=compression,format`}
+                                alt={selectedDBMS[0].db_name}
+                            />
+                            <Flex flexDir={'column'} gap={2}>
+                                <a href={selectedDBMS[0].website_url} target='_blank'>
+                                    <Text
+                                        color={textColor}
+                                        mb="4px"
+                                        fontWeight="700"
+                                        lineHeight="120%"
+                                        fontSize={'20px'}
+                                    >{selectedDBMS[0].db_name}</Text>
+                                </a>
+                                <Text
+                                    color={secondaryText}
+                                    mb="4px"
+                                    fontWeight="500"
+                                    lineHeight="120%"
+                                    fontSize={'16px'}
+                                >By {selectedDBMS[0].company_name}</Text>
+                                <Text
+                                    color={viewsColor}
+                                    mb="4px"
+                                    fontWeight="600"
+                                    lineHeight="120%"
+                                    fontSize={'18px'}
+                                >{selectedDBMS[0].profile_views} views</Text>
+                                <Flex align="center">
+                                    <Icon
+                                        w="24px"
+                                        h="24px"
+                                        me="5px"
+                                        color={selectedDBMS[0].approved === 1 ? 'green.500' : 'gray.500'}
+                                        as={selectedDBMS[0].approved === 1 ? MdCheckCircle : MdOutlineRemoveCircle}
+                                    />
+                                    <Text color={selectedDBMS[0].approved === 1 ? 'green.500' : 'gray.500'} fontSize="sm" fontWeight="700">
+                                        {selectedDBMS[0].approved === 1 ? 'Claimed' : 'Unclaimed'}
+                                    </Text>
+                                </Flex>
 
+                            </Flex>
+                        </Flex>
+                    </>
+                    :
+                    <>
+                        <Skeleton height={"300px"} borderRadius={"12px"} mb={5} />
+                        <Flex alignItems={'center'}>
+                            <Skeleton 
+                                mb={5}
+                                mx={5}
+                                w="172px"
+                                h={'172px'}
+                                objectFit="cover"
+                                objectPosition="center"
+                                border={borderColor}
+                                borderStyle={'solid'}
+                                borderWidth={1} />
+                            <Flex flexDir={'column'} gap={2}>
+                                <Skeleton width={'200px'} height={"30px"} borderRadius={"12px"} />
+                                <Skeleton width={'200px'} height={"30px"} borderRadius={"12px"} />
+                                <Skeleton width={'200px'} height={"30px"} borderRadius={"12px"} />
+                                <Skeleton width={'200px'} height={"30px"} borderRadius={"12px"} />
+                            </Flex>
+                        </Flex>
+                    </>
+                }
                 <Box
                     overflow={'auto'}
                     maxH={'80vh'}
@@ -202,7 +291,7 @@ export default function DBMS() {
                                     >
                                         {header.name}
                                     </Th>
-                                    {data && data.map(dbms => (
+                                    {data && data.length > 0 ? data.map(dbms => (
                                         <Td
                                             key={dbms.id}
                                             pe="10px"
@@ -217,7 +306,15 @@ export default function DBMS() {
                                                 dangerouslySetInnerHTML={{ __html: header.yes ? dbms[header.key] ? 'Yes' : 'No' : dbms[header.key] }}
                                             />
                                         </Td>
-                                    ))}
+                                    )) : (
+                                        <Td
+                                            pe="10px"
+                                            borderColor={borderColor}
+                                            width={'300px'}
+                                        >
+                                            <Skeleton width={'300px'} height={"30px"} borderRadius={"12px"} />
+                                        </Td>
+                                    )}
                                 </Tr>
                             ))}
                         </Tbody>

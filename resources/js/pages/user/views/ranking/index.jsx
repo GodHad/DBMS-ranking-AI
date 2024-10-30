@@ -361,7 +361,7 @@ export default function Vendor() {
                 !selectedDBMS ? <>
                     <Sidebar categories={options} showingCategory={showingCategory} setShowingCategory={setShowingCategory} />
                     <Flex justifyContent={"flex-end"}>
-                        <Box width={{ xl: 'calc(100% - 290px)', base: '100%' }} float={"right"} position={'relative'} zIndex={10}>
+                        <Box width={{ xl: 'calc(100% - 290px)', base: '100%' }} float={"right"} position={'relative'} zIndex={10} overflow={'auto'}>
                             <Breadcrumb px="25px">
                                 <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
                                     <Link to='/'>

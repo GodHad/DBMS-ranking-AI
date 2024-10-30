@@ -46,6 +46,8 @@ class Vendor extends Model
         'in_memory_capabilities',
         'user_concepts',
         'db_name',
+        'logo_url',
+        'banner',
         'approved'
     ];
 

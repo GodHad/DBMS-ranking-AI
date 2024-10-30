@@ -1,8 +1,8 @@
-import { FormLabel, Text, Select } from "@chakra-ui/react"
+import { FormLabel, Text, Select, Box } from "@chakra-ui/react"
 
 export const CustomSelect = ({ title, name, value, handleChangeForm, textColor, brandStars }) => {
     return (
-        <>
+        <Box w={'full'}>
             <FormLabel
                 display='flex'
                 ms='4px'
@@ -30,6 +30,6 @@ export const CustomSelect = ({ title, name, value, handleChangeForm, textColor, 
                 <option value={0}>No</option>
                 <option value={1}>Yes</option>
             </Select>
-        </>
+        </Box>
     )
 }

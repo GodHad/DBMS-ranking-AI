@@ -9,7 +9,7 @@ use App\Models\Category;
 use App\Models\CountryTrend;
 use App\Models\PrimaryCategoryVendor;
 use App\Models\SecondaryCategoryVendor;
-
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -159,14 +159,22 @@ class VendorController extends Controller
                 'in_memory_capabilities' => ['nullable'],
                 'user_concepts' => ['nullable'],
                 'db_name' => ['required'],
+                'logo_file' => ['required', 'file', 'mimes:jpeg,png,jpg,gif,webp'],
+                'banner_file' => ['required', 'file', 'mimes:jpeg,png,jpg,gif,webp']
             ]);
 
             if ($validator->fails()) {
                 return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
             }
 
-            
-            $vendor = Vendor::create($validator->validated());
+            $logoPath = $request->file('logo_file')->store('images/vendors/logos', 'public');
+            $bannerPath = $request->file('banner_file')->store('images/vendors/banners', 'public');
+
+            $vendor = Vendor::create([
+                ...$validator->validated(),
+                'logo_url' => $logoPath,
+                'banner' => $bannerPath,
+            ]);
             
             $primary_category = $data['primary_category'];
             $secondary_category = $data['secondary_category'];
@@ -242,6 +250,8 @@ class VendorController extends Controller
                 'in_memory_capabilities' => ['nullable'],
                 'user_concepts' => ['nullable'],
                 'db_name' => ['required'],
+                'logo_file' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif,webp'],
+                'banner_file' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif,webp']
             ]);
 
             if ($validator->fails()) {
@@ -257,6 +267,21 @@ class VendorController extends Controller
             }
 
             $vendor->update($validator->validated());
+            if ($request->hasFile('logo_file')) {
+                if ($vendor->logo_url) {
+                    Storage::disk('public')->delete($vendor->logo_url);
+                }
+                $logoPath = $request->file('logo_file')->store('images/vendors/logos', 'public');
+                $vendor->logo_url = $logoPath;
+            }
+
+            if ($request->hasFile('banner_file')) {
+                if ($vendor->banner) {
+                    Storage::disk('public')->delete($vendor->banner);
+                }
+                $bannerPath = $request->file('banner_file')->store('images/vendors/banners', 'public');
+                $vendor->banner = $bannerPath;
+            }
             $vendor->overall_ranking = 1000000;
             $vendor->primary_ranking = 1000000;
             $vendor->save();
@@ -289,5 +314,14 @@ class VendorController extends Controller
         } catch (\Exception $th) {
             return response()->json(['success' => false, 'error' => $th->getMessage()], 500);
         }
+    }
+
+    public function test()
+    {
+        Mail::raw('This is a test email from Laravel using Amazon SES!', function ($message) {
+            $message->to('sunharius@gmail.com')
+                    ->subject('Test SES Email');
+        });
+        return response()->json(['success' => true]);
     }
 }

@@ -1,8 +1,8 @@
-import { FormLabel, Text, Input } from "@chakra-ui/react"
+import { FormLabel, Text, Input, Box } from "@chakra-ui/react"
 
 export const CustomInput = ({ type = 'text', title, name, value, handleChangeForm, textColor, brandStars }) => {
     return (
-        <>
+        <Box w={'full'}>
             <FormLabel
                 display='flex'
                 ms='4px'
@@ -28,6 +28,6 @@ export const CustomInput = ({ type = 'text', title, name, value, handleChangeFor
                 value={value}
                 onChange={handleChangeForm}
             />
-        </>
+        </Box>
     )
 }
