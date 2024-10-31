@@ -285,7 +285,7 @@ export default function Vendor() {
             ],
         }),
         columnHelper.group({
-            header: 'Avg. Score',
+            header: 'Score',
             columns: [
                 columnHelper.accessor('overall_avg_score', {
                     id: 'overall_avg_score',

@@ -108,7 +108,7 @@ export default function DBMS() {
                 return {
                     ...selectedDBMS,
                     overall_ranking: `
-                    <span style="margin-right: 8px; line-height: 36px;">Overall Avg. Score:</span> ${selectedDBMS.overall_avg_score}<br> 
+                    <span style="margin-right: 8px; line-height: 36px;">Score:</span> ${selectedDBMS.overall_avg_score}<br> 
                     <span style="margin-right: 8px; line-height: 36px;">Rank:</span> #${selectedDBMS.overall_ranking} Overall<br>
                     ${selectedDBMS.primary_category.map((category, index) => (`<span style="margin-right: 8px; line-height: 36px; opacity: 0">Rank: </span> #${primaryRanking[index]} ${category.shortname}<br>`)).join(' ')}
                 `,
@@ -160,44 +160,8 @@ export default function DBMS() {
                     </Breadcrumb>
                     <Flex px="25px" mb="20px" gap={4} flexDir={{ base: 'column', md: 'row' }} justifyContent="space-between" align={{ base: 'inherit', md: "center" }}>
                         <Flex alignItems={'center'} gap={2}>
-                            <Text
-                                color={textColor}
-                                fontSize={{ md: "22px", base: '20px' }}
-                                mb="4px"
-                                fontWeight="700"
-                                lineHeight="100%"
-                            >
-                                {selectedDBMS && selectedDBMS.db_name}
-                            </Text>
-                            {(user && selectedDBMS && selectedDBMS.user.length && user.id === selectedDBMS.user[0].id) && !editing ? (
-                                <IconButton
-                                    aria-label="Edit"
-                                    icon={<MdEdit />}
-                                    colorScheme="blue"
-                                    variant="outline"
-                                    isRound
-                                    size="sm"
-                                    float={'right'}
-                                    onClick={() => setEditing(true)}
-                                />
-                            ) : <></>}
                         </Flex>
-                        <Flex gap={4} alignItems={'center'}>
-                            {/* {
-                                editing && (
-                                    <Button
-                                        fontSize='sm'
-                                        variant='solid'
-                                        fontWeight='500'
-                                        minW={'120px'}
-                                        w='100%'
-                                        color="white"
-                                        onClick={closeEditing}
-                                    >
-                                        Close
-                                    </Button>
-                                )
-                            } */}
+                        <Flex gap={4} alignItems={'center'} justifyContent={'right'}>
                             <Link to={`/dbms/compare/${slug}`}>
                                 <Text
                                     color={'blue.500'}
@@ -240,15 +204,29 @@ export default function DBMS() {
                                         />
                                         <Flex justifyContent={'space-between'} flexDir={{ base: 'column', lg: 'row' }} w='full' mx={'16px'} gap={4}>
                                             <Flex flexDir={'column'} gap={2}>
-                                                <a href={selectedDBMS.website_url} target='_blank'>
-                                                    <Text
-                                                        color={textColor}
-                                                        mb="4px"
-                                                        fontWeight="700"
-                                                        lineHeight="120%"
-                                                        fontSize={'20px'}
-                                                    >{selectedDBMS.db_name}</Text>
-                                                </a>
+                                                <Flex align={'center'} gap={2}>
+                                                    <a href={selectedDBMS.website_url} target='_blank'>
+                                                        <Text
+                                                            color={textColor}
+                                                            mb="4px"
+                                                            fontWeight="700"
+                                                            lineHeight="120%"
+                                                            fontSize={'20px'}
+                                                        >{selectedDBMS.db_name}</Text>
+                                                    </a>
+                                                    {(user && selectedDBMS && selectedDBMS.user.length && user.id === selectedDBMS.user[0].id) && !editing ? (
+                                                        <IconButton
+                                                            aria-label="Edit"
+                                                            icon={<MdEdit />}
+                                                            colorScheme="blue"
+                                                            variant="outline"
+                                                            isRound
+                                                            size="sm"
+                                                            float={'right'}
+                                                            onClick={() => setEditing(true)}
+                                                        />
+                                                    ) : <></>}
+                                                </Flex>
                                                 <Flex align="center">
                                                     <Icon
                                                         w="24px"
