@@ -40,7 +40,7 @@ import { getBlogs, getBlog, deleteBlog } from './requests/use-request';
 
 const columnHelper = createColumnHelper();
 
-const initialBlog = {
+export const initialBlog = {
     id: null,
     title: '',
     description: '',

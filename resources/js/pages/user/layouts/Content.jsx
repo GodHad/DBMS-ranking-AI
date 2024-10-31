@@ -19,6 +19,7 @@ const ContactUs = lazy(() => import('../views/contactus'));
 const Services = lazy(() => import('../views/services'));
 const EncyclopediaPage = lazy(() => import('../views/encyclopedia/Encyclopedia'))
 const ClaimDBMS = lazy(() => import('../views/claim-dbms'));
+const CreateBlogPage = lazy(() => import('../views/blogs/CreateBlogPage'));
 
 export default function Dashboard(props) {
   const { ...rest } = props;
@@ -174,6 +175,14 @@ export default function Dashboard(props) {
                       <BlogPage />
                     </Suspense>
                   } />
+                <Route
+                  path='/blog/create-blog'
+                  element={
+                    <Suspense fallback={<Spinner />}>
+                      <CreateBlogPage />
+                    </Suspense>
+                  }
+                />
                 <Route
                   path="/dbms/:slug"
                   element={

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Box, Heading, Avatar, Text, Flex, Breadcrumb, BreadcrumbItem, NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper, Select, Stack, Tag, Image, Tooltip, IconButton, useColorModeValue } from '@chakra-ui/react';
 import Card from "../../../../components/card/Card";
 import { ArrowRightIcon } from "@chakra-ui/icons";
-import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
+import { MdAdd, MdChevronLeft, MdChevronRight } from 'react-icons/md';
 import { getBlogs, getCategories, getTags } from '../../../admin/views/admin/blog/components/blogs/requests/use-request';
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
@@ -15,13 +15,14 @@ import Sidebar from './Sidebar/Sidebar';
 import { SidebarResponsive } from './Sidebar/Sidebar';
 import { generateSlug } from '../../../../variables/statics';
 import { Helmet } from 'react-helmet';
+import { UserContext } from '../../../../contexts/UserContext';
 
 export default () => {
 
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     let secondaryText = useColorModeValue('gray.700', 'white');
     const blogCardBg = useColorModeValue("gray.200", "navy.900");
-
+    const { user } = useContext(UserContext);
     const [page, setPage] = useState(1);
     const [countPerPage, setCountPerPage] = useState(10);
     const [showingCategories, setShowingCategories] = useState([]);
@@ -105,6 +106,19 @@ export default () => {
                                 Blog
                             </Text>
                             {(categories && tags) && <SidebarResponsive categories={categories} showingCategories={showingCategories} setShowingCategories={setShowingCategories} tags={options} showingTags={showingTags} setShowingTags={setShowingTags} />}
+                            {user && user.author && (
+                                <Link to='/blog/create-blog'>
+                                    <IconButton
+                                        aria-label="Add"
+                                        icon={<MdAdd />}
+                                        colorScheme="blue"
+                                        variant="outline"
+                                        isRound
+                                        size="md"
+                                        ml={2}
+                                    />
+                                </Link>
+                            )}
                         </Flex>
                         <Box>
                             {
