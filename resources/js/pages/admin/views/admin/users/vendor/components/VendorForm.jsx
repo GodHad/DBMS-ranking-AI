@@ -14,6 +14,7 @@ import {
 import { useQueryClient, useMutation } from 'react-query';
 import { createVendor, updateVendor } from '../requests/use-request';
 import { CustomInput } from '../../../../../../../components/form/CustomInput';
+import { column } from 'stylis';
 
 export default function VendorForm({ vendor, setOpenedPage }) {
     const queryClient = useQueryClient();
@@ -135,12 +136,18 @@ export default function VendorForm({ vendor, setOpenedPage }) {
         <Box p={"20px"}>
             <Text mb={"32px"} fontSize={22}>{!vendor.id ? "Create" : "Update"} Vendor</Text>
             <FormControl>
-                <CustomInput title="Name" name="name" value={form.name} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                <CustomInput title="Surname" name="surname" value={form.surname} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                <CustomInput title="Email" name="email" type="email" value={form.email} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                <CustomInput title="Phone Number" name="phone_number" value={form.phone_number} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                <CustomInput title="Job Title" name="job_title" value={form.job_title} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                <CustomInput title="Company" name="company" value={form.company} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                <Flex gap={4} flexDir={{ base: 'column', md: 'row' }}>
+                    <CustomInput title="Name" name="name" value={form.name} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomInput title="Surname" name="surname" value={form.surname} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                </Flex>
+                <Flex gap={4} flexDir={{ base: 'column', md: 'row' }}>
+                    <CustomInput title="Email" name="email" type="email" value={form.email} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomInput title="Phone Number" name="phone_number" value={form.phone_number} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                </Flex>
+                <Flex gap={4} flexDir={{ base: 'column', md: 'row' }}>
+                    <CustomInput title="Job Title" name="job_title" value={form.job_title} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomInput title="Company" name="company" value={form.company} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                </Flex>
                 {!vendor.id && <CustomInput title="Password" name="password" type="password" value={form.password} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />}
                 <Flex>
                     <FormControl display='flex' alignItems='center' mb={'24px'}>
