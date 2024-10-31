@@ -169,20 +169,18 @@ export default function DBMS() {
                             >
                                 {selectedDBMS && selectedDBMS.db_name}
                             </Text>
-                            {
-                                (user && selectedDBMS && selectedDBMS.user.length && user.id === selectedDBMS.user[0].id) && !editing && (
-                                    <IconButton
-                                        aria-label="Edit"
-                                        icon={<MdEdit />}
-                                        colorScheme="blue"
-                                        variant="outline"
-                                        isRound
-                                        size="sm"
-                                        float={'right'}
-                                        onClick={() => setEditing(true)}
-                                    />
-                                )
-                            }
+                            {(user && selectedDBMS && selectedDBMS.user.length && user.id === selectedDBMS.user[0].id) && !editing ? (
+                                <IconButton
+                                    aria-label="Edit"
+                                    icon={<MdEdit />}
+                                    colorScheme="blue"
+                                    variant="outline"
+                                    isRound
+                                    size="sm"
+                                    float={'right'}
+                                    onClick={() => setEditing(true)}
+                                />
+                            ) : <></>}
                         </Flex>
                         <Flex gap={4} alignItems={'center'}>
                             {/* {
