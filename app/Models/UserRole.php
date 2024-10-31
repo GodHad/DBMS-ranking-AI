@@ -14,7 +14,7 @@ class UserRole extends Model
     protected $table = 'user_roles';
     protected $fillable = [
         'user_id',
-        'role',
+        'author',
         'approved'
     ];
 

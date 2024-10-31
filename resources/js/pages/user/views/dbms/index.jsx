@@ -37,21 +37,16 @@ export default function Vendor() {
     const textColor = useColorModeValue('secondaryGray.900', 'white');
     let secondaryText = useColorModeValue('gray.700', 'white');
 
-    const { data: vendors = [], isLoading } = useQuery(
-        'vendors',
+    const { data: vendors, isLoading } = useQuery(
+        'user_vendors',
         () => getVendors(' '),
         {
             staleTime: 300000,
-            enabled: data.length === 0,
             onSuccess: (data) => {
                 setData(data);
             }
         }
     );
-
-    useEffect(() => {
-        setData(vendors || []);
-    }, [vendors]);
 
     const columnCount = useBreakpointValue({
         base: 4,

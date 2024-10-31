@@ -37,7 +37,7 @@ export default function Vendor() {
     pageSize: 10,
   })
 
-  const { data: vendors = [] } = useQuery('vendors', getVendors, { staleTime: 300000 });
+  const { data: vendors = [] } = useQuery('top_vendors', getVendors, { staleTime: 300000 });
 
   const columns = [
 
@@ -174,7 +174,7 @@ export default function Vendor() {
           </Thead>
           <Tbody>
             {
-              !vendors ?
+              !vendors.length ?
                 <Tr>
                   <Td colSpan={3}>
                     <Stack gap="6">

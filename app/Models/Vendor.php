@@ -48,7 +48,7 @@ class Vendor extends Model
         'db_name',
         'logo_url',
         'banner',
-        'approved'
+        'user_id'
     ];
 
     public function primaryCategory()
@@ -73,5 +73,10 @@ class Vendor extends Model
             'id',                     // Local key on the Vendor table
             'category_id'             // Local key on the PrimaryCategoryVendor table
         );
+    }
+
+    public function user()
+    {
+        return $this->belongsToMany(User::class, 'user_vendor', 'vendor_id', 'user_id');
     }
 }

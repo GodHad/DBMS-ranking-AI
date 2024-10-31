@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import {
     Box,
     Avatar,
@@ -8,6 +8,7 @@ import {
     BreadcrumbItem,
     Image as ChakraImage,
     Tag,
+    IconButton,
     useColorModeValue
 } from '@chakra-ui/react';
 import Card from "../../../../components/card/Card";
@@ -52,6 +53,9 @@ import {
 import 'ckeditor5/ckeditor5.css';
 import { Helmet } from 'react-helmet';
 import { APP_URL } from '../../../../variables/statics';
+import { UserContext } from '../../../../contexts/UserContext';
+import { MdEdit } from 'react-icons/md';
+import BlogForm from '../../../admin/views/admin/blog/components/blogs/components/BlogForm';
 
 export default () => {
     const { id } = useParams();
@@ -59,8 +63,11 @@ export default () => {
     let secondaryText = useColorModeValue('gray.700', 'white');
     const editorBgColor = useColorModeValue('#f9f9f9', '#1a202c');
 
-    const { data: blog, isLoadingBlog } = useQuery(['blog', id], () => getBlog(id), {
-        enabled: !!id, 
+    const { user } = useContext(UserContext);
+
+    const [editing, setEditing] = useState(false)
+    const { data: blog, isLoadingBlog } = useQuery(['blog', id, editing], () => getBlog(id), {
+        enabled: !!id,
         staleTime: 300000
     });
 
@@ -114,19 +121,36 @@ export default () => {
                             </BreadcrumbItem>
                         )}
                     </Breadcrumb>
-                    {
-                        blog ?
+                    {blog ?
+                        editing ? <BlogForm blog={{ ...blog, tags: blog.tags.map(tag => tag.id), categories: blog.categories.map(category => category.id) }} setOpenedPage={setEditing} /> :
                             <Box p={"20px"}>
                                 <ChakraImage
                                     mb={5}
                                     w="100%"
+                                    h={'300px'}
                                     borderRadius="xl"
                                     objectFit="cover"
                                     objectPosition="center"
                                     src={`../../storage/${blog.featured_images[0].url}?w=1400&auto=compression,format`}
                                     alt={blog.title}
                                 />
-                                <ChakraText mb={"32px"} fontSize={30} fontWeight={700}>{blog.title}</ChakraText>
+                                <ChakraText mb={"32px"} fontSize={30} fontWeight={700}>
+                                    {blog.title}
+                                    {
+                                        (user && user.id === blog.user_id) && !editing && (
+                                            <IconButton
+                                                aria-label="Edit"
+                                                icon={<MdEdit />}
+                                                colorScheme="blue"
+                                                variant="outline"
+                                                isRound
+                                                size="md"
+                                                ml={2}
+                                                onClick={() => setEditing(true)}
+                                            />
+                                        )
+                                    }
+                                </ChakraText>
                                 <Box>
                                     <Flex direction={{ base: "column", md: "row" }} justify="space-between" alignItems={'center'} mb={4} gap={2}>
                                         <Flex align="center" color="gray.500" _dark={{ color: "gray.400" }} gap={2}>

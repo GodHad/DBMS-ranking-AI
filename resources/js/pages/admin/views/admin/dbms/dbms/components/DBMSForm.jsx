@@ -270,13 +270,15 @@ export default function VendorForm({ vendor, categories, setOpenedPage }) {
     const logoFileRef = useRef(null);
     const bannerFileRef = useRef(null);
 
+    console.log(vendor)
+
     return (
         <Box p={"20px"}>
             <Text mb={"32px"} fontSize={22}>{!vendor.id ? "Create" : "Update"} DBMS</Text>
             <FormControl>
                 <FormControl display={'flex'} justifyContent={'space-between'} flexDir={{ base: 'column', md: 'row' }} gap={{ md: 6, base: 2 }} alignItems={'center'}>
-                    <CustomInput title="Company Name" name="company_name" value={form.company_name} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                    <CustomInput title="Database Name" name="db_name" value={form.db_name} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomInput title="Company Name" name="company_name" value={form.company_name || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomInput title="Database Name" name="db_name" value={form.db_name || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 </FormControl>
                 <FormLabel
                     display='flex'
@@ -302,60 +304,60 @@ export default function VendorForm({ vendor, categories, setOpenedPage }) {
                     borderColor={"grey"}
                     borderRadius={'16px'}
                     name="description"
-                    value={form.description}
+                    value={form.description || ''}
                     onChange={handleChangeForm}
                 />
                 <FormControl display={'flex'} justifyContent={'space-between'} flexDir={{ base: 'column', md: 'row' }} gap={{ md: 6, base: 2 }} alignItems={'center'}>
-                    <CustomMultiSelect title="Primary Categories" name="primary_category" value={form.primary_category} handleChangeMultiSelect={handleChangeMultiSelect} options={categories.map(category => ({ id: category.id, value: category.title, label: category.title }))} />
-                    <CustomMultiSelect title="Secondary Categories" name="secondary_category" value={form.secondary_category} handleChangeMultiSelect={handleChangeMultiSelect} options={categories.map(category => ({ id: category.id, value: category.title, label: category.title }))} />
+                    <CustomMultiSelect title="Primary Categories" name="primary_category" value={form.primary_category} handleChangeMultiSelect={handleChangeMultiSelect} options={categories.map(category => ({ id: category.id, value: category.title || '', label: category.title }))} />
+                    <CustomMultiSelect title="Secondary Categories" name="secondary_category" value={form.secondary_category} handleChangeMultiSelect={handleChangeMultiSelect} options={categories.map(category => ({ id: category.id, value: category.title || '', label: category.title }))} />
                 </FormControl>
                 <FormControl display={'flex'} justifyContent={'space-between'} flexDir={{ base: 'column', md: 'row' }} gap={{ md: 6, base: 2 }} alignItems={'center'}>
 
-                    <CustomInput type="url" title="Website URL" name="website_url" value={form.website_url} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                    <CustomInput type="url" title="Technical Documentation" name="technical_doc" value={form.technical_doc} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomInput type="url" title="Website URL" name="website_url" value={form.website_url || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomInput type="url" title="Technical Documentation" name="technical_doc" value={form.technical_doc || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 </FormControl>
-                <CustomInput title="Developer" name="developer" value={form.developer} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                <CustomInput title="Developer" name="developer" value={form.developer || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 <FormControl display={'flex'} justifyContent={'space-between'} flexDir={{ base: 'column', md: 'row' }} gap={{ md: 6, base: 2 }} alignItems={'center'}>
-                    <CustomInput title="Initial Release" name="initial_release" value={form.initial_release} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                    <CustomInput title="Current Release" name="current_release" value={form.current_release} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                    <CustomInput title="License" name="license" value={form.license} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                </FormControl>
-                <FormControl display={'flex'} justifyContent={'space-between'} flexDir={{ base: 'column', md: 'row' }} gap={{ md: 6, base: 2 }} alignItems={'center'}>
-                    <CustomSelect title="Cloud-based only" name="cloud_based_only" value={form.cloud_based_only} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                    <CustomInput title="DBaaS offerings" name="dbaas_offerings" value={form.dbaas_offerings} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                    <CustomInput title="Data Scheme" name="data_scheme" value={form.data_scheme} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                </FormControl>
-                <CustomInput title="Implementation Language" name="implementation_lang" value={form.implementation_lang} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                <CustomInput title="Server Operating System" name="server_os" value={form.server_os} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                <FormControl display={'flex'} justifyContent={'space-between'} flexDir={{ base: 'column', md: 'row' }} gap={{ md: 6, base: 2 }} alignItems={'center'}>
-                    <CustomSelect title="Typing" name="typing" value={form.typing} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                    <CustomSelect title="XML Support" name="xml_support" value={form.xml_support} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                    <CustomSelect title="Secondary Indexes" name="secondary_indexes" value={form.secondary_indexes} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomInput title="Initial Release" name="initial_release" value={form.initial_release || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomInput title="Current Release" name="current_release" value={form.current_release || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomInput title="License" name="license" value={form.license || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 </FormControl>
                 <FormControl display={'flex'} justifyContent={'space-between'} flexDir={{ base: 'column', md: 'row' }} gap={{ md: 6, base: 2 }} alignItems={'center'}>
-                    <CustomInput title="SQL" name="sql" value={form.sql} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                    <CustomInput title="APIs Access Method" name="apis_access_method" value={form.apis_access_method} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                    <CustomInput title="Supported Programming Languages" name="supported_programming_lang" value={form.supported_programming_lang} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomSelect title="Cloud-based only" name="cloud_based_only" value={form.cloud_based_only || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomInput title="DBaaS offerings" name="dbaas_offerings" value={form.dbaas_offerings || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomInput title="Data Scheme" name="data_scheme" value={form.data_scheme || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                </FormControl>
+                <CustomInput title="Implementation Language" name="implementation_lang" value={form.implementation_lang || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                <CustomInput title="Server Operating System" name="server_os" value={form.server_os || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                <FormControl display={'flex'} justifyContent={'space-between'} flexDir={{ base: 'column', md: 'row' }} gap={{ md: 6, base: 2 }} alignItems={'center'}>
+                    <CustomSelect title="Typing" name="typing" value={form.typing || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomSelect title="XML Support" name="xml_support" value={form.xml_support || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomSelect title="Secondary Indexes" name="secondary_indexes" value={form.secondary_indexes || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 </FormControl>
                 <FormControl display={'flex'} justifyContent={'space-between'} flexDir={{ base: 'column', md: 'row' }} gap={{ md: 6, base: 2 }} alignItems={'center'}>
-                    <CustomInput title="Server Side Scripts" name="server_side_scripts" value={form.server_side_scripts} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                    <CustomSelect title="Triggers" name="triggers" value={form.triggers} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                    <CustomInput title="Partitioning Methods" name="partitioning_methods" value={form.partitioning_methods} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomInput title="SQL" name="sql" value={form.sql || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomInput title="APIs Access Method" name="apis_access_method" value={form.apis_access_method || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomInput title="Supported Programming Languages" name="supported_programming_lang" value={form.supported_programming_lang || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 </FormControl>
                 <FormControl display={'flex'} justifyContent={'space-between'} flexDir={{ base: 'column', md: 'row' }} gap={{ md: 6, base: 2 }} alignItems={'center'}>
-                    <CustomInput title="Replication Methods" name="replication_methods" value={form.replication_methods} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                    <CustomInput title="MapReduce" name="mapreduce" value={form.mapreduce} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                    <CustomInput title="Consistency Concepts" name="consistency_concepts" value={form.consistency_concepts} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomInput title="Server Side Scripts" name="server_side_scripts" value={form.server_side_scripts || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomSelect title="Triggers" name="triggers" value={form.triggers || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomInput title="Partitioning Methods" name="partitioning_methods" value={form.partitioning_methods || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 </FormControl>
                 <FormControl display={'flex'} justifyContent={'space-between'} flexDir={{ base: 'column', md: 'row' }} gap={{ md: 6, base: 2 }} alignItems={'center'}>
-                    <CustomSelect title="Foreign Keys" name="foreign_keys" value={form.foreign_keys} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                    <CustomInput title="Transaction Concepts" name="trasaction_concepts" value={form.trasaction_concepts} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                    <CustomSelect title="Concurrency" name="concurrency" value={form.concurrency} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomInput title="Replication Methods" name="replication_methods" value={form.replication_methods || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomInput title="MapReduce" name="mapreduce" value={form.mapreduce || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomInput title="Consistency Concepts" name="consistency_concepts" value={form.consistency_concepts || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 </FormControl>
                 <FormControl display={'flex'} justifyContent={'space-between'} flexDir={{ base: 'column', md: 'row' }} gap={{ md: 6, base: 2 }} alignItems={'center'}>
-                    <CustomSelect title="Durability" name="durability" value={form.durability} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                    <CustomSelect title="In Memory Capabilities" name="in_memory_capabilities" value={form.in_memory_capabilities} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                    <CustomInput title="User Concepts" name="user_concepts" value={form.user_concepts} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomSelect title="Foreign Keys" name="foreign_keys" value={form.foreign_keys || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomInput title="Transaction Concepts" name="trasaction_concepts" value={form.trasaction_concepts || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomSelect title="Concurrency" name="concurrency" value={form.concurrency || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                </FormControl>
+                <FormControl display={'flex'} justifyContent={'space-between'} flexDir={{ base: 'column', md: 'row' }} gap={{ md: 6, base: 2 }} alignItems={'center'}>
+                    <CustomSelect title="Durability" name="durability" value={form.durability || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomSelect title="In Memory Capabilities" name="in_memory_capabilities" value={form.in_memory_capabilities || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomInput title="User Concepts" name="user_concepts" value={form.user_concepts || ''} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 </FormControl>
                 <FormControl display={'flex'} justifyContent={'space-between'} flexDir={{ base: 'column', md: 'row' }} gap={{ md: 6, base: 2 }} alignItems={'center'}>
                     <Box w={'full'}>
@@ -429,7 +431,7 @@ export default function VendorForm({ vendor, categories, setOpenedPage }) {
                             </Box>
                             {(form.banner || form.banner_file) && (
                                 <Box mt={4}>
-                                    <Image src={imagePreview.banner_file} alt="Image Preview" boxSize="200px" objectFit="cover" />
+                                    <Image src={imagePreview.banner_file} alt="Image Preview" width={'full'} height="200px" objectFit="cover" />
                                 </Box>
                             )}
                             <Input

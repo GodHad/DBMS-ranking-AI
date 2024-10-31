@@ -20,7 +20,7 @@ class AuthorMiddleware
     {
         $user = Auth::guard('web')->user();
         if (!$user) return response()->json(['error' => 'You can\'t do this operation'], 403);
-        $userRole = UserRole::where('role', 'author')->where('id', $user->id)->where('approved', 1)->first();
+        $userRole = UserRole::where('user_id', $user->id)->where('approved', 1)->where('author', 1)->first();
         $admin_emails = env('admin');
         if (strpos($admin_emails, $user->email) === false && !$userRole) return response()->json(['error' => 'You can\'t do this operation'], 403);
         return $next($request);

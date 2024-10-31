@@ -74,4 +74,9 @@ class User extends Authenticatable implements JWTSubject
             'role' => $this->role
         ];
     }
+
+    public function vendor()
+    {
+        return $this->belongsToMany(Vendor::class, 'user_vendor', 'user_id', 'vendor_id');
+    }
 }

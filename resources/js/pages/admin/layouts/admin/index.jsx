@@ -1,4 +1,4 @@
-import { Portal, Box, useDisclosure } from '@chakra-ui/react';
+import { Portal, Box, useDisclosure, Spinner } from '@chakra-ui/react';
 import Footer from '../../../../components/footer/FooterAdmin';
 import Navbar from '../../../../components/navbar/NavbarAdmin';
 import Sidebar from '../../../../components/sidebar/Sidebar';
@@ -95,7 +95,7 @@ export default function Dashboard(props) {
         return (
           <Route key={key} element={<AdminRoute />}>
             <Route path={route.path} element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Spinner />}>
                 <LazyComponent />
               </Suspense>
             } />

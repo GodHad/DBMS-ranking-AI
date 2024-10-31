@@ -61,7 +61,7 @@ export default function ColumnTable(props) {
                 isClosable: true
             })
         }).catch(error => {
-            const errors = error.response.data.errors ? error.response.data.errors : { error: error.response.data.error };
+            const errors = error.data.errors ? error.data.errors : { error: error.data.error };
             const key = errors[Object.keys(errors)[0]];
             toast({
                 title: "Failed to update category",

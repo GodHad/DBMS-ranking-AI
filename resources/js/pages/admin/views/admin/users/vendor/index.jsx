@@ -238,6 +238,30 @@ const Vendor = () => {
                 </Flex>
             )
         }),
+        columnHelper.accessor('author', {
+            id: 'author',
+            header: () => (
+                <Text
+                    justifyContent="center"
+                    align="center"
+                    fontSize={{ sm: '10px', lg: '12px' }}
+                    color="gray.400"
+                >
+                    Author
+                </Text>
+            ),
+            cell: (info) => (
+                <Flex align="center">
+                    <Icon
+                        w="24px"
+                        h="24px"
+                        me="5px"
+                        color={info.getValue() === 1 ? 'green.500' : 'gray.500'}
+                        as={info.getValue() === 1 ? MdCheckCircle : MdOutlineRemoveCircle}
+                    />
+                </Flex>
+            )
+        }),
         columnHelper.accessor('action', {
             id: 'action',
             header: () => (
@@ -295,11 +319,11 @@ const Vendor = () => {
             flexDirection="column"
             w="100%"
             px="0px"
-            overflowX={{ sm: 'scroll', lg: 'hidden' }}
+            overflowX={'auto'}
         >
             {openedPage === 0 && (
                 <>
-                    <Flex w='100%'>
+                    {/* <Flex w='100%'>
                         <Button
                             mb='50px'
                             mt={{ base: "20px" }}
@@ -310,7 +334,7 @@ const Vendor = () => {
                         >
                             <Icon as={MdAdd} h='18px' w='18px' />New Vendor
                         </Button>
-                    </Flex>
+                    </Flex> */}
                     <Box>
                         <Table variant="simple" color="gray.500" mb="24px" mt="12px">
                             <Thead>

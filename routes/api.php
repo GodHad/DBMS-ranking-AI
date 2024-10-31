@@ -106,8 +106,8 @@ Route::group([
 
     // vendor requests
     Route::get('/get-vendor-managers', [VendorRequestController::class, 'getAllVendors']);
-    
     Route::get('/get-vendor-requests', [VendorRequestController::class, 'getAllRequests']);
+    Route::post('/claim-dbms', [VendorRequestController::class, 'createVendorRequest']);
     
     // author requests
     Route::get('/get-authors', [AuthorRequestController::class, 'getAllAuthors']);

@@ -45,6 +45,8 @@ function SignIn() {
   const handleLogin = async () => {
     const res = await axios.post('/api/login', form);
     if (!res.data.success) {
+      const errors = res.data.errors ? res.data.errors : { error: res.data.error };
+      const key = errors[Object.keys(errors)[0]];
       toast({
         title: "Sign in failed",
         description: key,
@@ -64,9 +66,9 @@ function SignIn() {
         isClosable: true
       })
 
-      navigate('/admin');
-
       setUser(res.data.user);
+      if (res.data.user.admin) navigate('/admin');
+      else navigate('/');
     }
   }
 

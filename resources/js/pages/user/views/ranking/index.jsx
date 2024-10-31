@@ -348,184 +348,184 @@ export default function Vendor() {
 
     return (
         <>
-        <Helmet>
+            <Helmet>
                 <title>DB Rank AI | DBMS Ranking</title>
             </Helmet>
-        <Card
-            flexDirection="column"
-            w="100%"
-            px="0px"
-            minH="calc(100vh - 150px)"
-            overflowX={{ sm: 'auto', lg: 'hidden' }}
-        >
-            {
-                !selectedDBMS ? <>
-                    <Sidebar categories={options} showingCategory={showingCategory} setShowingCategory={setShowingCategory} />
-                    <Flex justifyContent={"flex-end"}>
-                        <Box width={{ xl: 'calc(100% - 290px)', base: '100%' }} float={"right"} position={'relative'} zIndex={10} overflow={'auto'}>
-                            <Breadcrumb px="25px">
-                                <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
-                                    <Link to='/'>
-                                        Home
-                                    </Link>
-                                </BreadcrumbItem>
+            <Card
+                flexDirection="column"
+                w="100%"
+                px="0px"
+                minH="calc(100vh - 150px)"
+                overflowX={{ sm: 'auto', lg: 'hidden' }}
+            >
+                {
+                    !selectedDBMS ? <>
+                        <Sidebar categories={options} showingCategory={showingCategory} setShowingCategory={setShowingCategory} />
+                        <Flex justifyContent={"flex-end"}>
+                            <Box width={{ xl: 'calc(100% - 290px)', base: '100%' }} float={"right"} position={'relative'} zIndex={10} overflow={'auto'}>
+                                <Breadcrumb px="25px">
+                                    <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
+                                        <Link to='/'>
+                                            Home
+                                        </Link>
+                                    </BreadcrumbItem>
 
-                                <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
-                                    <Link to='/ranking'>
-                                        DB Ranking
-                                    </Link>
-                                </BreadcrumbItem>
-                            </Breadcrumb>
-                            <Flex px="25px" mb="8px" gap={4} flexDir={{ base: 'column', md: 'row' }} justifyContent="space-between" align={{ base: 'inherit', md: "center" }}>
-                                <Text
-                                    color={textColor}
-                                    fontSize="22px"
-                                    mb="4px"
-                                    fontWeight="700"
-                                    lineHeight="100%"
-                                >
-                                    DBMS Ranking {options && ('for ' + options[showingCategory].label)}
-                                </Text>
-                                <Box display={"flex"} gap={2} alignItems={"center"} justifyContent={{ base: 'right', md: 'inherit' }}>
-                                    <Select
-                                        options={countryOptions}
-                                        value={country}
-                                        onChange={handleChangeCountry}
-                                        isSearchable
-                                        chakraStyles={{
-                                            container: (provided) => ({
-                                                ...provided,
-                                                width: '200px', // Set the container width here
-                                            }),
-                                        }}
-                                    />
-                                    <Tooltip label={showing === 0 ? 'Chart View' : 'Table View'}>
-                                        <IconButton
-                                            align='center'
-                                            justifyContent='center'
-                                            bg={bgButton}
-                                            _hover={bgHover}
-                                            _focus={bgFocus}
-                                            _active={bgFocus}
-                                            w='37px'
-                                            h='37px'
-                                            lineHeight='100%'
-                                            borderRadius='10px'
-                                            onClick={() => setShowing(prev => 1 - prev)}
-                                        >
-                                            <Icon as={showing === 0 ? MdAutoGraph : MdTableView} width={"20px"} height={"20px"} color="inherit" />
-                                        </IconButton>
-                                    </Tooltip>
-                                    <SidebarResponsive categories={options} showingCategory={showingCategory} setShowingCategory={setShowingCategory} />
-                                </Box>
-                            </Flex>
+                                    <BreadcrumbItem color={secondaryText} fontSize='sm' mb='5px'>
+                                        <Link to='/ranking'>
+                                            DB Ranking
+                                        </Link>
+                                    </BreadcrumbItem>
+                                </Breadcrumb>
+                                <Flex px="25px" mb="8px" gap={4} flexDir={{ base: 'column', md: 'row' }} justifyContent="space-between" align={{ base: 'inherit', md: "center" }}>
+                                    <Text
+                                        color={textColor}
+                                        fontSize="22px"
+                                        mb="4px"
+                                        fontWeight="700"
+                                        lineHeight="100%"
+                                    >
+                                        DBMS Ranking {options && ('for ' + options[showingCategory].label)}
+                                    </Text>
+                                    <Box display={"flex"} gap={2} alignItems={"center"} justifyContent={{ base: 'right', md: 'inherit' }}>
+                                        <Select
+                                            options={countryOptions}
+                                            value={country}
+                                            onChange={handleChangeCountry}
+                                            isSearchable
+                                            chakraStyles={{
+                                                container: (provided) => ({
+                                                    ...provided,
+                                                    width: '200px', // Set the container width here
+                                                }),
+                                            }}
+                                        />
+                                        <Tooltip label={showing === 0 ? 'Chart View' : 'Table View'}>
+                                            <IconButton
+                                                align='center'
+                                                justifyContent='center'
+                                                bg={bgButton}
+                                                _hover={bgHover}
+                                                _focus={bgFocus}
+                                                _active={bgFocus}
+                                                w='37px'
+                                                h='37px'
+                                                lineHeight='100%'
+                                                borderRadius='10px'
+                                                onClick={() => setShowing(prev => 1 - prev)}
+                                            >
+                                                <Icon as={showing === 0 ? MdAutoGraph : MdTableView} width={"20px"} height={"20px"} color="inherit" />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <SidebarResponsive categories={options} showingCategory={showingCategory} setShowingCategory={setShowingCategory} />
+                                    </Box>
+                                </Flex>
 
-                            {showing === 0 ?
-                                <Table variant="simple" color="gray.500" mb="24px" mt="12px">
-                                    <Thead>
-                                        {table.getHeaderGroups().map((headerGroup) => (
-                                            <Tr key={headerGroup.id}>
-                                                {headerGroup.headers.map((header) => {
-                                                    return (
-                                                        <Th
-                                                            key={header.id}
-                                                            colSpan={header.colSpan}
-                                                            pe="10px"
-                                                            borderColor={borderColor}
-                                                            cursor="pointer"
-                                                            onClick={header.column.getToggleSortingHandler()}
-                                                        >
-                                                            <Flex
-                                                                justifyContent="space-between"
-                                                                align="center"
-                                                                fontSize={{ sm: '10px', lg: '12px' }}
-                                                                color="gray.400"
+                                {showing === 0 ?
+                                    <Table variant="simple" color="gray.500" mb="24px" mt="12px">
+                                        <Thead>
+                                            {table.getHeaderGroups().map((headerGroup) => (
+                                                <Tr key={headerGroup.id}>
+                                                    {headerGroup.headers.map((header) => {
+                                                        return (
+                                                            <Th
+                                                                key={header.id}
+                                                                colSpan={header.colSpan}
+                                                                pe="10px"
+                                                                borderColor={borderColor}
+                                                                cursor="pointer"
+                                                                onClick={header.column.getToggleSortingHandler()}
                                                             >
-                                                                {flexRender(
-                                                                    header.column.columnDef.header,
-                                                                    header.getContext(),
-                                                                )}
-                                                                {{
-                                                                    asc: '',
-                                                                    desc: '',
-                                                                }[header.column.getIsSorted()] ?? null}
-                                                            </Flex>
-                                                        </Th>
-                                                    );
-                                                })}
-                                            </Tr>
-                                        ))}
-                                    </Thead>
-                                    <Tbody>
-                                        {
-                                            !vendors ?
-                                                <Tr>
-                                                    <Td colSpan={100}>
-                                                        <Stack gap="6">
-                                                            <Skeleton height={"50px"} borderRadius={"12px"} />
-                                                            <Skeleton height={"50px"} borderRadius={"12px"} />
-                                                            <Skeleton height={"50px"} borderRadius={"12px"} />
-                                                            <Skeleton height={"50px"} borderRadius={"12px"} />
-                                                            <Skeleton height={"50px"} borderRadius={"12px"} />
-                                                            <Skeleton height={"50px"} borderRadius={"12px"} />
-                                                            <Skeleton height={"50px"} borderRadius={"12px"} />
-                                                            <Skeleton height={"50px"} borderRadius={"12px"} />
-                                                            <Skeleton height={"50px"} borderRadius={"12px"} />
-                                                        </Stack>
-                                                    </Td>
-                                                </Tr> :
-                                                (rowModel && rowModel.rows.length !== 0) ?
-                                                    rowModel
-                                                        .rows
-                                                        .map((row) => {
-                                                            return (
-                                                                <Tr key={row.id}>
-                                                                    {row.getVisibleCells().map((cell) => {
-                                                                        return (
-                                                                            <Td
-                                                                                key={cell.id}
-                                                                                fontSize={{ sm: '14px' }}
-                                                                                minW={{ sm: '70px', md: '70px', lg: 'auto' }}
-                                                                                borderColor="transparent"
-                                                                            >
-                                                                                {flexRender(
-                                                                                    cell.column.columnDef.cell,
-                                                                                    cell.getContext(),
-                                                                                )}
-                                                                            </Td>
-                                                                        );
-                                                                    })}
-                                                                </Tr>
-                                                            );
-                                                        }) : (
-                                                        <Tr>
-                                                            <Td
-                                                                fontSize={{ sm: '14px' }}
-                                                                minW={{ sm: '150px', md: '200px', lg: 'auto' }}
-                                                                borderColor="transparent"
-                                                                colSpan={8}
-                                                            >
-                                                                <Text
-                                                                    color={textColor}
-                                                                    mb="4px"
-                                                                    align={"center"}
-                                                                    fontWeight="700"
-                                                                    lineHeight="100%"
+                                                                <Flex
+                                                                    justifyContent="space-between"
+                                                                    align="center"
+                                                                    fontSize={{ sm: '10px', lg: '12px' }}
+                                                                    color="gray.400"
                                                                 >
-                                                                    No Databases
-                                                                </Text>
-                                                            </Td>
-                                                        </Tr>
-                                                    )}
-                                    </Tbody>
-                                </Table> : <RankChart showingCategory={options[showingCategory].id} country={country} />
-                            }
-                        </Box>
-                    </Flex>
-                </>
-                    : <CompareDBMS selectedDBMS={selectedDBMS} setSelectedDBMS={setSelectedDBMS} vendors={vendors} />
-            }
-        </Card>
+                                                                    {flexRender(
+                                                                        header.column.columnDef.header,
+                                                                        header.getContext(),
+                                                                    )}
+                                                                    {{
+                                                                        asc: '',
+                                                                        desc: '',
+                                                                    }[header.column.getIsSorted()] ?? null}
+                                                                </Flex>
+                                                            </Th>
+                                                        );
+                                                    })}
+                                                </Tr>
+                                            ))}
+                                        </Thead>
+                                        <Tbody>
+                                            {
+                                                !vendors.length ?
+                                                    <Tr>
+                                                        <Td colSpan={100}>
+                                                            <Stack gap="6">
+                                                                <Skeleton height={"50px"} borderRadius={"12px"} />
+                                                                <Skeleton height={"50px"} borderRadius={"12px"} />
+                                                                <Skeleton height={"50px"} borderRadius={"12px"} />
+                                                                <Skeleton height={"50px"} borderRadius={"12px"} />
+                                                                <Skeleton height={"50px"} borderRadius={"12px"} />
+                                                                <Skeleton height={"50px"} borderRadius={"12px"} />
+                                                                <Skeleton height={"50px"} borderRadius={"12px"} />
+                                                                <Skeleton height={"50px"} borderRadius={"12px"} />
+                                                                <Skeleton height={"50px"} borderRadius={"12px"} />
+                                                            </Stack>
+                                                        </Td>
+                                                    </Tr> :
+                                                    (rowModel && rowModel.rows.length !== 0) ?
+                                                        rowModel
+                                                            .rows
+                                                            .map((row) => {
+                                                                return (
+                                                                    <Tr key={row.id}>
+                                                                        {row.getVisibleCells().map((cell) => {
+                                                                            return (
+                                                                                <Td
+                                                                                    key={cell.id}
+                                                                                    fontSize={{ sm: '14px' }}
+                                                                                    minW={{ sm: '70px', md: '70px', lg: 'auto' }}
+                                                                                    borderColor="transparent"
+                                                                                >
+                                                                                    {flexRender(
+                                                                                        cell.column.columnDef.cell,
+                                                                                        cell.getContext(),
+                                                                                    )}
+                                                                                </Td>
+                                                                            );
+                                                                        })}
+                                                                    </Tr>
+                                                                );
+                                                            }) : (
+                                                            <Tr>
+                                                                <Td
+                                                                    fontSize={{ sm: '14px' }}
+                                                                    minW={{ sm: '150px', md: '200px', lg: 'auto' }}
+                                                                    borderColor="transparent"
+                                                                    colSpan={8}
+                                                                >
+                                                                    <Text
+                                                                        color={textColor}
+                                                                        mb="4px"
+                                                                        align={"center"}
+                                                                        fontWeight="700"
+                                                                        lineHeight="100%"
+                                                                    >
+                                                                        No Databases
+                                                                    </Text>
+                                                                </Td>
+                                                            </Tr>
+                                                        )}
+                                        </Tbody>
+                                    </Table> : <RankChart showingCategory={options[showingCategory].id} country={country} />
+                                }
+                            </Box>
+                        </Flex>
+                    </>
+                        : <CompareDBMS selectedDBMS={selectedDBMS} setSelectedDBMS={setSelectedDBMS} vendors={vendors} />
+                }
+            </Card>
         </>
     );
 }

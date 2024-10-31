@@ -71,7 +71,7 @@ export default function Sponsor() {
     const [openedPage, setOpenedPage] = useState(0);
 
     const [sponsor, setSponsor] = useState(initialSponsor);
-    const { data: sponsors, isLoadingSponsors } = useQuery('sponsors', getSponsors);
+    const { data: sponsors, isLoadingSponsors } = useQuery('sponsors', () => getSponsors(' '));
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: 10,

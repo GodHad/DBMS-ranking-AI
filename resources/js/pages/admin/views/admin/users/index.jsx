@@ -14,20 +14,20 @@ import Author from './author';
 export default function Blog() {
     return (
         <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
-            <Tabs>
+            {/* <Tabs>
                 <TabList>
                     <Tab>Vendors</Tab>
                     <Tab>Authors</Tab>
                 </TabList>
                 <TabPanels>
-                    <TabPanel>
+                    <TabPanel> */}
                         <Vendor />
-                    </TabPanel>
+                    {/* </TabPanel>
                     <TabPanel>
                         <Author />
-                    </TabPanel>
-                </TabPanels>
-            </Tabs>
+                    </TabPanel> */}
+                {/* </TabPanels> */}
+            {/* </Tabs> */}
         </Box >
     );
 }

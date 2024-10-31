@@ -1,4 +1,4 @@
-import { Box, useDisclosure, Image } from '@chakra-ui/react';
+import { Box, useDisclosure, Image, Spinner } from '@chakra-ui/react';
 import Footer from './Footer/Footer';
 import Navbar from '../../../components/navbar/NavbarUser';
 import React, { useState, useMemo, Suspense, lazy } from 'react';
@@ -18,6 +18,7 @@ const DBMS = lazy(() => import('../views/dbms/components/DBMS'));
 const ContactUs = lazy(() => import('../views/contactus'));
 const Services = lazy(() => import('../views/services'));
 const EncyclopediaPage = lazy(() => import('../views/encyclopedia/Encyclopedia'))
+const ClaimDBMS = lazy(() => import('../views/claim-dbms'));
 
 export default function Dashboard(props) {
   const { ...rest } = props;
@@ -100,7 +101,7 @@ export default function Dashboard(props) {
         <Route
           path={`${route.path}`}
           element={
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<Spinner />}>
               <LazyComponent />
             </Suspense>
           }
@@ -169,14 +170,14 @@ export default function Dashboard(props) {
                 <Route
                   path="/blog/:id/:slug"
                   element={
-                    <Suspense fallback={<div>Loading...</div>}>
+                    <Suspense fallback={<Spinner />}>
                       <BlogPage />
                     </Suspense>
                   } />
                 <Route
                   path="/dbms/:slug"
                   element={
-                    <Suspense fallback={<div>Loading...</div>}>
+                    <Suspense fallback={<Spinner />}>
                       <DBMS />
                     </Suspense>
                   }
@@ -184,7 +185,7 @@ export default function Dashboard(props) {
                 <Route
                   path="/dbms/compare/:slug"
                   element={
-                    <Suspense fallback={<div>Loading...</div>}>
+                    <Suspense fallback={<Spinner />}>
                       <CompareDBMS />
                     </Suspense>
                   }
@@ -192,21 +193,29 @@ export default function Dashboard(props) {
                 <Route
                   path="/encyclopedia/:slug"
                   element={
-                    <Suspense fallback={<div>Loading...</div>}>
+                    <Suspense fallback={<Spinner />}>
                       <EncyclopediaPage />
                     </Suspense>
                   }
                 />
                 <Route path='/contact-us' element={
-                  <Suspense fallback={<div>Loading...</div>}>
+                  <Suspense fallback={<Spinner />}>
                     <ContactUs />
                   </Suspense>
                 } />
                 <Route path='/services' element={
-                  <Suspense fallback={<div>Loading...</div>}>
+                  <Suspense fallback={<Spinner />}>
                     <Services />
                   </Suspense>
                 } />
+                <Route
+                  path='/claim-dbms/:slug'
+                  element={
+                    <Suspense fallback={<Spinner />}>
+                      <ClaimDBMS />
+                    </Suspense>
+                  }
+                />
                 <Route path='/*' element={<Page404 />} />
               </Routes>
             </Box>

@@ -6,6 +6,8 @@ import {
     Text,
     Box,
     Switch,
+    Flex,
+    Input,
     useToast,
     useColorModeValue
 } from '@chakra-ui/react'
@@ -28,7 +30,8 @@ export default function VendorForm({ vendor, setOpenedPage }) {
         job_title,
         company,
         approved,
-        userRoleId
+        userRoleId,
+        author,
     } = vendor;
 
     const [form, setForm] = useState({
@@ -41,7 +44,9 @@ export default function VendorForm({ vendor, setOpenedPage }) {
         company,
         password: '',
         approved,
-        userRoleId
+        author,
+        userRoleId,
+        vendor: vendor.vendor
     })
 
     const createVendorMutation = useMutation(createVendor, {
@@ -58,7 +63,7 @@ export default function VendorForm({ vendor, setOpenedPage }) {
             })
         },
         onError: (error) => {
-            const errors = error.response.data.errors ? error.response.data.errors : {error: error.response.data.error};
+            const errors = error.response.data.errors ? error.response.data.errors : { error: error.response.data.error };
             const key = errors[Object.keys(errors)[0]];
             toast({
                 title: "Failed to create vendor",
@@ -86,7 +91,7 @@ export default function VendorForm({ vendor, setOpenedPage }) {
             })
         },
         onError: (error) => {
-            const errors = error.response.data.errors ? error.response.data.errors : {error: error.response.data.error};
+            const errors = error.response.data.errors ? error.response.data.errors : { error: error.response.data.error };
             const key = errors[Object.keys(errors)[0]];
             toast({
                 title: "Failed to update vendor",
@@ -120,7 +125,9 @@ export default function VendorForm({ vendor, setOpenedPage }) {
             job_title,
             company,
             approved,
-            userRoleId
+            author,
+            userRoleId,
+            vendor: vendor.vendor
         }));
     }, [vendor])
 
@@ -135,29 +142,80 @@ export default function VendorForm({ vendor, setOpenedPage }) {
                 <CustomInput title="Job Title" name="job_title" value={form.job_title} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 <CustomInput title="Company" name="company" value={form.company} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 {!vendor.id && <CustomInput title="Password" name="password" type="password" value={form.password} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />}
-                <FormControl display='flex' alignItems='center' mb={'24px'}>
+                <Flex>
+                    <FormControl display='flex' alignItems='center' mb={'24px'}>
+                        <FormLabel
+                            display='flex'
+                            ms='4px'
+                            mb={0}
+                            fontSize='sm'
+                            fontWeight='500'
+                            color={textColor}
+                        >
+                            Approved
+                        </FormLabel>
+                        <Switch
+                            size={'lg'}
+                            colorScheme={"brand"}
+                            isChecked={form.approved === 1}
+                            onChange={() => {
+                                setForm(prevState => ({
+                                    ...prevState,
+                                    approved: 1 - form.approved
+                                }))
+                            }}
+                        />
+                    </FormControl>
+                    <FormControl display='flex' alignItems='center' mb={'24px'}>
+                        <FormLabel
+                            display='flex'
+                            ms='4px'
+                            mb={0}
+                            fontSize='sm'
+                            fontWeight='500'
+                            color={textColor}
+                        >
+                            Author Permission
+                        </FormLabel>
+                        <Switch
+                            size={'lg'}
+                            colorScheme={"brand"}
+                            isChecked={form.author === 1}
+                            onChange={() => {
+                                setForm(prevState => ({
+                                    ...prevState,
+                                    author: 1 - form.author
+                                }))
+                            }}
+                        />
+                    </FormControl>
+                </Flex>
+                <Box w={'full'}>
                     <FormLabel
                         display='flex'
                         ms='4px'
-                        mb={0}
                         fontSize='sm'
                         fontWeight='500'
                         color={textColor}
+                        mb='8px'
                     >
-                        Approved
+                        Request to claim DBMS
                     </FormLabel>
-                    <Switch
-                        size={'lg'}
-                        colorScheme={"brand"}
-                        isChecked={form.approved === 1}
-                        onChange={() => {
-                            setForm(prevState => ({
-                                ...prevState,
-                                approved: 1 - form.approved
-                            }))
-                        }}
+                    <Input
+                        isRequired={true}
+                        variant='auth'
+                        fontSize='sm'
+                        ms={{ base: "0px", md: "0px" }}
+                        type={'text'}
+                        placeholder=''
+                        mb='24px'
+                        fontWeight='500'
+                        size='lg'
+                        borderColor={"gray"}
+                        disabled
+                        defaultValue={form.vendor[0].db_name}
                     />
-                </FormControl>
+                </Box>
             </FormControl>
             <Button variant={"brand"} mt={3} mr={3} onClick={handleVendor}>
                 Save

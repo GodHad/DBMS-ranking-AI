@@ -1,8 +1,8 @@
-import React, { useContext, useState, Suspense, lazy } from 'react';
+import React, { useContext, useState, Suspense, lazy, useEffect } from 'react';
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import { ReactNotifications } from 'react-notifications-component'
 
-import { Box, useColorModeValue } from '@chakra-ui/react';
+import { Box, Spinner, useColorModeValue } from '@chakra-ui/react';
 
 import { SidebarContext } from '../../../../contexts/SidebarContext';
 import { UserContext } from '../../../../contexts/UserContext';
@@ -13,7 +13,10 @@ export default function Auth() {
   const [toggleSidebar, setToggleSidebar] = useState(false);
   const { user } = useContext(UserContext);
 
-  if (user) navigate('/admin');
+  useEffect(() => {
+    if (user && user.admin) navigate('/admin');
+    if (user) navigate('/')
+  }, [user])
 
   const authBg = useColorModeValue('white', 'navy.900');
   document.documentElement.dir = 'ltr';
@@ -39,7 +42,7 @@ export default function Auth() {
           transitionTimingFunction="linear, linear, ease"
         >
           <Box mx="auto" minH="100vh">
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<Spinner />}>
               <SignIn />
             </Suspense>
           </Box>

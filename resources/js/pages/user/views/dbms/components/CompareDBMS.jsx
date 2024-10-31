@@ -32,7 +32,7 @@ export default function CompareDBMS(props) {
   const { vendors, setVendors } = useContext(DBMSContext);
 
   const { data: _vendors, isLoadingVendor } = useQuery(
-    'vendors',
+    'user_vendors',
     getVendors,
     {
       staleTime: 300000,

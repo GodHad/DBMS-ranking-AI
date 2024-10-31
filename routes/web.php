@@ -8,7 +8,7 @@ Route::get('/api/user', function() {
     $admins = env('admin');
     if ($user) $user->admin = strpos($admins, $user->email) !== false;
     
-    return response()->json(['user' => $user, 'admins' => $admins]);
+    return response()->json(['user' => $user]);
 });
 
 Route::get('/{any}', function () {

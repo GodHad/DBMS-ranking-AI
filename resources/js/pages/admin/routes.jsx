@@ -45,9 +45,9 @@ const routes = [
     component: () => import('./views/admin/banner')
   },
   {
-    name: 'Users',
+    name: 'Vendors',
     layout: '/admin',
-    path: '/user',
+    path: '/vendors',
     icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
     component: () => import('./views/admin/users')
   },

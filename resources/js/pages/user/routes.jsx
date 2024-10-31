@@ -37,7 +37,7 @@ const routes = [
         name: 'Sponsors',
         path: '/sponsors',
         component: () => import('./views/sponsor')
-    },
+    }
 ];
 
 export default routes;

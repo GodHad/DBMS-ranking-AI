@@ -23,16 +23,17 @@ import {
 
 function generateSlug(title) {
   return title
-      .toLowerCase()
-      .trim()       
-      .replace(/[\s\W-]+/g, '-')
-      .replace(/^-+|-+$/g, '');
+    .toLowerCase()
+    .trim()
+    .replace(/[\s\W-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 }
 
 export default () => {
   const textColor = useColorModeValue('secondaryGray.900', 'white');
   const blogCardBg = useColorModeValue("gray.200", "navy.900");
-  const { data: blogs } = useQuery('blogs', getRecentlyBlogs, {staleTime: 300000});
+  const { data: blogs, isLoadingBlog } = useQuery('blogs', getRecentlyBlogs, { staleTime: 300000 });
+  console.log(blogs)
   return (
     <Box
       flexDirection="column"
@@ -42,7 +43,7 @@ export default () => {
       <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
         <Text
           color={textColor}
-          fontSize={{md: "22px", sm: '20px'}}
+          fontSize={{ md: "22px", sm: '20px' }}
           mb="4px"
           fontWeight="700"
           lineHeight="100%"
@@ -52,12 +53,18 @@ export default () => {
       </Flex>
       <SimpleGrid columns={{ base: 1, lg: 3 }} gap='20px' mb='20px' justifyContent={"center"}>
         {
-          !(blogs && blogs.data) ?
-            <HStack gap="6" maxW="xs" display="flex">
-              <Skeleton height="460px" borderRadius={"21px"} />
-              <Skeleton height="460px" borderRadius={"21px"} />
-              <Skeleton height="460px" borderRadius={"21px"} />
-            </HStack>
+          (!blogs || isLoadingBlog) ?
+            <>
+              <Box maxW="xs" display="flex" gap={8} justifyContent={'space-between'}>
+                <Skeleton width={'400px'} height="460px" borderRadius={"21px"} />
+              </Box>
+              <Box maxW="xs" display="flex" gap={8} justifyContent={'space-between'}>
+                <Skeleton width={'400px'} height="460px" borderRadius={"21px"} />
+              </Box>
+              <Box maxW="xs" display="flex" gap={8} justifyContent={'space-between'}>
+                <Skeleton width={'400px'} height="460px" borderRadius={"21px"} />
+              </Box>
+            </>
             :
             blogs.data.length > 0 ? blogs.data.map((blog, index) => (
               !blog ? <></> :
@@ -80,7 +87,7 @@ export default () => {
                     <Heading
                       as="h2"
                       pb={3}
-                      fontSize={{md: '18px', base: '16px'}}
+                      fontSize={{ md: '18px', base: '16px' }}
                       fontWeight="semibold"
                       color="gray.800"
                       _dark={{ color: "gray.200" }}
@@ -92,7 +99,7 @@ export default () => {
                   <Box>
                     <Flex direction={"column"} justify="space-between" mb={4} gap={2}>
                       <Flex align="center" color="gray.500" _dark={{ color: "gray.400" }}>
-                        <Text fontSize={{md: '16px', base: '14px'}}>{`By ${blog.user.name} ${blog.user.surname ? blog.user.surname : ''} on ${moment(blog.created_at).format('MMM D, YYYY')}`}</Text>
+                        <Text fontSize={{ md: '16px', base: '14px' }}>{`By ${blog.user.name} ${blog.user.surname ? blog.user.surname : ''} on ${moment(blog.created_at).format('MMM D, YYYY')}`}</Text>
                       </Flex>
                       <Flex
                         display={"flex"}
@@ -111,7 +118,7 @@ export default () => {
                     <Flex justify="space-between" fontWeight="medium" color="blue.500" _dark={{ color: "green.200" }}>
                       <Link to={`/blog/${blog.id}/${generateSlug(blog.title)}`}>
                         <Flex align="center">
-                          <Text fontSize={{md: '16px', base: '14px'}}>Read article</Text>
+                          <Text fontSize={{ md: '16px', base: '14px' }}>Read article</Text>
                           <ArrowRightIcon w={4} h={4} mx={2} />
                         </Flex>
                       </Link>

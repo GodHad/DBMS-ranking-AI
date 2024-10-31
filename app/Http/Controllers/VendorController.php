@@ -24,7 +24,7 @@ class VendorController extends Controller
             // $countPerPage = $request->query('countPerPage');
             // if ($countPerPage) $vendors = Vendor::orderBy('overall_ranking')->limit($countPerPage)->get();
             // else $vendors = Vendor::with(['primaryCategory', 'secondaryCategory'])->get();
-            $vendors = Vendor::with(['primaryCategory', 'secondaryCategory'])->get();
+            $vendors = Vendor::with(['primaryCategory', 'secondaryCategory', 'user'])->get();
             // foreach ($vendors as $vendor) {
             //     // Split the primary_category and secondary_category fields into arrays of category IDs
             //     $primaryCategoryIds = explode(',', $vendor->primary_category);
