@@ -151,7 +151,7 @@ const Vendor = () => {
                     fontSize={{ sm: '10px', lg: '12px' }}
                     color="gray.400"
                 >
-                    Surname
+                    Last Name
                 </Text>
             ),
             cell: (info) => (

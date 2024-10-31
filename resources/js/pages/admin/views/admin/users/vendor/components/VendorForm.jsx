@@ -137,8 +137,8 @@ export default function VendorForm({ vendor, setOpenedPage }) {
             <Text mb={"32px"} fontSize={22}>{!vendor.id ? "Create" : "Update"} Vendor</Text>
             <FormControl>
                 <Flex gap={4} flexDir={{ base: 'column', md: 'row' }}>
-                    <CustomInput title="Name" name="name" value={form.name} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
-                    <CustomInput title="Surname" name="surname" value={form.surname} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomInput title="First Name" name="name" value={form.name} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
+                    <CustomInput title="Last Name" name="surname" value={form.surname} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
                 </Flex>
                 <Flex gap={4} flexDir={{ base: 'column', md: 'row' }}>
                     <CustomInput title="Email" name="email" type="email" value={form.email} handleChangeForm={handleChangeForm} textColor={textColor} brandStars={brandStars} />
