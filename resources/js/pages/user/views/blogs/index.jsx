@@ -106,7 +106,7 @@ export default () => {
                                 Blog
                             </Text>
                             {(categories && tags) && <SidebarResponsive categories={categories} showingCategories={showingCategories} setShowingCategories={setShowingCategories} tags={options} showingTags={showingTags} setShowingTags={setShowingTags} />}
-                            {user && user.author && (
+                            {(user && user.author) ? (
                                 <Link to='/blog/create-blog'>
                                     <IconButton
                                         aria-label="Add"
@@ -118,7 +118,7 @@ export default () => {
                                         ml={2}
                                     />
                                 </Link>
-                            )}
+                            ) : <></>}
                         </Flex>
                         <Box>
                             {

@@ -136,20 +136,18 @@ export default () => {
                                 />
                                 <ChakraText mb={"32px"} fontSize={30} fontWeight={700}>
                                     {blog.title}
-                                    {
-                                        (user && user.id === blog.user_id) && !editing && (
-                                            <IconButton
-                                                aria-label="Edit"
-                                                icon={<MdEdit />}
-                                                colorScheme="blue"
-                                                variant="outline"
-                                                isRound
-                                                size="md"
-                                                ml={2}
-                                                onClick={() => setEditing(true)}
-                                            />
-                                        )
-                                    }
+                                    {(user && user.author && user.id === blog.user_id && !editing) ? (
+                                        <IconButton
+                                            aria-label="Edit"
+                                            icon={<MdEdit />}
+                                            colorScheme="blue"
+                                            variant="outline"
+                                            isRound
+                                            size="md"
+                                            ml={2}
+                                            onClick={() => setEditing(true)}
+                                        />
+                                    ) : <></>}
                                 </ChakraText>
                                 <Box>
                                     <Flex direction={{ base: "column", md: "row" }} justify="space-between" alignItems={'center'} mb={4} gap={2}>
