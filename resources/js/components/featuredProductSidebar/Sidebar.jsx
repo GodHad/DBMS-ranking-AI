@@ -56,7 +56,7 @@ export function FeaturedProductsSidebarResponsive() {
   const btnRef = React.useRef();
 
   return (
-    <Flex display={{ sm: "flex", xl: "none" }} alignItems='center'>
+    <Flex display={{ sm: "flex", lg: "none" }} alignItems='center'>
       <Flex ref={btnRef} w='max-content' h='max-content' onClick={onOpen}>
         <Icon
           as={MdFavoriteBorder}
