@@ -145,6 +145,7 @@ export default function Navbar(props) {
               {routes.map((route, index) => (
                 <NavLink key={route.path + index} route={route} />
               ))}
+              <NavLink route={{path: '/sign-in', name: 'Login'}} />
             </Stack>
           </Box>
         ) : null}
