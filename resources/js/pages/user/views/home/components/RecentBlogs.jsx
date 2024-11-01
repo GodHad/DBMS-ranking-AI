@@ -33,7 +33,6 @@ export default () => {
   const textColor = useColorModeValue('secondaryGray.900', 'white');
   const blogCardBg = useColorModeValue("gray.200", "navy.900");
   const { data: blogs, isLoadingBlog } = useQuery('blogs', getRecentlyBlogs, { staleTime: 300000 });
-  console.log(blogs)
   return (
     <Box
       flexDirection="column"

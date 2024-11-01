@@ -14,7 +14,7 @@ function SidebarContent() {
   const textColor = useColorModeValue('secondaryGray.900', 'white');
 
   return (
-    <Flex direction='column' height='100%' px="8px" borderRadius='30px' zIndex={1000000}
+    <Flex direction='column' height='100%' px="8px" borderRadius='30px' zIndex={1}
     position={'relative'}>
       <Stack direction='column' mb='auto' mt='8px'>
         <Flex px="10px" mb="8px" justifyContent="space-between" align="center">
