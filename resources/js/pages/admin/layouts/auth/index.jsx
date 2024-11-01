@@ -2,7 +2,7 @@ import React, { useContext, useState, Suspense, lazy, useEffect } from 'react';
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import { ReactNotifications } from 'react-notifications-component'
 
-import { Box, Spinner, useColorModeValue } from '@chakra-ui/react';
+import { Box, Spinner, Flex, useColorModeValue } from '@chakra-ui/react';
 
 import { SidebarContext } from '../../../../contexts/SidebarContext';
 import { UserContext } from '../../../../contexts/UserContext';

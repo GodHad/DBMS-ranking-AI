@@ -10,6 +10,7 @@ import {
     Image as ChakraImage,
     Spinner,
     Textarea,
+    Flex,
     useToast,
     useColorModeValue
 } from '@chakra-ui/react'

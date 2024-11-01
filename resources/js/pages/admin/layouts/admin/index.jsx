@@ -1,4 +1,4 @@
-import { Portal, Box, useDisclosure, Spinner } from '@chakra-ui/react';
+import { Portal, Box, useDisclosure, Spinner, Flex } from '@chakra-ui/react';
 import Footer from '../../../../components/footer/FooterAdmin';
 import Navbar from '../../../../components/navbar/NavbarAdmin';
 import Sidebar from '../../../../components/sidebar/Sidebar';
