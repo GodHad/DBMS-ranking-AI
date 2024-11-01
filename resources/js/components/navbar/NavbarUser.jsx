@@ -9,6 +9,7 @@ import {
   useBreakpointValue,
   Image,
   Stack,
+  Icon,
 } from '@chakra-ui/react'
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons'
 import Logo from './components/Logo'
@@ -22,7 +23,7 @@ import { getBanners } from '../../pages/admin/views/admin/banner/requests/use-re
 import { useQuery } from 'react-query';
 import Slider from 'react-slick';
 import { APP_URL } from '../../variables/statics';
-import { MdChildCare } from 'react-icons/md';
+import { MdAutoAwesome } from 'react-icons/md';
 
 const settings = {
   dots: true,
@@ -45,7 +46,7 @@ const NavLink = ({ route }) => {
     route.name !== 'Data Explorer' ?
       <Box
         px={3}
-        py={3}
+        py={4}
         rounded={'md'}
         bg={location.pathname.startsWith(route.path) ? bg : 'transparent'}
         _hover={{
@@ -67,8 +68,6 @@ const NavLink = ({ route }) => {
         rounded={'md'}
         px={3}
         py={3}
-        bgClip="text"
-        bgGradient={"linear(to-r, #2ac349, #018cc1)"}
       >
         <Box
           color={
@@ -78,7 +77,23 @@ const NavLink = ({ route }) => {
           }
           me='8px'
         >
-          <MdChildCare />
+          <Flex
+            borderRadius="full"
+            justify="center"
+            align="center"
+            // bg={'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)'}
+            h="30px"
+            minH="30px"
+            minW="30px"
+            bgGradient={"linear(to-r, #2ac349, #018cc1)"}
+          >
+            <Icon
+              as={MdAutoAwesome}
+              width="20px"
+              height="20px"
+              color="white"
+            />
+          </Flex>
         </Box>
         <Box>
           <Link to={route.path}>{route.name}</Link>

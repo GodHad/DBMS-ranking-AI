@@ -64,6 +64,7 @@
         "react-select-country-list": "^2.2.3",
         "react-slick": "^0.30.2",
         "react-table": "^7.8.0",
+        "remark-breaks": "^4.0.0",
         "stylis": "^4.3.2",
         "stylis-plugin-rtl": "^2.0.2",
         "web-vitals": "^4.2.2"

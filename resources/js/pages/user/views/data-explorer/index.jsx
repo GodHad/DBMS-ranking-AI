@@ -5,6 +5,7 @@ import {
     Flex,
     Icon,
     Img,
+    Spinner,
     Text,
     Textarea,
     useColorModeValue,
@@ -15,6 +16,7 @@ import { MdAutoAwesome, MdPerson } from 'react-icons/md';
 import Bg from '../../../../assets/img/bg-chat-image.png';
 import { useMutation } from 'react-query';
 import axios from '../../../../variables/axiosConfig';
+import Card from '../../../../components/card/Card';
 
 const sendMessageToChatBot = async (message) => {
     const res = await axios.post('/api/send-message-to-chat-bot', { message });
@@ -38,10 +40,7 @@ export default function Chat() {
         { color: 'whiteAlpha.600' },
     );
 
-    const sendChatMutation = useMutation((message) => {
-        setInputCode('');
-        return sendMessageToChatBot(message);
-    }, {
+    const sendChatMutation = useMutation(sendMessageToChatBot, {
         onSuccess: async (response) => {
             const data = response.data;
             if (!data) {
@@ -116,6 +115,8 @@ export default function Chat() {
         }
 
         setLoading(true);
+        setInputCode('');
+
         sendChatMutation.mutate(inputCode);
     };
 
@@ -127,7 +128,7 @@ export default function Chat() {
             position="relative"
         >
             <Img
-                src={Bg.src}
+                src={Bg}
                 position={'absolute'}
                 w="350px"
                 left="50%"
@@ -151,7 +152,7 @@ export default function Chat() {
                     display={'flex'}
                     mb={'auto'}
                 >
-                    <Flex w="100%" align={'center'} mb="10px"  display={outputCode ? 'flex' : 'none'}>
+                    <Flex w="100%" align={'center'} mb="10px" display={outputCode ? 'flex' : 'none'}>
                         <Flex
                             borderRadius="full"
                             justify="center"
@@ -163,7 +164,7 @@ export default function Chat() {
                             h="40px"
                             minH="40px"
                             minW="40px"
-                           
+                            zIndex={'2'}
                         >
                             <Icon
                                 as={MdPerson}
@@ -177,7 +178,7 @@ export default function Chat() {
                             border="1px solid"
                             borderColor={borderColor}
                             borderRadius="14px"
-                            w="85%"
+                            w={{ base: '75%', md: "85%" }}
                             zIndex={'2'}
                         >
                             <Text
@@ -195,7 +196,7 @@ export default function Chat() {
                             borderRadius="full"
                             justify="center"
                             align="center"
-                            bg={'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)'}
+                            bgGradient={"linear(to-r, #2ac349, #018cc1)"}
                             me="20px"
                             h="40px"
                             minH="40px"
@@ -209,15 +210,44 @@ export default function Chat() {
                                 color="white"
                             />
                         </Flex>
-                        <MessageBoxChat output={outputCode} />
+                        {!loading ? <MessageBoxChat output={outputCode} /> : (
+                            <Card
+                                px="22px !important"
+                                pl="22px !important"
+                                color={textColor}
+                                w={{ base: '75%', md: "85%" }}
+                                fontSize={{ base: 'sm', md: 'md' }}
+                                lineHeight={{ base: '24px', md: '26px' }}
+                                maxH={'100vh'}
+                                overflow={'auto'}
+                                fontWeight="500"
+                                sx={{
+                                    '&::-webkit-scrollbar': {
+                                        width: '8px',
+                                        height: '8px',
+                                        backgroundColor: 'transparent', // Change to transparent or the desired color
+                                    },
+                                    '&::-webkit-scrollbar-thumb': {
+                                        backgroundColor: borderColor, // Color for the scrollbar thumb
+                                        borderRadius: '20px',
+                                    },
+                                    '&::-webkit-scrollbar-track': {
+                                        backgroundColor: 'rgba(0, 0, 0, 0.15)', // Track color, adjust as needed
+                                        borderRadius: '20px',
+                                    },
+                                }}
+                            >
+                                <Spinner />
+                            </Card>
+                        )}
                     </Flex>
                 </Flex>
                 {/* Chat Input */}
+                <Text>Sometimes I am not smart enough.</Text>
                 <Box bottom={0} width={'full'}>
-                    <Flex ms={{ base: '0px', xl: '60px' }} mt="20px" justifyContent={'center'}>
+                    <Flex ms={{ base: '0px', xl: '60px' }} mt="20px" justifyContent={'center'} alignItems={'center'}>
                         <Textarea
                             minH="54px"
-                            h="100%"
                             border="1px solid"
                             borderColor={borderColor}
                             borderRadius="45px"
@@ -229,6 +259,7 @@ export default function Chat() {
                             color={inputColor}
                             _placeholder={placeholderColor}
                             placeholder="Type your message here..."
+                            value={inputCode}
                             onChange={handleChange}
                             sx={{
                                 '&::-webkit-scrollbar': {

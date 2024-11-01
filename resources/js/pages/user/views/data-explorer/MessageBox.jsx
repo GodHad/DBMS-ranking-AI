@@ -1,6 +1,7 @@
 import ReactMarkdown from 'react-markdown';
 import { useColorModeValue } from '@chakra-ui/react';
 import Card from '../../../../components/card/Card';
+import remarkBreaks from 'remark-breaks';
 
 export default function MessageBox(props) {
     const { output } = props
@@ -12,7 +13,7 @@ export default function MessageBox(props) {
             px="22px !important"
             pl="22px !important"
             color={textColor}
-            width="85%"
+            w={{base: '75%', md: "85%"}}
             fontSize={{ base: 'sm', md: 'md' }}
             lineHeight={{ base: '24px', md: '26px' }}
             maxH={'100vh'}
@@ -34,7 +35,7 @@ export default function MessageBox(props) {
                 },
             }}
         >
-            <ReactMarkdown className="font-medium" style={{ width: '100%', overflow: 'auto', height: 'calc(100% - 300px)' }}>
+            <ReactMarkdown className="font-medium" style={{ width: '100%', overflow: 'auto', height: 'calc(100% - 300px)' }} remarkPlugins={[remarkBreaks]}>
                 {output ? output : ''}
             </ReactMarkdown>
         </Card>
