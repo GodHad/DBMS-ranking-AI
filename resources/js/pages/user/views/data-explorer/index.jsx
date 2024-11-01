@@ -246,7 +246,7 @@ export default function Chat() {
                 {/* Chat Input */}
                 <Text textColor={secondaryText} textAlign={'center'}>Sometimes I am not smart enough. I am still learning.</Text>
                 <Box bottom={0} width={'full'}>
-                    <Flex ms={{ base: '0px', xl: '60px' }} mt="20px" justifyContent={'center'} alignItems={'center'}>
+                    <Flex mt="20px" justifyContent={'center'} alignItems={'center'}>
                         <Textarea
                             minH="54px"
                             border="1px solid"
