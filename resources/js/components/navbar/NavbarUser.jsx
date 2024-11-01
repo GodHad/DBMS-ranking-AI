@@ -22,6 +22,7 @@ import { getBanners } from '../../pages/admin/views/admin/banner/requests/use-re
 import { useQuery } from 'react-query';
 import Slider from 'react-slick';
 import { APP_URL } from '../../variables/statics';
+import { MdChildCare } from 'react-icons/md';
 
 const settings = {
   dots: true,
@@ -38,19 +39,51 @@ const settings = {
 const NavLink = ({ route }) => {
   const location = useLocation();
   const bg = useColorModeValue('gray.200', 'gray.700');
+  let activeIcon = useColorModeValue("brand.500", "white");
+  let textColor = useColorModeValue("secondaryGray.500", "white");
   return (
-    <Box
-      px={3}
-      py={3}
-      rounded={'md'}
-      bg={location.pathname.startsWith(route.path) ? bg : 'transparent'}
-      _hover={{
-        textDecoration: 'none',
-        bg: bg
-      }}
-    >
-      <Link to={route.path}>{route.name}</Link>
-    </Box>
+    route.name !== 'Data Explorer' ?
+      <Box
+        px={3}
+        py={3}
+        rounded={'md'}
+        bg={location.pathname.startsWith(route.path) ? bg : 'transparent'}
+        _hover={{
+          textDecoration: 'none',
+          bg: bg
+        }}
+      >
+        <Link to={route.path}>{route.name}</Link>
+      </Box> :
+      <Flex
+        alignItems='center'
+        justifyContent='center'
+        bg={location.pathname.startsWith(route.path) ? bg : 'transparent'}
+        _hover={{
+          textDecoration: 'none',
+          bg: bg,
+          color: 'white'
+        }}
+        rounded={'md'}
+        px={3}
+        py={3}
+        bgClip="text"
+        bgGradient={"linear(to-r, #2ac349, #018cc1)"}
+      >
+        <Box
+          color={
+            location.pathname.includes('explorer')
+              ? activeIcon
+              : textColor
+          }
+          me='8px'
+        >
+          <MdChildCare />
+        </Box>
+        <Box>
+          <Link to={route.path}>{route.name}</Link>
+        </Box>
+      </Flex>
   )
 }
 
@@ -73,7 +106,7 @@ export default function Navbar(props) {
     <>
       <Box bg={navbarBg} px={4} my={"10px"}>
         <Flex w="100%" display={'flex'} flexDir={{ base: 'column', sm: 'column', lg: 'row' }} alignItems={'center'} justifyContent={'center'}>
-          <Box position={{base: 'block', lg: 'absolute'}} left={'4'}>
+          <Box position={{ base: 'block', lg: 'absolute' }} left={'4'}>
             <Logo />
           </Box>
           <Box position={'relative'} height={'90px'} maxW={'728px'} width={{ base: '90%', lg: '80%' }} overflow={'hidden'}>
@@ -124,7 +157,7 @@ export default function Navbar(props) {
               {routes.map((route, index) => (
                 <NavLink key={route.path + index} route={route} />
               ))}
-              <NavLink route={{path: '/sign-in', name: 'Login'}} />
+              <NavLink route={{ path: '/sign-in', name: 'Login' }} />
             </HStack>
           </HStack>
           <Flex alignItems={'center'}>
@@ -145,7 +178,7 @@ export default function Navbar(props) {
               {routes.map((route, index) => (
                 <NavLink key={route.path + index} route={route} />
               ))}
-              <NavLink route={{path: '/sign-in', name: 'Login'}} />
+              <NavLink route={{ path: '/sign-in', name: 'Login' }} />
             </Stack>
           </Box>
         ) : null}

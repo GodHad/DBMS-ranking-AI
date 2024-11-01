@@ -90,7 +90,7 @@ export default function CompareDBMS(props) {
   return (
     <>
       <Helmet>
-        (<title>{`DB Rank AI | DBMS Compare | ${
+        (<title>{`DBMS Ranking AI | DBMS Compare | ${
           selectedDBMS.length === 1 ?
             selectedDBMS[0].db_name
             : selectedDBMS.map((dbms, index) => (index === selectedDBMS.length - 1) ? dbms.db_name : `${dbms.db_name} vs.`).join(' ')

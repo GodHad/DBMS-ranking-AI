@@ -83,7 +83,7 @@ export default () => {
         <>
             {blog && (
                 <Helmet>
-                    <title>DB Rank AI | Blog | {blog.title}</title>
+                    <title>DBMS Ranking AI | Blog | {blog.title}</title>
                     <meta name="description" content={blog.meta_description} />
 
                     <meta property="og:title" content={blog.meta_title} />

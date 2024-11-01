@@ -39,7 +39,7 @@ const SponsorPage = () => {
     return (
         <>
             <Helmet>
-                <title>DB Rank AI | Sponsors</title>
+                <title>DBMS Ranking AI | Sponsors</title>
             </Helmet>
             <Card
                 w="100%"

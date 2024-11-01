@@ -99,7 +99,7 @@ export default function Contact() {
     return (
         <>
             <Helmet>
-                <title>DB Rank AI | Contact us</title>
+                <title>DBMS Ranking AI | Contact us</title>
             </Helmet>
             <Box
                 color={textColor}

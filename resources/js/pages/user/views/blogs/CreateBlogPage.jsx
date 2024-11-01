@@ -15,7 +15,7 @@ export default () => {
     return (
         <>
             <Helmet>
-                <title>DB Rank AI | Create Blog</title>
+                <title>DBMS Ranking AI | Create Blog</title>
             </Helmet>
             <Card
                 w="100%"

@@ -15,6 +15,7 @@ use App\Http\Controllers\FeaturedProductController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\ChatBotController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -127,5 +128,7 @@ Route::group([
     Route::post('/send-request', [ContactController::class, 'index']);
 
     Route::post('/search', [SearchController::class, 'index']);
+
+    Route::post('/send-message-to-chat-bot', [ChatBotController::class, 'index']);
     Route::get('/test', [VendorController::class, 'test']);
 });

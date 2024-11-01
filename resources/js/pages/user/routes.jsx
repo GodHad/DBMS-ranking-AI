@@ -1,13 +1,11 @@
-import React from 'react';
-
-import Home from './views/home';
-import DBMSRanking from './views/ranking';
-import DBMS from './views/dbms';
-import Encyclopedia from './views/encyclopedia';
-import Blogs from './views/blogs';
-import Sponsor from './views/sponsor';
+import DataExplorer from './views/data-explorer'
 
 const routes = [
+    {
+        name: 'Data Explorer',
+        path: '/explorer',
+        component: <DataExplorer />
+    },
     {
         name: 'Home',
         path: '/home',

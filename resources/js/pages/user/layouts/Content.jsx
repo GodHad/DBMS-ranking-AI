@@ -1,4 +1,4 @@
-import { Box, useDisclosure, Image, Spinner } from '@chakra-ui/react';
+import { Box, useDisclosure, Image, Spinner, Flex } from '@chakra-ui/react';
 import Footer from './Footer/Footer';
 import Navbar from '../../../components/navbar/NavbarUser';
 import React, { useState, useMemo, Suspense, lazy } from 'react';
@@ -97,17 +97,26 @@ export default function Dashboard(props) {
   };
   const getRoutes = (routes) => {
     return routes.map((route, key) => {
-      const LazyComponent = lazy(route.component)
-      return (
-        <Route
-          path={`${route.path}`}
-          element={
-            <Suspense fallback={<Spinner />}>
-              <LazyComponent />
-            </Suspense>
-          }
-          key={route.path} />
-      );
+      if (route.name !== 'Data Explorer') {
+        const LazyComponent = lazy(route.component)
+        return (
+          <Route
+            path={`${route.path}`}
+            element={
+              <Suspense fallback={<Flex justifyContent={'center'} minH="300px" alignItems="center"><Spinner /></Flex>}>
+                <LazyComponent />
+              </Suspense>
+            }
+            key={route.path} />
+        );
+      } else {
+        return (
+          <Route
+            path={`${route.path}`}
+            element={route.component}
+            key={route.path} />
+        );
+      }
     });
   };
   const { onOpen } = useDisclosure();
@@ -171,14 +180,14 @@ export default function Dashboard(props) {
                 <Route
                   path="/blog/:id/:slug"
                   element={
-                    <Suspense fallback={<Spinner />}>
+                    <Suspense fallback={<Flex justifyContent={'center'} minH="300px" alignItems="center"><Spinner /></Flex>}>
                       <BlogPage />
                     </Suspense>
                   } />
                 <Route
                   path='/blog/create-blog'
                   element={
-                    <Suspense fallback={<Spinner />}>
+                    <Suspense fallback={<Flex justifyContent={'center'} minH="300px" alignItems="center"><Spinner /></Flex>}>
                       <CreateBlogPage />
                     </Suspense>
                   }
@@ -186,7 +195,7 @@ export default function Dashboard(props) {
                 <Route
                   path="/dbms/:slug"
                   element={
-                    <Suspense fallback={<Spinner />}>
+                    <Suspense fallback={<Flex justifyContent={'center'} minH="300px" alignItems="center"><Spinner /></Flex>}>
                       <DBMS />
                     </Suspense>
                   }
@@ -194,7 +203,7 @@ export default function Dashboard(props) {
                 <Route
                   path="/dbms/compare/:slug"
                   element={
-                    <Suspense fallback={<Spinner />}>
+                    <Suspense fallback={<Flex justifyContent={'center'} minH="300px" alignItems="center"><Spinner /></Flex>}>
                       <CompareDBMS />
                     </Suspense>
                   }
@@ -202,25 +211,25 @@ export default function Dashboard(props) {
                 <Route
                   path="/encyclopedia/:slug"
                   element={
-                    <Suspense fallback={<Spinner />}>
+                    <Suspense fallback={<Flex justifyContent={'center'} minH="300px" alignItems="center"><Spinner /></Flex>}>
                       <EncyclopediaPage />
                     </Suspense>
                   }
                 />
                 <Route path='/contact-us' element={
-                  <Suspense fallback={<Spinner />}>
+                  <Suspense fallback={<Flex justifyContent={'center'} minH="300px" alignItems="center"><Spinner /></Flex>}>
                     <ContactUs />
                   </Suspense>
                 } />
                 <Route path='/services' element={
-                  <Suspense fallback={<Spinner />}>
+                  <Suspense fallback={<Flex justifyContent={'center'} minH="300px" alignItems="center"><Spinner /></Flex>}>
                     <Services />
                   </Suspense>
                 } />
                 <Route
                   path='/claim-dbms/:slug'
                   element={
-                    <Suspense fallback={<Spinner />}>
+                    <Suspense fallback={<Flex justifyContent={'center'} minH="300px" alignItems="center"><Spinner /></Flex>}>
                       <ClaimDBMS />
                     </Suspense>
                   }

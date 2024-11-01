@@ -95,7 +95,7 @@ export default function Dashboard(props) {
         return (
           <Route key={key} element={<AdminRoute />}>
             <Route path={route.path} element={
-              <Suspense fallback={<Spinner />}>
+              <Suspense fallback={<Flex justifyContent={'center'} minH="300px" alignItems="center"><Spinner /></Flex>}>
                 <LazyComponent />
               </Suspense>
             } />

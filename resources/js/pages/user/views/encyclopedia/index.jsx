@@ -83,7 +83,7 @@ const EncyclopediaPage = () => {
     return (
         <>
             <Helmet>
-                <title>DB Rank AI | Encyclopedia</title>
+                <title>DBMS Ranking AI | Encyclopedia</title>
             </Helmet>
             <Card
                 w="100%"

@@ -25,7 +25,7 @@ export default function UserReports() {
     return (
         <>
             <Helmet>
-                <title>DB Rank AI | Services</title>
+                <title>DBMS Ranking AI | Services</title>
             </Helmet>
             <Box>
                 <Card
@@ -65,7 +65,7 @@ export default function UserReports() {
                             fontWeight="500"
                             lineHeight="150%"
                         >
-                            This page describes the services and products DB Rank AI can offer to:
+                            This page describes the services and products DBMS Ranking AI can offer to:
                         </Text>
                         <Heading as={'h2'} fontSize={{ md: '24px', base: '16px' }} lineHeight={'48px'}>
                             A) Vendors of a DBMS:

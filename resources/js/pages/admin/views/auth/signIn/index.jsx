@@ -75,7 +75,7 @@ function SignIn() {
   return (
     <>
       <Helmet>
-        <title>DB Rank AI | Sign In</title>
+        <title>DBMS Ranking AI | Sign In</title>
       </Helmet>
       <DefaultAuth illustrationBackground={illustration} image={illustration}>
         <Flex

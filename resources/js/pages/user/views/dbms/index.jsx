@@ -70,7 +70,7 @@ export default function Vendor() {
     return (
         <>
             <Helmet>
-                <title>DB Rank AI | DBMS</title>
+                <title>DBMS Ranking AI | DBMS</title>
             </Helmet>
             <Card
                 flexDirection="column"

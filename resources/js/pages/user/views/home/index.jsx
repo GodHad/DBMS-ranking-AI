@@ -18,7 +18,7 @@ export default function UserReports() {
   return (
     <>
       <Helmet>
-        <title>DB Rank AI</title>
+        <title>DBMS Ranking AI</title>
       </Helmet>
       <Box>
         <SimpleGrid columns={{ base: 1, lg: 2, xl: 2 }} gap='20px' mb='20px' justifyContent={"center"}>

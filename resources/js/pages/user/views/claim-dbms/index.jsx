@@ -127,7 +127,7 @@ export default function DBMS() {
     return (
         <>
             <Helmet>
-                (<title>{`DB Rank AI | Claim DBMS | ${selectedDBMS && selectedDBMS.length > 0 && selectedDBMS[0].db_name}`}</title>)
+                (<title>{`DBMS Ranking AI | Claim DBMS | ${selectedDBMS && selectedDBMS.length > 0 && selectedDBMS[0].db_name}`}</title>)
             </Helmet>
             <Box
                 flexDirection="column"

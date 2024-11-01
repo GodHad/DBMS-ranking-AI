@@ -42,7 +42,7 @@ export default function Auth() {
           transitionTimingFunction="linear, linear, ease"
         >
           <Box mx="auto" minH="100vh">
-            <Suspense fallback={<Spinner />}>
+            <Suspense fallback={<Flex justifyContent={'center'} minH="300px" alignItems="center"><Spinner /></Flex>}>
               <SignIn />
             </Suspense>
           </Box>

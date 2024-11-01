@@ -273,7 +273,7 @@ export default function BlogForm({ blog, setOpenedPage }) {
     }
 
     if (isLoadingCategories || isLoadingTags || !bCategories || !bTags) {
-        return <Spinner />
+        return <Flex justifyContent={'center'} minH="300px" alignItems="center"><Spinner /></Flex>
     }
 
     return (
