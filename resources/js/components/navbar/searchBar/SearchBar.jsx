@@ -7,7 +7,8 @@ import {
   useColorModeValue,
   VStack,
   Box,
-  Text
+  Text,
+  Spinner
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { useMutation } from "react-query";
@@ -40,12 +41,14 @@ export function SearchBar(props) {
   const { variant, background, children, placeholder, borderRadius, ...rest } =
     props;
 
+  const [loading, setLoading] = useState(false);
+
   const searchIconColor = useColorModeValue("gray.700", "white");
   const inputBg = useColorModeValue("secondaryGray.300", "navy.900");
   const inputText = useColorModeValue("gray.700", "gray.100");
 
   const [searchTerm, setSearchTerm] = useState('');
-  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const [searchResult, setSearchResult] = useState({
     dbms: [],
     blog: []
@@ -54,11 +57,13 @@ export function SearchBar(props) {
   const searchMutation = useMutation(searchDBMSAndBlogEncyclopedia, {
     onSuccess: (data) => {
       setSearchResult(data);
+      setLoading(false)
     }
   })
 
   useEffect(() => {
     if (debouncedSearchTerm) {
+      setLoading(true);
       searchMutation.mutate(debouncedSearchTerm);
     }
   }, [debouncedSearchTerm])
@@ -97,20 +102,36 @@ export function SearchBar(props) {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </InputGroup>
-      {searchTerm && (searchResult.blog.length > 0 || searchResult.dbms.length > 0) &&
-        <Box width="300px" borderWidth="1px" borderRadius="md" p={4} position={'absolute'} top={9} zIndex={10} bg={inputBg}>
-          {searchResult.blog.length > 0 && (
-            searchResult.blog.map((result, index) => (
-              <Link to={`/blog/${result.id}/${generateSlug(result.title)}`} key={index} onClick={() => setSearchTerm('')}><Text isTruncated maxWidth={'100%'}>Blog: {result.title}</Text></Link>
-            ))
-          )}
-          {searchResult.dbms.length > 0 && (
-            searchResult.dbms.map((result, index) => (
-              <Link to={`/dbms/${generateSlug(result.db_name)}`} key={index} onClick={() => setSearchTerm('')}><Text>DBMS: {result.db_name}</Text></Link>
-            ))
-          )}
-        </Box>
-      }
+      {searchTerm && (
+        (searchResult.blog.length > 0 || searchResult.dbms.length > 0) ? (
+          <Box width="300px" borderWidth="1px" borderRadius="md" p={4} position="absolute" top={9} zIndex={10} bg={inputBg}>
+            {searchResult.blog.length > 0 && (
+              searchResult.blog.map((result, index) => (
+                <Link to={`/blog/${result.id}/${generateSlug(result.title)}`} key={`blog-${index}`} onClick={() => setSearchTerm('')}>
+                  <Text isTruncated maxWidth="100%">Blog: {result.title}</Text>
+                </Link>
+              ))
+            )}
+            {searchResult.dbms.length > 0 && (
+              searchResult.dbms.map((result, index) => (
+                <Link to={`/dbms/${generateSlug(result.db_name)}`} key={`dbms-${index}`} onClick={() => setSearchTerm('')}>
+                  <Text>DBMS: {result.db_name}</Text>
+                </Link>
+              ))
+            )}
+          </Box>
+        ) : (
+          !loading ? (
+            <Box width="300px" borderWidth="1px" borderRadius="md" p={4} position="absolute" top={9} zIndex={10} bg={inputBg}>
+              <Text>No results</Text>
+            </Box>
+          ) : (
+            <Box width="300px" borderWidth="1px" borderRadius="md" p={4} position="absolute" top={9} zIndex={10} bg={inputBg}>
+              <Spinner />
+            </Box>
+          )
+      ))}
+
     </VStack>
   );
 }
