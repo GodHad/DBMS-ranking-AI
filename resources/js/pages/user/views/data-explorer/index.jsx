@@ -35,6 +35,7 @@ export default function Chat() {
     const inputColor = useColorModeValue('navy.700', 'white');
     const brandColor = useColorModeValue('brand.500', 'white');
     const textColor = useColorModeValue('navy.700', 'white');
+    let secondaryText = useColorModeValue('gray.700', 'gray.500');
     const placeholderColor = useColorModeValue(
         { color: 'gray.500' },
         { color: 'whiteAlpha.600' },
@@ -243,7 +244,7 @@ export default function Chat() {
                     </Flex>
                 </Flex>
                 {/* Chat Input */}
-                <Text>Sometimes I am not smart enough.</Text>
+                <Text textColor={secondaryText} textAlign={'center'}>Sometimes I am not smart enough. I am still learning.</Text>
                 <Box bottom={0} width={'full'}>
                     <Flex ms={{ base: '0px', xl: '60px' }} mt="20px" justifyContent={'center'} alignItems={'center'}>
                         <Textarea
@@ -294,6 +295,7 @@ export default function Chat() {
                                     bg: 'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)',
                                 },
                             }}
+                            color={'white'}
                             onClick={handleTranslate}
                             isLoading={loading ? true : false}
                         >
